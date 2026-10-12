@@ -1,6 +1,6 @@
 # Nightfall Art Direction v1.0.0 — release candidate record
 
-**Status:** RELEASE CANDIDATE, not a verified release. The implementation checkpoint passed every check that could run in this environment. Ten DOM-based runtime test files, physical-device checks, Worker deployment and hosted verification remain **Not run** (see below). Do not merge to `main` or deploy until those are resolved, because `main` publishes GitHub Pages.
+**Status:** RELEASE CANDIDATE, not a verified release. The implementation checkpoint passed every check that could run in this environment. The full test suite passes in GitHub Actions. Physical-device checks, Worker deployment and hosted verification remain **Not run** (see below). Do not merge to `main` or deploy until those are resolved, because `main` publishes GitHub Pages.
 
 - Specification: [Nightfall Art Direction v1.0.0](../change-specs/nightfall-art-direction-v1.0.0.md); sprite brief and sheets at `e79fdb8`.
 - Branch: `implement/nightfall-art-v1.0.0`.
@@ -51,8 +51,8 @@
 
 | # | Check | Result | Evidence |
 |---|---|---|---|
-| 1 | Repository test suite (`npm test`) | **Passed** for 267 of 277 tests. The 10 failing entries are whole test files that cannot load `happy-dom` (below) | Same 10 files fail identically on the baseline in this environment |
-| 1a | DOM runtime suites: blackline-runtime, false-haven-runtime, held-input, ironbreak-input, journey-input, migration-ui, nightfall-runtime, runtime, v093, v094-runtime | **Not run** | `npm ci` was refused by the network policy for registry.npmjs.org, so `happy-dom` could not be installed. Re-run once dependencies install |
+| 1 | Repository test suite (`npm test`) on GitHub Actions, full dependencies | **Passed**, 321 of 321 | Workflow `tests`, run on `89a5c03` (game, Worker and test code identical to checkpoint `7d4b9a7` except one test assertion). The first CI run found one stale assertion (`migration-ui`: expected `nightfall-city-5`); it was updated to `nightfall-city-6` and re-run |
+| 1a | DOM runtime suites (blackline-runtime, false-haven-runtime, held-input, ironbreak-input, journey-input, migration-ui, nightfall-runtime, runtime, v093, v094-runtime) | **Passed** in CI (row 1) | Could not run in the development sandbox because npm was blocked; GitHub's servers ran them |
 | 2 | Release validation (`npm run build`), including the five new sheets | **Passed** | Checks each sheet is a 1024 × 1024 PNG |
 | 3 | Reachability and keep-out (`test/nightfall-reachability.test.mjs`) | **Passed**, 13 tests | 4 games/routes × all reachable topology states; every door, window side, task, pickup, switch and enemy home still reachable; floor area ≥ 97% of baseline (`test/fixtures/nightfall-baseline-area.json`); no furniture in keep-out zones; no corridor under 48 px |
 | 4 | Barricade removal and save compatibility tests | **Passed** | `false-haven.test.mjs`, `false-haven-performance.test.mjs` |
@@ -84,6 +84,6 @@ Platform v0.9.8 changes `BRAND.engineVersion`. A v0.9.8 frontend refuses a v0.9.
 
 ## Open items before VERIFIED CHECKPOINT
 
-1. Install dependencies and run the 10 DOM runtime suites.
+1. ~~Run the 10 DOM runtime suites~~ — done in CI, see row 1.
 2. Owner replay on Windows Chrome and an iPad, including furniture collisions, roof fade and legibility.
 3. Then record the verified checkpoint, merge, and deploy the Worker together with Pages.
