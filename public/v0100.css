@@ -15,9 +15,9 @@
 .engine-question p{margin:0 0 8px}
 .engine-question svg,.problem svg{max-width:100%;height:auto;display:block;margin:8px auto;background:#fff}
 .problem .engine-question{font-size:clamp(20px,4.6vw,30px);line-height:1.3}
-.engine-keys{grid-template-columns:repeat(4,1fr)}
+.engine-keys{grid-template-columns:repeat(3,1fr)}
 .engine-keys button{font-size:20px}
 .engine-text-answer{display:grid;gap:6px;font-weight:800;margin:6px 0}
 .engine-text-answer input{min-height:56px;font-size:24px;border:2px solid #c5ccda;border-radius:12px;padding:8px 12px;background:#f9fafc}
 .answer-display .answer-slot{font-size:clamp(20px,6vw,34px);overflow-wrap:anywhere}
-@media(max-width:460px){.engine-results{grid-template-columns:1fr}.engine-keys{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:460px){.engine-results{grid-template-columns:1fr}}

@@ -22,7 +22,7 @@ import {configureSupply,awardSupply} from './engine/supply.js';
 
 const ACTIVE_MS = 20_000;
 export const RETENTION_MS=48*60*60*1000;
-const VERSION = "0.10.0-rc.1";
+const VERSION = "0.10.0-rc.2";
 const supportedEngine=version=>["0.9.2","0.9.4","0.9.5","0.9.6","0.9.7",VERSION].includes(version);
 const DIFFICULTY_POLICIES = ["session", "foundation", "standard", "challenge"];
 const GATE_PATHS = {

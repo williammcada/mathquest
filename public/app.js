@@ -1,5 +1,5 @@
 import {splitScene,instructionPanel} from './review-presentation.js?v=u11';
-import {JourneyHost} from './games/journey/host.js?v=0.10.0-rc.1';
+import {JourneyHost} from './games/journey/host.js?v=0.10.0-rc.2';
 let journeyHost=null;
 import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.9.7';
 import {IronbreakHost} from './games/shooter/host.js?v=ironbreak-0.1.0';
@@ -7,7 +7,7 @@ import {RescueHost} from './games/nightfall/rescue-host.js?v=0.9.7';
 import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.9.7';
 import { hostingFor, fetchApi } from './hosting.js?v=0.9.7';
 import { CATALOG } from './catalog.js?v=0.9.7'; // retired MathQuest module titles only
-import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.10.0-rc.1';
+import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.10.0-rc.2';
 import { StealthRuntime } from './stealth.js?v=0.9.7';
 import { SceneAssets } from './vault7-assets.js?v=0.9.7';
 import { TeacherAudio } from './teacher-audio.js?v=0.9.7';
@@ -16,10 +16,10 @@ import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.9.7';
 import { FinaleHost } from './finale-host.js?v=0.9.7';
 import { CartridgeAudio } from './cartridge-audio.js?v=0.9.7';
 import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.9.7';
-import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.10.0-rc.1';
+import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.10.0-rc.2';
 import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.9.7';
 forgetExpiredRooms();
-import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.10.0-rc.1';
+import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.10.0-rc.2';
 let setupCartridge='';
 let finaleHost=null;
 const app = document.querySelector("#app");
@@ -899,7 +899,7 @@ document.addEventListener('keydown',event=>{
   if(teacherKey||extractionRuntime||state?.student?.gateComplete||currentTeam()?.stage!=='gate'||document.activeElement?.matches('input,select,textarea')||event.ctrlKey||event.metaKey||event.altKey)return;
   const key=/^\d$/.test(event.key)?event.key:event.key==='Backspace'?'backspace':event.key==='-'?'minus':event.key==='.'?'.':null;
   if(key){const button=document.querySelector(`[data-answer-key="${key}"]`);if(button){event.preventDefault();button.click();return;}}
-  if(event.key.length===1){const typed=event.key===' '?' ':event.key;const button=[...document.querySelectorAll('[data-answer-text]')].find(b=>b.dataset.answerText.toLowerCase()===typed.toLowerCase()||(typed==='*'&&b.dataset.answerText==='×'));if(button){event.preventDefault();button.click();}}
+  if(event.key.length===1){const typed=event.key;const buttons=[...document.querySelectorAll('[data-answer-text]')];const button=buttons.find(b=>b.dataset.answerText.toLowerCase()===typed.toLowerCase()||(typed==='*'&&b.dataset.answerText==='×'))||(/^[ap]$/i.test(typed)?buttons.find(b=>b.dataset.answerText===typed.toUpperCase()+'M'):null);if(button){event.preventDefault();button.click();}}
   if(event.key==='Enter'){event.preventDefault();document.querySelector('[data-action="math.submit"]')?.click();}
 });
 app.addEventListener("click", handleDelegatedTeacherControl);
