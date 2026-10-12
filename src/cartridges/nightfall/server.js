@@ -60,7 +60,7 @@ export function expansionCommand(room, student, input) {
     if(!['decision','finale'].includes(t.stage)||!room.isLead(student,t))return fail('Only the current Event Lead can resolve an open choice.');
     const selected=winner(t.stage==='decision'?t.votes:t.finalVotes,members,student.id);
     if(selected===null)return fail('Every crew member must vote first.');
-    if(t.stage==='decision'){t.route=selected;if(c.id==='nightfall'&&['0.9.4','0.9.5','0.9.6','0.9.7'].includes(room.state.config.engineVersion))openRescue(room,t);else room.openGate(t,1);}
+    if(t.stage==='decision'){t.route=selected;if(c.id==='nightfall'&&room.state.config.engineVersion!=='0.9.2')openRescue(room,t);/* First Response exists from v0.9.4 on; only v0.9.2 rooms predate it. */else room.openGate(t,1);}
     else{
       t.finalAction=selected;t.stage='victory';t.completedAt=new Date().toISOString();
     }

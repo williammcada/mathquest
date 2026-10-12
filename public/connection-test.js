@@ -1,5 +1,5 @@
 import { hostingFor, fetchApi } from './hosting.js?v=0.9.7';
-import {BRAND} from './brand.js?v=0.10.0-rc.3';
+import {BRAND} from './brand.js?v=0.10.0-rc.4';
 const hosting = hostingFor(location.href);
 const button = document.querySelector('#run-test');
 const result = document.querySelector('#result');
