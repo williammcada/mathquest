@@ -286,3 +286,23 @@ shared authored story/instruction roles, separate labeled panels in classroom,
 preview and maintained standalone delivery. Preserve gameplay and academic rules.
 New narrative content should supply separate `scene.paragraphs` (story only) and
 `scene.instructions` arrays, consumed by the shared presentation renderer.
+
+## Nightfall franchise art standard NF-ART-01 — 12 October 2026
+
+**Status:** Approved by William McAda on 12 October 2026 (Asia/Shanghai) as a Nightfall franchise standard. Scope is every current and future Nightfall game: First Response, Last Bus Out, False Haven and later chapters. It is deliberately not a handbook universal rule; the handbook treats art style as product-local (U-08, S-03).
+
+**Rule:** Draw every Nightfall world object from predesigned sprite art. This covers structures, terrain features, props, interactables and their visible state changes. Do not substitute code-drawn geometric shapes. Code drawing is limited to the HUD and prompts, minimap, debug overlays, objective markers, aim line, bullets, weather, lighting, short-lived effects, and game-rendered text placed on sprite-backed signs.
+
+**Check:** Rendered frames of every changed object and state show sprite art, readable against the surrounding ground at in-game size. A missing sprite is reported as missing, not silently replaced by shapes.
+
+**First application:** [Nightfall Art Direction v1.0.0](change-specs/nightfall-art-direction-v1.0.0.md) with [sprite brief](art/NIGHTFALL-SPRITE-BRIEF-v1.md). Stage: CHANGE SPEC. Sprite sheets are not yet produced; no implementation or verification is claimed.
+
+Owner decisions:
+- One combined release covering all three games.
+- False Haven's movable barricades are removed.
+- The inspection-lane trap is kept with new sprites.
+- Painted roofs, floor decals and wall furniture are added, guarded by a reachability test.
+- First Response gets the full treatment.
+- Platform target is v0.9.8; False Haven v0.4.0; Chapter 1 gains visible version v1.1.0.
+
+The Worker must be deployed together with the frontend because it validates shared Nightfall geometry.
