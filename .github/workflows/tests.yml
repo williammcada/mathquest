@@ -18,5 +18,20 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci --no-audit --no-fund
-      - run: npm test
+      - name: npm test (failures reported as annotations)
+        shell: bash
+        run: |
+          set +e
+          npm test > test.log 2>&1; status=$?
+          summary=$(grep -E '^# (tests|pass|fail)' test.log | tr '\n' ' ')
+          echo "::notice title=npm test::$summary"
+          if [ $status -ne 0 ]; then
+            # One annotation per failing test with its error line (readable via the checks API).
+            grep -n -E '^\s*not ok' test.log | head -40 | while IFS= read -r line; do
+              n=${line%%:*}; err=$(tail -n +$n test.log | grep -m1 -E "error:|expected|Error" | sed 's/%/%25/g')
+              echo "::error title=${line#*:}::${err}"
+            done
+            grep -E 'Error \[|Cannot find|ERR_' test.log | sort | uniq -c | head -5 | sed 's/^/::warning title=error summary::/'
+          fi
+          exit $status
       - run: npm run build
