@@ -9,7 +9,9 @@ import {settleRescues} from './cartridges/nightfall/rescue-server.js';
 import {equipmentCommand,equipmentSlots,completeEquipmentBlock} from './engine/equipment.js';
 import {serverFor} from './cartridges/registry.js';
 import { withCors } from './cors.js';
-import { PRESET_MODULES, MODULE_BY_ID, normalizeCustomItem, checkItem, hashSeed } from "./math.js";
+import { normalizeCustomItem, hashSeed } from "./math.js";
+import { checkAnswerFor } from "./answer-check.js";
+import { ENGINE, LEGACY_MODULE_MAP, LEGACY_MODULE_TITLES, engineEntry, engineIdsFor, engineTitle, engineCatalogSummary, enginePreview } from "./engine-questions.js";
 import { VAULT7_SECRETS } from "./vault7.js";
 import { provideQuestion } from "./question-provider.js";
 import { beginExtraction, settleExtractions, finishExtractions, extractionCommand, extractionProjection, extractionSummary } from './extraction.js';
@@ -20,8 +22,8 @@ import {configureSupply,awardSupply} from './engine/supply.js';
 
 const ACTIVE_MS = 20_000;
 export const RETENTION_MS=48*60*60*1000;
-const VERSION = "0.9.7";
-const supportedEngine=version=>["0.9.2","0.9.4","0.9.5","0.9.6","0.9.7"].includes(version);
+const VERSION = "0.10.0-rc.1";
+const supportedEngine=version=>["0.9.2","0.9.4","0.9.5","0.9.6","0.9.7",VERSION].includes(version);
 const DIFFICULTY_POLICIES = ["session", "foundation", "standard", "challenge"];
 const GATE_PATHS = {
   3: ["Perimeter Power", "Containment Laboratory", "Isolation Core"],
@@ -79,23 +81,25 @@ function sanitizeModules(config) {
       const items = sourceItems
         .map((record, index) => normalizeCustomItem(record, index, title));
       if (items.length) output.push({ id: `custom.${hashSeed(title + moduleIndex)}`, title, source: "custom", band: "teacher", itemCount: items.length, items });
-    } else if (MODULE_BY_ID[selected.id]) {
-      const meta = MODULE_BY_ID[selected.id];
+    } else if (selected.source === "engine" || selected.source === "preset" || LEGACY_MODULE_MAP[selected.id] || engineEntry(selected.id)) {
+      // Math Engine module. A retired MathQuest module id ("preset") maps to its engine items;
+      // its old Beginner/Intermediate/Advanced band is not used (spec D4).
+      const engineIds = LEGACY_MODULE_MAP[selected.id] || (engineEntry(selected.id) ? [selected.id] : []);
+      if (!engineIds.length) continue;
+      if (output.some(module => module.id === selected.id)) continue;
       output.push({
-        id: meta.id,
-        title: meta.title,
-        source: "preset",
-        band: ["beginner", "intermediate", "advanced"].includes(selected.band) ? selected.band : "intermediate",
+        id: selected.id,
+        title: LEGACY_MODULE_MAP[selected.id] ? LEGACY_MODULE_TITLES[selected.id] : engineTitle(selected.id),
+        source: "engine",
+        engineIds,
         itemCount: clamp(selected.itemCount, 1, 50, 3)
       });
     }
   }
   if (!output.length) {
-    output.push(
-      { id: "number.integer-operations", title: "Integer Operations", source: "preset", band: "intermediate", itemCount: 4 },
-      { id: "number.gcf", title: "Greatest Common Factor", source: "preset", band: "intermediate", itemCount: 2 },
-      { id: "number.lcm", title: "Least Common Multiple", source: "preset", band: "intermediate", itemCount: 2 }
-    );
+    for (const [id, count] of [["g7-intadd", 1], ["g7-intsub", 1], ["g7-intmul", 1], ["g7-intdiv", 1], ["g6-gcf", 2], ["g6-lcm", 2]]) {
+      output.push({ id, title: engineTitle(id), source: "engine", engineIds: [id], itemCount: count });
+    }
   }
   return output;
 }
@@ -154,9 +158,16 @@ async function routeRequest(request, env) {
       version: VERSION,
       cartridges: CARTRIDGES.map(({id,title,revision})=>({id,title,revision})),
       disciplines: [{ id: "mathematics", title: "Mathematics", enabled: true }, { id: "science", title: "Science", enabled: false }, { id: "humanities", title: "Humanities", enabled: false }, { id: "languages", title: "Languages", enabled: false }],
-      courseBanks:[{id:'prealgebra',title:'Prealgebra',enabled:true},{id:'elementary',title:'Elementary Mathematics',enabled:false},{id:'algebra1',title:'Algebra 1',enabled:false},{id:'algebra2',title:'Algebra 2',enabled:false}],
-      modules: PRESET_MODULES.map(module => ({ ...module, disciplineId: "mathematics", source: "mathquest-preset" }))
+      engine: ENGINE,
+      modules: engineCatalogSummary(),
+      legacyModules: LEGACY_MODULE_MAP
     });
+    if (url.pathname === "/api/engine-preview" && request.method === "POST") {
+      let input = {};
+      try { input = await request.json(); } catch { /* empty */ }
+      const ids = Array.isArray(input.ids) ? input.ids.map(String).slice(0, 20) : [];
+      return json({ engine: ENGINE, items: enginePreview(ids) });
+    }
     if (url.pathname === "/api/sessions" && request.method === "POST") {
       let input = {};
       try { input = await request.json(); } catch { /* defaults */ }
@@ -340,7 +351,7 @@ export class QuestSession {
     };
     names.forEach((name, index) => {
       const team = teamTemplate(name, randomCode(4), index);
-      if(cartridge.id==='coastal-escape'){const loads=this.state.config.gateLoads;if(loads.every(n=>n===loads[0]))team.supply={count:loads[0],enabled:true,moduleIds:modules.filter(m=>m.source==='preset').map(m=>m.id),allowReuse:false};}
+      if(cartridge.id==='coastal-escape'){const loads=this.state.config.gateLoads;if(loads.every(n=>n===loads[0]))team.supply={count:loads[0],enabled:true,moduleIds:modules.filter(m=>(m.source==='engine'||m.source==='preset')).map(m=>m.id),allowReuse:false};}
       this.state.teams[team.id] = team;
     });
     this.addEvent("session-created", `${cartridge.title} created with ${totalQuestions} questions across ${gateCount} gates`);
@@ -506,7 +517,7 @@ export class QuestSession {
       } else {
         for (let index = 0; index < selected.itemCount; index += 1) {
           const seed = hashSeed(`${this.state.code}:${student.id}:${selected.id}:${index}`);
-          assignments.push({ source: "preset", moduleId: selected.id, moduleTitle: selected.title, band: selected.band, seed });
+          assignments.push({ source: "engine", moduleId: selected.id, moduleTitle: selected.title, seed });
         }
       }
     }
@@ -563,7 +574,7 @@ export class QuestSession {
     if (student.gateComplete) return { error: "Your contribution to this gate is complete." };
     const item = this.ensureItem(student);
     if (!item) return { error: "No question is available." };
-    const checked = checkItem(item, input.answer);
+    const checked = checkAnswerFor(item, input.answer);
     if (!checked.valid) return { error: checked.error };
     item.attempts += 1;
     this.state.attempts.push({
@@ -676,9 +687,10 @@ export class QuestSession {
       moduleTitle: student.currentItem.moduleTitle,
       answerType: student.currentItem.answerType,
       options: student.currentItem.options || [],
+      keys: student.currentItem.keys || [],
       promptMarkup: student.currentItem.promptMarkup || null,
       media: student.currentItem.media || null,
-      unit:student.currentItem.unit||'',currency:student.currentItem.currency||'$',expectedForm:['fraction','mixed'].includes(student.currentItem.answerType)?(student.currentItem.representationInstruction||'Give your answer in simplest form'):student.currentItem.expectedForm||null,
+      unit:student.currentItem.unit||'',currency:student.currentItem.currency||'$',expectedForm:student.currentItem.source==='math-engine'?null:['fraction','mixed'].includes(student.currentItem.answerType)?(student.currentItem.representationInstruction||'Give your answer in simplest form'):student.currentItem.expectedForm||null,
       attempts: student.currentItem.attempts
     } : null;
     const privateTeam = this.state.teams[student.teamId];

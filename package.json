@@ -1,6 +1,6 @@
 {
   "name": "mathquest-prototype",
-  "version": "0.9.7",
+  "version": "0.10.0-rc.1",
   "private": true,
   "type": "module",
   "scripts": {

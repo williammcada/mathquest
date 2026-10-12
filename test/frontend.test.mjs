@@ -32,9 +32,13 @@ test("teacher builder exposes cartridge, discipline, module, import, and balance
   assert.match(source, /Automatic Allocation/);
   assert.match(source, /No gate belongs to one skill/);
   assert.match(source, /Apply count to selected/);
-  assert.match(source, /Apply difficulty to selected/);
   assert.match(source, /Reset question counts/);
-  assert.match(source, /Reset difficulty/);
+  // 0.10.0: modules come from the Math Engine picker; per-module difficulty bands were retired (spec D4).
+  assert.match(source, /id="math-level"/);
+  assert.match(source, /id="math-search"/);
+  assert.match(source, /data-preview-math/);
+  assert.match(source, /MathQuest sets \(former modules\)/);
+  assert.doesNotMatch(source, /Apply difficulty to selected/);
 });
 
 test("teacher launch controls survive polling and expose progress and errors", () => {

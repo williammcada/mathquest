@@ -103,7 +103,7 @@ test("teams receive different story-linked secrets and honor recent exclusions",
   assert.ok(launched.body.teams.every(team => team.scene.title === "The Asterion breach"));
 });
 
-test("teacher difficulty changes only the next unissued preset question and stays private", async () => {
+test("teacher difficulty changes only the next unissued engine question and stays private", async () => {
   const room = new QuestSession(context());
   await call(room, "/init", "POST", { code: "LEVEL5", teacherKey: "teacher", config: {
     teamNames: ["Cipher"], gateCount: 3,
@@ -113,13 +113,14 @@ test("teacher difficulty changes only the next unissued preset question and stay
   await command(room, { type: "student.join", deviceId: "student", alias: "Morgan", teamPin: pin });
   await command(room, { type: "teacher.start", teacherKey: "teacher" });
   await command(room, { type: "briefing.ready", deviceId: "student" });
-  assert.equal(room.state.students.student.currentItem.band, "intermediate");
+  assert.equal(room.state.students.student.currentItem.assignedDifficulty, "standard");
+  assert.equal(room.state.students.student.currentItem.source, "math-engine");
   const currentId = room.state.students.student.currentItem.id;
   await command(room, { type: "teacher.setDifficulty", teacherKey: "teacher", studentId: "student", policy: "challenge" });
   assert.equal(room.state.students.student.currentItem.id, currentId);
   const answer = room.state.students.student.currentItem.answer;
   await command(room, { type: "math.submit", deviceId: "student", answer });
-  assert.equal(room.state.students.student.currentItem.band, "advanced");
+  assert.equal(room.state.students.student.currentItem.assignedDifficulty, "challenge");
   const studentState = (await call(room, "/state?deviceId=student")).body;
   assert.equal(studentState.teams[0].members[0].difficultyPolicy, undefined);
   const teacherState = (await call(room, "/state?teacherKey=teacher")).body;

@@ -4,7 +4,7 @@ export function configureSupply(room,input){
  if(t.supply?.started||['minigame','finale','victory','brawl'].includes(t.stage))return {error:'This crew has already committed its supply plan.'};
  const count=Number(input.count??3);if(!Number.isInteger(count)||count<1||count>20)return {error:'Choose 1–20 questions per student.'};
  const modules=room.state.config.modules.filter(m=>!input.moduleIds?.length||input.moduleIds.includes(m.id));
- const allowed=modules.filter(m=>m.source==='preset'||input.allowReuse===true);
+ const allowed=modules.filter(m=>(m.source==='engine'||m.source==='preset')||input.allowReuse===true);
  if(input.enabled&&!allowed.length)return {error:'Choose preset questions, or explicitly allow imported question reuse.'};
  t.supply={enabled:!!input.enabled,count,moduleIds:allowed.map(m=>m.id),allowReuse:!!input.allowReuse,started:false,earned:0,correct:0,cap:20};
  room.addEvent('supply-offered',`Supply contract ${t.supply.enabled?'enabled':'disabled'}: ${count} questions per student; another equipment slot on completion`,t.id);room.bump();return room.snapshot({teacherKey:input.teacherKey});
