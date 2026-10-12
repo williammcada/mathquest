@@ -11,3 +11,6 @@ document.querySelector('#restart').click();
 document.querySelector('#debug').onchange=e=>{if(runtime)runtime.s.debug=e.target.checked;};
 
 document.querySelector('#chapter').onchange=()=>{const rescue=document.querySelector('#chapter').value==='rescue';for(const el of document.querySelectorAll('#threat,#checkpoint,#survivor,#items input'))el.disabled=rescue;document.querySelector('#restart').click();};
+// Deep link: practice-nightfall.html#rescue (or #city) opens that chapter directly.
+const openChapterFromHash=()=>{const want=location.hash.slice(1),sel=document.querySelector('#chapter');if([...sel.options].some(o=>o.value===want)&&sel.value!==want){sel.value=want;sel.onchange();}};
+openChapterFromHash();addEventListener('hashchange',openChapterFromHash);
