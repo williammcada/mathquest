@@ -1,4 +1,8 @@
-# MathQuest 0.10.0-rc.2 — verification
+# MathQuest 0.10.0-rc.3 — verification
+
+**rc.3 (2026-10-12):** engine updated to Math Engine 0.34.0-rc.3 (MATH-ENGINE `10127fc`), which adds lesson names; the teacher picker now shows each course item's lesson and lists courses in teaching order. Rerun on rc.3: release validation passed; 260/270 node tests passed (same 10 `happy-dom` files not run); browser checks passed for fraction, number, remainder (2 runs), choice, typed text, Algebra 2 and time inputs; picker lists Intermediate 4 by lesson; no page errors. The rc.2 record below is retained for history.
+
+## rc.2 record
 
 **Candidate:** branch `review/mathquest-0.10.0-engine`, the commit that adds this file. **Engine:** 0.34.0-rc.2 (MATH-ENGINE `414dc38`). **Spec:** [v0.10.0-math-engine](../change-specs/v0.10.0-math-engine.md). **Date:** 2026-10-12 (Asia/Shanghai).
 **Environment:** Linux, Node.js 22.22.0; headless Chromium 141 (Playwright) against `public/` served locally, with `/api/*` handled by the real `src/worker.js` and in-memory Durable Objects. No Cloudflare runtime, no hosted deployment, no physical device.

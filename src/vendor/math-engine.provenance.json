@@ -1,12 +1,12 @@
 {
   "repository": "williammcada/MATH-ENGINE",
-  "commit": "414dc3850c0f9fc5f3aba0d4e3374bc37cd4f3fa",
+  "commit": "10127fc92ca3787df392046e7bbe13a7b3fb5cf7",
   "module": "dist/math-engine-practice.js",
-  "engineVersion": "0.34.0-rc.2",
+  "engineVersion": "0.34.0-rc.3",
   "bankVersion": "0.33.0-rc.1",
   "k7Version": "megaman-v0.7",
-  "bundleSha256": "a13792204c1665555d45cb2e19af7a359a87828d48ab148980d4cf5b9e89019d",
-  "contentHash": "d769fe0583b4314cc6785e6fcbf7ca3f",
+  "bundleSha256": "8784557667e08ce08fd23c77b232dbbdbe307f67c744c4598a2e465e9990cd11",
+  "contentHash": "5cdb34cc0facb7ac3c2b6658f1c2f72b",
   "baseline": "baselines/megaman-v0.7/shared-math.js",
   "baselineSha256": "78841274e50b07c6640913bb84fdd821247ed47030b575feb27760d35fcff1a0",
   "sources": [

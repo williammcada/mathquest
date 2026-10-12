@@ -42,7 +42,7 @@ function cors(response) {
   assert.equal(response.headers.get('access-control-allow-origin'), origin);
   assert.match(response.headers.get('vary'), /Origin/);
   assert.equal(response.headers.get('cache-control'), 'no-store');
-  assert.equal(response.headers.get('x-mathquest-version'), '0.10.0-rc.2');
+  assert.equal(response.headers.get('x-mathquest-version'), '0.10.0-rc.3');
   assert.equal(response.headers.get('access-control-allow-credentials'), null);
 }
 

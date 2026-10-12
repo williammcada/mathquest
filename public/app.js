@@ -1,5 +1,5 @@
 import {splitScene,instructionPanel} from './review-presentation.js?v=u11';
-import {JourneyHost} from './games/journey/host.js?v=0.10.0-rc.2';
+import {JourneyHost} from './games/journey/host.js?v=0.10.0-rc.3';
 let journeyHost=null;
 import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.9.7';
 import {IronbreakHost} from './games/shooter/host.js?v=ironbreak-0.1.0';
@@ -7,7 +7,7 @@ import {RescueHost} from './games/nightfall/rescue-host.js?v=0.9.7';
 import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.9.7';
 import { hostingFor, fetchApi } from './hosting.js?v=0.9.7';
 import { CATALOG } from './catalog.js?v=0.9.7'; // retired MathQuest module titles only
-import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.10.0-rc.2';
+import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.10.0-rc.3';
 import { StealthRuntime } from './stealth.js?v=0.9.7';
 import { SceneAssets } from './vault7-assets.js?v=0.9.7';
 import { TeacherAudio } from './teacher-audio.js?v=0.9.7';
@@ -16,10 +16,10 @@ import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.9.7';
 import { FinaleHost } from './finale-host.js?v=0.9.7';
 import { CartridgeAudio } from './cartridge-audio.js?v=0.9.7';
 import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.9.7';
-import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.10.0-rc.2';
+import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.10.0-rc.3';
 import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.9.7';
 forgetExpiredRooms();
-import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.10.0-rc.2';
+import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.10.0-rc.3';
 let setupCartridge='';
 let finaleHost=null;
 const app = document.querySelector("#app");
@@ -49,7 +49,7 @@ const selectedDefaults = { 'number.integer-operations':4, 'number.gcf':2, 'numbe
 // Math content comes from the Math Engine (K–Algebra 2). Retired MathQuest module names remain as
 // ready-made sets that expand to their mapped engine skills.
 const LEGACY_TITLES = Object.fromEntries(CATALOG.map(({id,title}) => [id,title]));
-const ENGINE_INDEX = new Map(ENGINE_ROWS.map(([id,name,layer,grade,bankId,lesson]) => [id,{id,name,layer,grade,bankId,lesson}]));
+const ENGINE_INDEX = new Map(ENGINE_ROWS.map(([id,name,layer,grade,bankId,lesson,order]) => [id,{id,name,layer,grade,bankId,lesson,order}]));
 const COURSE_NAMES = Object.fromEntries(ENGINE_COURSES.map(c => [c.bankId,c.course]));
 let selectedMath = Object.entries(selectedDefaults).map(([id,count]) => ({id,itemCount:count,defaultItemCount:count}));
 let pickerLevel = 'mathquest', pickerQuery = '', pickerLimit = 40, mathPreview = null;
@@ -64,6 +64,8 @@ function pickerRows() {
   let rows = pickerLevel === 'mathquest' ? Object.keys(LEGACY_MODULE_MAP).map(id => ({id,name:LEGACY_TITLES[id]||id,lesson:''}))
     : [...ENGINE_INDEX.values()].filter(e => pickerLevel === 'all' || (pickerLevel.startsWith('grade:') ? e.layer === 'skill' && e.grade === pickerLevel.slice(6) : pickerLevel.startsWith('bank:') ? e.bankId === pickerLevel.slice(5) : pickerLevel === 'extras' && e.layer === 'continuity'));
   if (q) rows = rows.filter(r => `${r.name} ${r.lesson||''}`.toLowerCase().includes(q));
+  // Course items in teaching order (lesson order from the engine); others keep catalog order.
+  if (pickerLevel.startsWith('bank:')) rows = rows.map((r,i) => [r,i]).sort((a,b) => (a[0].order??1e9)-(b[0].order??1e9) || a[1]-b[1]).map(x => x[0]);
   return rows;
 }
 let extractionRuntime = null;
