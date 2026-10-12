@@ -130,7 +130,7 @@ test('Nightfall join starts neutral, resolves while typing, and clears cartridge
 
 test('failed session lookup displays the connection error without a cartridge fallback',async()=>{
  const ui=await mount(`${page}?session=BAD123&student=1`,'app.js',true);
- try{await ui.timers[0]();assert.match(ui.win.document.body.textContent,/HTTP 404/);assert.doesNotMatch(ui.win.document.body.textContent,/Vault 7|VII|Nightfall/);assert.equal(ui.win.document.title,'MathQuest');}finally{await ui.close();}
+ try{await ui.timers[0]();assert.match(ui.win.document.body.textContent,/HTTP 404/);assert.doesNotMatch(ui.win.document.body.textContent,/Vault 7|VII|Nightfall/);assert.equal(ui.win.document.title,'MathQuest 0.10.0-rc.3');}finally{await ui.close();}
 });
 
 test('connection page completes both checks and exposes the game link only on success', async () => {

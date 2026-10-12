@@ -34,9 +34,9 @@ jobs:
         run: |
           set +e
           npx wrangler deploy --dry-run --outdir build/worker > dry-run.txt 2>&1; s1=$?
-          tail -20 dry-run.txt | sed 's/^/::notice title=dry-run::/'
-          ls -la build/worker | sed 's/^/::notice title=worker files::/'
-          gzip -9 -c build/worker/*.js | wc -c | xargs -I{} echo "::notice title=worker gzip bytes::{}"
+          size=$(grep -m1 'Total Upload' dry-run.txt | tr -s ' ')
+          gz=$(gzip -9 -c build/worker/*.js | wc -c)
           npx wrangler check startup > startup.txt 2>&1; s2=$?
-          tail -15 startup.txt | sed 's/^/::notice title=startup::/'
+          startup=$(grep -iE 'startup|cpu|ms|error' startup.txt | tail -4 | tr '\n' ' ' | tr -s ' ')
+          echo "::warning title=Worker size and startup::dry-run exit $s1; $size; worker gzip bytes $gz; startup exit $s2; $startup"
           exit $((s1|s2))
