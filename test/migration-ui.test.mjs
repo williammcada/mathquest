@@ -72,7 +72,7 @@ test('neutral builder requires an explicit cartridge and switches metadata witho
 
 test('Nightfall teacher setup accepts the current cartridge revision and creates a session',async()=>{
  const ui=await mount(page);
- try{const select=ui.win.document.querySelector('#cartridge-select');select.value='nightfall';select.dispatchEvent(new ui.win.Event('change'));ui.win.document.querySelector('#create').click();await drain(()=>ui.win.location.search.includes('session='));const code=new URL(ui.win.location.href).searchParams.get('session');assert.equal(rooms.get(code).state.config.cartridgeRevision,'nightfall-city-5');assert.equal(ui.alerts.length,0);}finally{await ui.close();}
+ try{const select=ui.win.document.querySelector('#cartridge-select');select.value='nightfall';select.dispatchEvent(new ui.win.Event('change'));ui.win.document.querySelector('#create').click();await drain(()=>ui.win.location.search.includes('session='));const code=new URL(ui.win.location.href).searchParams.get('session');assert.equal(rooms.get(code).state.config.cartridgeRevision,'nightfall-city-6');assert.equal(ui.alerts.length,0);}finally{await ui.close();}
 });
 test('teacher creation opens the GitHub project dashboard; its QR contains the student link', async () => {
   const setup = await mount(page);
