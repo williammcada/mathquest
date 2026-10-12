@@ -1,0 +1,22 @@
+# Runs the full MathQuest test suite and release validation on GitHub's servers.
+# Added for Nightfall Art Direction v1.0.0 because the development sandbox
+# cannot install npm packages; it changes nothing that is deployed.
+name: tests
+on:
+  push:
+    branches: ['implement/**', 'release/**', 'fix/**']
+  pull_request:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci --no-audit --no-fund
+      - run: npm test
+      - run: npm run build
