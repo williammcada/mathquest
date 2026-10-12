@@ -62,7 +62,8 @@
 | 8 | Performance against baseline, same machine | **Passed** | Render cost across six busy False Haven views: mean 1.24 ms per frame against 1.26 ms on the baseline; worst view 2.0 ms against 2.7 ms. Both hold the 60 Hz cap (16.7 ms median and p95). Synthetic headless timing, not device FPS |
 | 9 | Hosted Pages files and visible versions | **Not run** | Candidate is not on `main` |
 | 10 | Worker deployment and classroom revision handshake (S-04) | **Not run** | See deployment note |
-| 11 | Owner Windows Chrome replay; physical iPad/iPhone (U-05, U-10) | **Not run** | Requires the owner's devices |
+| 11 | Owner playtest, desktop, from the private playtest page | **Passed**, 13 Oct 2026 | Owner: "It looks good." Two issues found and fixed first: the First Response link opened Last Bus Out (`2c519dd`), and the roof texture slid with the camera (`5a0b12d`). Browser not recorded |
+| 11a | Owner playtest on a physical iPad (U-05, U-10) | **Not run** | Deferred by the owner; required before classroom use |
 | 12 | Narrative/instruction separation (U-11) | **Not applicable** to new work | No story text changed. The one instruction edit (barricades removed) stays in the instruction block |
 
 **Note 6 — False Haven browser run** (`browser-results.json` and the `fh-*.jpg` screenshots):
@@ -85,5 +86,5 @@ Platform v0.9.8 changes `BRAND.engineVersion`. A v0.9.8 frontend refuses a v0.9.
 ## Open items before VERIFIED CHECKPOINT
 
 1. ~~Run the 10 DOM runtime suites~~ — done in CI, see row 1.
-2. Owner replay on Windows Chrome and an iPad, including furniture collisions, roof fade and legibility.
+2. ~~Owner desktop replay~~ — done, row 11. iPad replay still required (row 11a).
 3. Then record the verified checkpoint, merge, and deploy the Worker together with Pages.
