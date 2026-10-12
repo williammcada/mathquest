@@ -306,3 +306,5 @@ Owner decisions:
 - Platform target is v0.9.8; False Haven v0.4.0; Chapter 1 gains visible version v1.1.0.
 
 The Worker must be deployed together with the frontend because it validates shared Nightfall geometry.
+
+**Implementation — 12 October 2026:** branch `implement/nightfall-art-v1.0.0`, implementation checkpoint `7d4b9a7`. Platform v0.9.8, False Haven v0.4.0, Chapter 1 v1.1.0. Status: release candidate. All checks that could run passed: suite, build, reachability and keep-out, review frames, Chromium play of all three games, performance. Ten DOM runtime suites could not run (dependency install blocked), and physical-device, hosted Pages and Worker checks are pending. See [release record](releases/nightfall-art-v1.0.0.md). Do not merge to `main` until the Worker deploys alongside Pages, because v0.9.8 needs the matching Worker for every cartridge.

@@ -17,6 +17,8 @@ const base=`http://127.0.0.1:${server.address().port}/`;
 const browser=await chromium.launch({headless:true,args:['--no-sandbox','--disable-dev-shm-usage']});
 const results=[],record=(check,status,detail='')=>{results.push({check,status,detail});console.log(status.padEnd(7),check,detail);};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+// Hold a tap across at least one simulation frame so the edge is never missed.
+const tap=async(page,key)=>{await page.keyboard.down(key);await sleep(120);await page.keyboard.up(key);await sleep(200);};
 async function frameStats(page,seconds=3){return page.evaluate(sec=>new Promise(done=>{const t=[];let last=performance.now();const end=last+sec*1000;function f(now){t.push(now-last);last=now;if(now<end)requestAnimationFrame(f);else{t.sort((a,b)=>a-b);done({frames:t.length,median:t[t.length>>1],p95:t[Math.floor(t.length*.95)]});}}requestAnimationFrame(f);}),seconds);}
 try{
  // ---------- False Haven ----------
@@ -40,7 +42,7 @@ try{
  await put(1472,900);await sleep(300);const old=await s();assert.ok(!/barricade/i.test(old.prompt||''));record('No barricade switch at the former shelter barricade','Passed',old.prompt||'no prompt');
  // Guided machinery route with combat removed: proves furniture/sprites block no interaction.
  await page.evaluate(()=>{window.falseHaven.s.enemies=[];});
- const steps=[['generator_online',1696,600,3.4],['power_pump',1856,600,1.4],['service_shortcut',2720,1460,2],['power_depot',1856,600,1.4],['trolley_parked',3240,960,2.4],['depot_shutter',3360,930,2.4],['gate_unlocked',3328,580,3.4],['barrier_released',2720,1530,2.4]];
+ const steps=[['generator_online',1696,600,3.4],['power_pump',1856,600,1.4],['service_shortcut',2720,1460,2],['power_depot',1856,600,1.4],['trolley_parked',3240,960,2.4],['depot_shutter',3360,930,2.4],['gate_unlocked',3328,556,3.4],['barrier_released',2720,1530,2.4]];
  for(const [id,x,y,hold] of steps){
   if(id==='service_shortcut'){await page.waitForFunction(()=>window.falseHaven.s.tasks.passage_drained,null,{timeout:12000});await shot('fh-passage-drained');}
   if(id==='depot_shutter')await page.waitForFunction(()=>window.falseHaven.s.tasks.trolley_parked,null,{timeout:8000});
@@ -49,10 +51,11 @@ try{
   if(id==='generator_online')await shot('fh-generator-on');if(id==='trolley_parked')await shot('fh-trolley');if(id==='barrier_released')await shot('fh-barrier-up');
  }
  record('Every machinery objective completes in order in real time','Passed',steps.map(s=>s[0]).join(' → '));
- // Inspection gate: speaker and trap toggle, refused when occupied.
- await put(2048,1090);await sleep(150);await page.keyboard.press('KeyE');await sleep(300);const trap=await s();assert.equal(trap.trap,true);await shot('fh-trap-closed');
- await page.keyboard.press('KeyE');await sleep(300);assert.equal((await s()).trap,false);record('Inspection gate closes and reopens from its console','Passed');
- await put(1872,920);await sleep(150);await page.keyboard.press('KeyE');await sleep(300);await shot('fh-speaker-active');
+ // Inspection gate and speaker. The evacuation finale has spawned by now; keep this scripted check combat-free.
+ await page.evaluate(()=>{const s=window.falseHaven.s;s.enemies=[];s.immune=1e9;});
+ await put(2048,1090);await sleep(150);await tap(page,'KeyE');const trap=await s();assert.equal(trap.trap,true);await shot('fh-trap-closed');
+ await tap(page,'KeyE');assert.equal((await s()).trap,false);record('Inspection gate closes and reopens from its console','Passed');
+ await put(1872,920);await sleep(150);await tap(page,'KeyE');await shot('fh-speaker-active');
  // Pause / reload / resume restores progress.
  await page.keyboard.press('Escape');await sleep(300);const before=await s();
  await page.reload();await page.locator('#resume').click().catch(()=>{});await page.waitForFunction(()=>window.falseHaven?.s,null,{timeout:20000});
@@ -69,6 +72,12 @@ try{
   const p=await browser.newPage({viewport:{width:1280,height:800}});await p.goto(url);await p.evaluate(()=>{try{localStorage.clear();}catch{}});await p.reload();
   await p.locator('[data-start]').waitFor({timeout:30000});await p.locator('[data-start]').click();await sleep(300);
   await p.evaluate(()=>{const s=window.falseHaven.s;s.x=1700;s.y=700;s.immune=1e9;});await sleep(800);
+  // Render cost per frame, independent of the 60 Hz display cap: draw the live state
+  // 300 times into an offscreen canvas at several busy positions.
+  const cost=await p.evaluate(()=>{const h=window.falseHaven,c=document.createElement('canvas');c.width=640;c.height=360;const g=c.getContext('2d'),spots=[[552,560],[1700,700],[2000,900],[2560,1200],[3330,600],[700,1660]],t=[];
+   for(const [x,y] of spots){h.s.x=x;h.s.y=y;for(let i=0;i<20;i++)h.adapter.render(g,h.s,h.art,{map:false});const a=performance.now();for(let i=0;i<50;i++)h.adapter.render(g,h.s,h.art,{map:false});t.push((performance.now()-a)/50);}
+   return {perFrameMs:t.map(v=>+v.toFixed(2)),meanMs:+(t.reduce((a,b)=>a+b)/t.length).toFixed(2)};});
+  record(`Render cost (${label}) across six busy views`,'Measured',`mean ${cost.meanMs} ms/frame; per view ${cost.perFrameMs.join(', ')}`);results.at(-1).cost=cost;
   const st=await frameStats(p,4);record(`Frame time (${label}), utility yard/shelter, live enemies`,'Measured',`median ${st.median.toFixed(1)} ms, p95 ${st.p95.toFixed(1)} ms over ${st.frames} frames`);
   results.at(-1).profile=st;await p.close();
  }
