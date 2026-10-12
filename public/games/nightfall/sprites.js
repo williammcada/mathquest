@@ -45,10 +45,13 @@ export function strip(c,art,sheet,cell,r,{thickness,segment,alpha=1}={}){
  }
 }
 
-// Fill a rectangle with a seamless roof material at `size` px per tile.
-export function tiled(c,art,sheet,cell,r,size=64){
+// Fill a rectangle with a seamless roof material at `size` px per tile. The tile
+// grid is anchored to `origin` (the roof's own corner) so the texture stays fixed
+// to the building while `r` is only the visible part being drawn.
+export function tiled(c,art,sheet,cell,r,size=64,origin=r){
  const im=art?.[sheet];if(!im)return;const sx=im.width/1024;
  c.save();c.beginPath();c.rect(r.x,r.y,r.w,r.h);c.clip();
- for(let y=r.y;y<r.y+r.h;y+=size)for(let x=r.x;x<r.x+r.w;x+=size)c.drawImage(im,(cell%4)*256*sx,Math.floor(cell/4)*256*sx,256*sx,256*sx,x,y,size,size);
+ const x0=origin.x+Math.floor((r.x-origin.x)/size)*size,y0=origin.y+Math.floor((r.y-origin.y)/size)*size;
+ for(let y=y0;y<r.y+r.h;y+=size)for(let x=x0;x<r.x+r.w;x+=size)c.drawImage(im,(cell%4)*256*sx,Math.floor(cell/4)*256*sx,256*sx,256*sx,x,y,size,size);
  c.restore();
 }

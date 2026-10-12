@@ -45,7 +45,7 @@ function drawGround(c,s,art,buildings,ox,oy){
 function drawRoof(c,s,art,b,view,{block=false,others=[]}={}){
  const r=roofFor(s,b,{block}),vx=Math.max(b.x,view.x),vy=Math.max(b.y,view.y),vw=Math.min(b.x+b.w,view.x+view.w)-vx,vh=Math.min(b.y+b.h,view.y+view.h)-vy;
  if(vw<=0||vh<=0)return;
- tiled(c,art,'roofs',r.material,{x:vx,y:vy,w:vw,h:vh},64);
+ tiled(c,art,'roofs',r.material,{x:vx,y:vy,w:vw,h:vh},64,b);
  const T=12,covered=(x,y)=>others.some(o=>o!==b&&x>=o.x&&y>=o.y&&x<o.x+o.w&&y<o.y+o.h);
  for(let x=b.x;x<b.x+b.w;x+=48){const w=Math.min(48,b.x+b.w-x);
   if(!covered(x+w/2,b.y-4))sprite(c,art,'roofs',CELL.parapet,x,b.y,w,T,{rot:2,full:true});
