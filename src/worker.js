@@ -22,7 +22,7 @@ import {configureSupply,awardSupply} from './engine/supply.js';
 
 const ACTIVE_MS = 20_000;
 export const RETENTION_MS=48*60*60*1000;
-const VERSION = "0.10.0-rc.5";
+const VERSION = "0.10.0";
 // Supported room versions: v0.9.2 and v0.9.4 onward, including every 0.10.x build (rooms survive candidate updates).
 const supportedEngine=version=>["0.9.2","0.9.4","0.9.5","0.9.6","0.9.7","0.9.8",VERSION].includes(version)||/^0\.10\.\d+(?:-rc\.\d+)?$/.test(String(version));
 const DIFFICULTY_POLICIES = ["session", "foundation", "standard", "challenge"];

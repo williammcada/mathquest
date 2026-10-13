@@ -1,4 +1,8 @@
-# MathQuest 0.10.0-rc.5 — verification
+# MathQuest 0.10.0 — verification
+
+**Release 0.10.0 (2026-10-13):** version numbers, release notes (`docs/releases/v0.10.0.md`) and deploy-script text only, on top of verified candidate rc.5 (`292fad1`). Rerun on the release commit: release validation passed; 324/324 tests passed; browser answer checks passed (fraction, remainder, choice, typed text, Algebra 2, time). One browser run first reported a fraction answer as not advancing; it was a measurement artifact (two identical consecutive questions; the script compared question text). Re-measured by completed-question count: 10/10 answers advanced on the first attempt across 5 runs.
+
+## rc.5 record
 
 **rc.5 (2026-10-13):** merged MathQuest `main` at `704fbe7` (v0.9.8: action-difficulty changes for Coastal Escape, Ironbreak and Blackline; U-13 DEV playtest mode; GitHub test workflow) into the engine branch. Conflicts were version strings plus the Nightfall rescue check, which on `main` had the same exact-version-list limitation (it had added 0.9.8 to the list); the branch's version-independent check was kept. Rooms created by 0.9.8 remain supported. No 0.9.8 code uses the retired generators. Rerun on rc.5: release validation passed; **324/324 tests passed** (happy-dom built from source); browser answer checks passed for fraction, choice, typed text, K number, Algebra 2 and time; no page errors.
 
