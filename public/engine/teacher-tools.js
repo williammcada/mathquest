@@ -6,7 +6,7 @@ export const practiceTools=[
  {title:'Vault 7',href:'./dev-extraction.html'},
  {title:'Nightfall',href:'./practice-nightfall.html'},
  {title:'Nightfall II · False Haven',href:'./practice-false-haven.html',story:'./false-haven-preview.html'},
- {title:'Blackline v0.3.1',href:'./reviews/BLACKLINE-v0.3.1.html?dev=action',story:'./reviews/BLACKLINE-v0.3.1.html'},
+ {title:'Blackline v0.3.2',href:'./reviews/BLACKLINE-v0.3.2.html?dev=action',story:'./reviews/BLACKLINE-v0.3.2.html'},
  {title:'Ironbreak v0.2.1',href:'./reviews/Ironbreak-v0.2.1.html?dev=action',story:'./reviews/Ironbreak-v0.2.1.html'},
  {title:'Coastal Escape flight v0.3.1',href:'./aerial-shooter-practice.html?v=0.3.1',story:'./coastal-escape-preview.html'}
 ];

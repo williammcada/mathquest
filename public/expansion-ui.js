@@ -1,5 +1,5 @@
 import {COASTAL_PERSONAL} from './cartridges/coastal-escape.js';
-import {BLACKLINE_PERSONAL} from './cartridges/blackline.js?v=0.3.0';
+import {BLACKLINE_PERSONAL} from './cartridges/blackline.js?v=0.3.2';
 import {HAVEN_PERSONAL} from './cartridges/false-haven.js?v=0.2.0';
 import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.9.7';
 import {cartridgeFor} from './cartridges.js?v=0.9.7';

@@ -3,7 +3,7 @@ const EQUIPMENT=['impact-plating','boost-capacitor','repair-reserve'];
 const finite=(v,a,b)=>Number.isFinite(v)&&v>=a&&v<=b;
 export function validateBlackline(run,input){
  const s=input.snapshot,old=run.snapshot,r=s?.race,p=old?.race,elapsed=input.activeElapsedMs;
- if(!s||!r||s.revision!=='blackline-racer-0.3.0'||s.runId!==run.runId||s.route!==run.route||s.threat!==run.threat||JSON.stringify(s.loadout)!==JSON.stringify(run.loadout)||s.mode!==run.mode)return 'Invalid BLACKLINE configuration.';
+ if(!s||!r||s.revision!=='blackline-racer-0.3.2'||s.runId!==run.runId||s.route!==run.route||s.threat!==run.threat||JSON.stringify(s.loadout)!==JSON.stringify(run.loadout)||s.mode!==run.mode)return 'Invalid BLACKLINE configuration.';
  if(!finite(s.time,0,300)||Math.abs(s.time*1000-elapsed)>2||!finite(r.t,0,s.time+.002)||run.mode==='action'&&Math.abs(r.t-s.time)>.002)return 'Invalid race clock.';
  if(!finite(r.z,0,14500)||r.z<(p?.z||0)||!finite(r.x,-1.17,1.17)||!finite(r.v,0,Sim.C.boostMax+.001)||!finite(r.hp,0,100)||!finite(r.boost,0,1))return 'Invalid race position or resources.';
  const dt=s.time-(old?.time||0);
@@ -13,7 +13,7 @@ export function validateBlackline(run,input){
  if(!r.stats||Object.keys(Sim.newState().stats).some(k=>!Number.isInteger(r.stats[k])||r.stats[k]<(p?.stats?.[k]||0)||r.stats[k]>100000))return 'Invalid pursuit counters.';
  if(!Array.isArray(r.enemies)||r.enemies.length>3||r.enemies.some(e=>!e||!['interceptor','rammer'].includes(e.type)||!finite(e.z,-500,15000)||!finite(e.x,-1.2,1.2)||!finite(e.v,0,80)))return 'Invalid pursuit state.';
  if(!Array.isArray(r.projectiles)||r.projectiles.length>30||r.projectiles.some(x=>!x||!finite(x.z,-500,15000)||!finite(x.x,-2,2)||!finite(x.life,0,2)))return 'Invalid projectile state.';
- if(!Array.isArray(r.strikes)||r.strikes.length>2||r.strikes.some(k=>!k||!Number.isInteger(k.id)||k.id>r.strikeSerial||!finite(k.age,0,Sim.STRIKE.flight+.02)||!finite(k.aim,-1.2,1.2)||!['interceptor','artillery'].includes(k.source))||!Array.isArray(r.blasts)||r.blasts.length>10)return 'Invalid strike state.';
+ if(!Array.isArray(r.strikes)||r.strikes.length>2||r.strikes.some(k=>!k||!Number.isInteger(k.id)||k.id>r.strikeSerial||!finite(k.age,0,Sim.STRIKE.flight+.02)||!finite(k.aim,-1.2,1.2)||!finite(k.z,-500,15500)||!['interceptor','artillery'].includes(k.source))||!Array.isArray(r.blasts)||r.blasts.length>10)return 'Invalid strike state.';
  if(!Array.isArray(r.obstaclesHit)||new Set(r.obstaclesHit).size!==r.obstaclesHit.length||r.obstaclesHit.some(i=>!Sim.OBSTACLES[i]||r.z<Sim.OBSTACLES[i].z)||p?.obstaclesHit?.some(i=>!r.obstaclesHit.includes(i)))return 'Invalid obstacle history.';
  if(!Array.isArray(r.picked)||new Set(r.picked).size!==r.picked.length||r.picked.some(i=>!Sim.REPAIRS[i]||r.z<Sim.REPAIRS[i].z)||p?.picked?.some(i=>!r.picked.includes(i)))return 'Invalid repair history.';
  if(!s.used||Object.entries(s.used).some(([id,v])=>!EQUIPMENT.includes(id)||!run.loadout.includes(id)||v!==true)||Object.keys(old?.used||{}).some(k=>!s.used[k]))return 'Equipment cannot recharge.';

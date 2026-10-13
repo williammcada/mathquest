@@ -1,14 +1,18 @@
 /* BLACKLINE: deterministic road and pursuit simulation. Metres, seconds, road-width units. */
 (function(root){'use strict';
-const VERSION='0.3.0';
+const VERSION='0.3.2';
 const C={max:220/3.6,boostMax:260/3.6,accel:8,brake:20,boostAccel:14,gravity:20,jumpVy:10,roadHalf:7.2,length:14500,limit:300};
-const JUMPS=[{id:0,start:5050,end:5090,corridor:.68},{id:1,start:6250,end:6294,corridor:.68},{id:2,start:14200,end:14247,corridor:.68}].map(j=>({...j,safeKmh:Math.ceil((j.end-j.start+4)*3.6/5)*5,flight:1}));
+// v0.3.2: every gap is 64 m and needs boost (≈230 km/h at take-off; top speed without boost is 220).
+const GAP=64;
+const JUMPS=[{id:0,start:5050,end:5050+GAP,corridor:.68},{id:1,start:6250,end:6250+GAP,corridor:.68},{id:2,start:14200,end:14200+GAP,corridor:.68}].map(j=>({...j,safeKmh:Math.ceil((j.end-j.start+4)*3.6/5)*5,flight:1}));
 const REPAIRS=[{z:8320,x:.62},{z:12480,x:-.62}];
 // v0.3.0: authored road obstacles, clear of ramps and repair kits.
 const OBSTACLES=[[900,-.5,'barricade'],[1650,.45,'crates'],[2450,0,'barricade'],[3300,-.55,'crates'],[3900,.5,'barricade'],[4400,.2,'crates'],[5600,-.35,'barricade'],[7100,.55,'crates'],[7900,-.45,'barricade'],[8900,0,'crates'],[9800,.45,'barricade'],[10900,-.5,'crates'],[11600,.3,'barricade'],[13200,-.25,'crates']].map(([z,x,kind],id)=>({id,z,x,kind}));
 // v0.3.0: aerial strikes. A shell appears at the horizon and approaches in five
 // animation steps; its hit zone shows from 1.2 s, locks at 1.8 s, lands at 3.0 s.
-const STRIKE={flight:3,frames:5,zoneAt:1.2,lockAt:1.8,width:.2,damage:14};
+// v0.3.2: the zone locks onto a fixed spot of road ahead (where you would be at your current speed);
+// steer out of it, boost past it or brake short of it.
+const STRIKE={flight:3,frames:5,zoneAt:1.2,lockAt:1.8,width:.2,depth:6,damage:14};
 const SECTIONS=[{start:0,name:'LOCKDOWN AVENUE',short:'LOCKDOWN',sky:['#080d1d','#382743','#a65653'],ground:['#1b3031','#1c3333']},{start:1900,name:'FOUNDRY SWITCHBACKS',short:'FOUNDRY',sky:['#180f1c','#552a38','#c97440'],ground:['#382d30','#34272c']},{start:4500,name:'BROKEN SKYWAY',short:'SKYWAY',sky:['#0b142b','#313b5b','#8881a1'],ground:['#152937','#172d3b']},{start:6800,name:'FREIGHT UNDERPASS',short:'UNDERPASS',sky:['#050b16','#111d28','#304748'],ground:['#182c2b','#1b3030']},{start:9300,name:'SIREN SPIRAL',short:'SPIRAL',sky:['#1b1029','#49233f','#a35769'],ground:['#2c293d','#29273a']},{start:11900,name:'LAST EXIT',short:'LAST EXIT',sky:['#0d1e2a','#405d65','#dbaa77'],ground:['#243b3d','#294144']}];
 const bends=[[350,680,1.2],[800,1130,-1.8],[1280,1590,2.15],[1750,2090,-2.05],[2250,2580,1.5],[2730,3030,-2.1],[3170,3490,2.15],[3630,3940,-1.8],[4080,4380,2.1],[4580,4750,-1.3],[5500,5780,1.6],[6470,6680,-1.3],[6940,7230,1.8],[7390,7660,-2.05],[7800,8120,1.8],[8470,8730,-2],[8850,9150,1.9],[9440,9740,2.2],[9900,10200,-2.2],[10350,10660,2.3],[10800,11100,-2.15],[11220,11500,1.9],[11640,11850,-1.8],[11960,12220,1.7],[12670,13000,-2],[13140,13400,2],[13520,13720,-1.6]].map(([a,b,k])=>({a,b,k}));
 const ENCOUNTERS=[{z:300,type:'interceptor'},{z:2200,type:'interceptor'},{z:4200,type:'interceptor'},{z:6950,type:'rammer'},{z:8250,type:'interceptor'},{z:9500,type:'rammer'},{z:11000,type:'interceptor'},{z:12080,type:'rammer'},{z:13250,type:'interceptor'}];
@@ -28,6 +32,8 @@ function resume(s){if(s.mode==='paused'){s.mode='countdown';s.countdown=1;}}
 function finish(s,reason){if(s.mode==='result')return;s.mode='result';s.reason=reason;s.resultCount++;s.steer=0;s.boosting=false;s.braking=false;s.events.push(reason==='escaped'?'win':'fail');}
 function damage(s,amount,cause){if(!s.damagePending||amount>s.damagePending.amount)s.damagePending={amount,cause};}
 function resolveDamage(s){const p=s.damagePending;s.damagePending=null;if(!p||s.cooldown>0)return;s.hp=Math.max(0,s.hp-p.amount);s.cooldown=1;s.collisions++;s.impact=1;s.lastHit=p.cause;s.events.push('hit');if(p.cause==='barrier')s.v*=.75;if(p.cause==='obstacle')s.v*=.7;if(p.cause==='ram')s.v*=.85;if(p.cause==='burst'||p.cause==='ram'||p.cause==='strike')s.stats.hits++;if(s.hp<=0){s.deathCause=p.cause;finish(s,'destroyed');}}
+// Guards the partial step up to a ramp lip from re-triggering the same ramp (seen once boost is held on the ramp).
+let preJump=false;
 function drive(s,dt,input){
  if(s.mode!=='running'||dt<=0)return;
  const steer=clamp(Number(input.steer)||0,-1,1),brake=!!input.brake,boost=!!input.boost&&!brake&&!s.jump&&s.boost>0;
@@ -38,11 +44,12 @@ function drive(s,dt,input){
  const oldV=s.v;if(brake)s.v=Math.max(0,s.v-C.brake*dt);else s.v=Math.min(boost?C.boostMax:C.max,s.v+(boost?C.boostAccel:C.accel)*dt);if(!boost&&!brake&&oldV>C.max)s.v=Math.max(C.max,oldV-10*dt);
  let travel=(oldV+s.v)*.5*dt;
  const j=JUMPS[s.jumpIndex];
- if(j&&s.z<j.start&&s.z+travel>=j.start){const f=(j.start-s.z)/travel;s.v=oldV;drive(s,Math.max(0,dt*f-1e-9),input);if(s.mode!=='running')return;s.z=j.start;s.jumpIndex++;s.landed=false;if(Math.abs(s.x)>j.corridor){finish(s,'missed-ramp');return;}s.jump={id:j.id,age:0};s.lv=clamp(s.lv,-.25,.25);s.boosting=false;s.braking=false;s.events.push('jump');if(dt*(1-f)>0)drive(s,dt*(1-f),input);return;}
+ if(j&&!preJump&&s.z<j.start&&s.z+travel>=j.start){const f=(j.start-s.z)/travel;s.v=oldV;preJump=true;try{drive(s,Math.max(0,dt*f-1e-9),input);}finally{preJump=false;}if(s.mode!=='running')return;s.z=j.start;s.jumpIndex++;s.landed=false;if(Math.abs(s.x)>j.corridor){finish(s,'missed-ramp');return;}s.jump={id:j.id,age:0};s.lv=clamp(s.lv,-.25,.25);s.boosting=false;s.braking=false;s.events.push('jump');if(dt*(1-f)>0)drive(s,dt*(1-f),input);return;}
  if(s.z+travel>=C.length){const f=(C.length-s.z)/travel;dt*=f;travel=C.length-s.z;}
  const oldZ=s.z,n=s.v/C.max,steerRate=1.65*(.3+.7*n),outward=curve(s.z)*n*n*.98,target=steer*steerRate-outward;
  s.lv+=(target-s.lv)*Math.min(1,dt*(brake?9:7));s.x+=s.lv*dt;s.z+=travel;s.t+=dt;if(boost)s.boost=Math.max(0,s.boost-dt/2);else s.boost=Math.min(1,s.boost+dt/10);
  if(Math.abs(s.x)>1){damage(s,12,'barrier');s.x=clamp(s.x,-1.16,1.16);}
+ for(const j of JUMPS)if(oldZ<j.start-450&&s.z>=j.start-450){s.notice=`GAP AHEAD · BOOST TO ${j.safeKmh} KM/H`;s.noticeUntil=s.t+4;}
  for(const o of OBSTACLES)if(oldZ<o.z-140&&s.z>=o.z-140){s.notice=`${o.kind==='crates'?'CRATES':'BARRICADE'} AHEAD · ${o.x<-.15?'LEFT':o.x>.15?'RIGHT':'CENTRE'}`;s.noticeUntil=s.t+2;}
  for(const o of OBSTACLES)if(!s.obstaclesHit.includes(o.id)&&oldZ<o.z&&s.z>=o.z&&Math.abs(s.x-o.x)<.27){s.obstaclesHit.push(o.id);s.stats.obstacles++;damage(s,12,'obstacle');}
  REPAIRS.forEach((r,i)=>{if(!s.picked.includes(i)&&oldZ<=r.z&&s.z>=r.z&&Math.abs(s.x-r.x)<.24){s.hp=Math.min(100,s.hp+20);s.picked.push(i);s.events.push('repair');s.notice='REPAIR +20';s.noticeUntil=s.t+2.5;}});
@@ -70,10 +77,10 @@ function moveEnemy(s,e,dt){
  if(e.z<s.z-340)retire(s,e);
 }
 function strikeClear(s){const j=nextJump(s.z);return !protectedRoad(s)&&Math.abs(curve(s.z))<1.9&&!s.strikes.length&&(!j||j.start-s.z>s.v*(STRIKE.flight+.4)+180);}
-function launchStrike(s,source,owner){s.strikes.push({id:++s.strikeSerial,source,owner,age:0,aim:s.x,locked:false});s.stats.shots++;s.stats.strikes++;s.events.push('lock');}
+function launchStrike(s,source,owner){s.strikes.push({id:++s.strikeSerial,source,owner,age:0,aim:s.x,z:s.z+s.v*STRIKE.flight,locked:false});s.stats.shots++;s.stats.strikes++;s.events.push('lock');}
 function updateStrikes(s,dt){
- for(const k of s.strikes){k.age+=dt;if(!k.locked){k.aim=s.x;if(k.age>=STRIKE.lockAt){k.locked=true;s.events.push('shot');}}
-  if(k.age>=STRIKE.flight){k.landed=true;s.blasts.push({x:k.aim,t:s.t});if(!protectedRoad(s)&&s.mode==='running'&&Math.abs(s.x-k.aim)<STRIKE.width)damage(s,STRIKE.damage,'strike');else s.stats.evaded++;s.events.push('ram');}}
+ for(const k of s.strikes){k.age+=dt;if(!k.locked){k.aim=s.x;k.z=s.z+s.v*(STRIKE.flight-k.age);if(k.age>=STRIKE.lockAt){k.locked=true;s.events.push('shot');s.notice='SHELL LOCKED · STEER, BOOST PAST OR BRAKE';s.noticeUntil=s.t+1.3;}}
+  if(k.age>=STRIKE.flight){k.landed=true;s.blasts.push({x:k.aim,z:k.z,t:s.t});if(!protectedRoad(s)&&s.mode==='running'&&Math.abs(s.x-k.aim)<STRIKE.width&&Math.abs(s.z-k.z)<STRIKE.depth)damage(s,STRIKE.damage,'strike');else s.stats.evaded++;s.events.push('ram');}}
  s.strikes=s.strikes.filter(k=>!k.landed);
  s.blasts=s.blasts.filter(b=>s.t-b.t<.6);
 }

@@ -48,3 +48,12 @@ Unit/regression tests; deterministic headless runs (bounded populations, boss co
 ## Addendum — U-13 DEV playtest mode (13 Oct 2026)
 
 Owner approved handbook U-13 (handbook commit `0304be1`). Applied here: shared `public/engine/dev-playtest.js` panel (banner "DEV PLAYTEST · [Game] v[version] · no questions, no records", every power-up selectable, starting point selectable, Start; return to setup). Blackline v0.3.1 (sections), Ironbreak v0.2.1 (START/MID/MID2/BOSS), Coastal Escape flight v0.3.1 (take-off/midpoint/boss). Display versions advance per U-01 because the playtest files changed; data contracts (`blackline-racer-0.3.0`, `ironbreak-0.2.0`, aerial `0.3.0` config) are unchanged. Vault Seven, Nightfall and False Haven are not yet migrated.
+
+## Addendum — Blackline v0.3.2 boost gaps and dodgeable shells (13 Oct 2026)
+
+Owner instruction: "boost should be required to jump the gaps & allow you dodge the mortars."
+- All three gaps are 64 m; take-off needs about 230 km/h (green ramp at 245). Top speed without boost is 220, boost reaches 260. A "GAP AHEAD · BOOST TO … KM/H" notice appears 450 m before each ramp.
+- Shell zones now mark a fixed patch of road (±6 m, ±0.2 lane) where you would be at your current speed. The zone follows you until it locks at 1.8 s; after that, steering out, boosting past or braking short all avoid it. A targeting beam and "SHELL LOCKED" notice keep it readable.
+- **Owner-approved exception:** the BLACKLINE brief's must-retain line "no … required boost for a mandatory jump" is superseded by this instruction. "No invisible damage" still holds: the ramp colour and notice show the required speed.
+- Fixed a latent bug: holding boost onto a ramp lip could count the ramp twice (jumpIndex skip), which the validator rejected.
+- Data contract `blackline-racer-0.3.2`; DEV/story file `reviews/BLACKLINE-v0.3.2.html`.

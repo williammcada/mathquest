@@ -33,3 +33,13 @@ Owner playtest: staying in floor water for more than about a second paused the r
 | Banner, all power-ups selectable, starting point selectable, no question shown | Passed | Chromium from the offline files: Blackline started at 6.8 km with all three upgrades (jumps 2/3); Ironbreak at BOSS with spread/armor/agility (health 4/4); Coastal at boss checkpoint with all upgrades (hull 150/150, 1:15 left). `u13-dev-playtest.png`. |
 | Start from every checkpoint/section | Passed | Unit tests for all Coastal checkpoints (restorable) and all six Blackline sections; Ironbreak checkpoints use the existing tested `createGame` path. |
 | Suite | 261 / 271 | Same ten `happy-dom` files Not run. |
+
+## Blackline v0.3.2 (13 Oct 2026)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Gap at full speed without boost fails; with boost clears | Passed | Unit test (`jump-too-slow` without boost; landing with boost). |
+| Locked shell: no input is hit; boost past and brake short both avoid it | Passed | Unit test on straight road. |
+| Binary driver (boosts on ramps, steers from zones/obstacles) completes with server validation | Passed | 263 s, all three jumps, 0 obstacle hits. |
+| Zone readability | Passed (visual) | Beam and road zone visible before impact (local screenshot review). |
+| Suite | 265 / 275 | Same ten `happy-dom` files Not run. |

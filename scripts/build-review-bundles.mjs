@@ -37,5 +37,5 @@ async function bundle({page,out,version,assets}){
   console.log(`${out}: ${Buffer.byteLength(html)} bytes, sha256 ${hash.slice(0,16)}…, embedded ${[...embedded].join(', ')||'none'}`);
 }
 
-await bundle({page:'blackline-preview.html',out:'reviews/BLACKLINE-v0.3.1.html',version:'BLACKLINE v0.3.1',assets:'assets/blackline/'});
+await bundle({page:'blackline-preview.html',out:'reviews/BLACKLINE-v0.3.2.html',version:'BLACKLINE v0.3.2',assets:'assets/blackline/'});
 await bundle({page:'ironbreak-review.html',out:'reviews/Ironbreak-v0.2.1.html',version:'Ironbreak v0.2.1',assets:'assets/ironbreak/'});
