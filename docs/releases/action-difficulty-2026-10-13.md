@@ -42,4 +42,4 @@ Owner playtest: staying in floor water for more than about a second paused the r
 | Locked shell: no input is hit; boost past and brake short both avoid it | Passed | Unit test on straight road. |
 | Binary driver (boosts on ramps, steers from zones/obstacles) completes with server validation | Passed | 263 s, all three jumps, 0 obstacle hits. |
 | Zone readability | Passed (visual) | Beam and road zone visible before impact (local screenshot review). |
-| Suite | 265 / 275 | Same ten `happy-dom` files Not run. |
+| Suite | 263 / 273 | Same ten `happy-dom` files Not run. |
