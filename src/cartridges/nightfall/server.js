@@ -1,5 +1,6 @@
 import {validateBlackline} from '../blackline/validation.js';
 import {validateHaven} from '../false-haven/validation.js';
+import {validateBlackout} from '../blackout/validation.js';
 
 import {ironbreakCommand,ironbreakProjection,settleIronbreak} from '../ironbreak/server.js';
 import {openRescue,rescueCommand,rescueProjection} from './rescue-server.js';
@@ -11,7 +12,7 @@ import {dispatchHorde} from '../../../public/games/nightfall/simulation.js';
 import {startSupply} from '../../engine/supply.js';
 export const expansionFor = room => {
   const c=cartridgeFor(room.state.config.cartridgeId);
-  return ['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline'].includes(c?.id) && c.contract ? c : null;
+  return ['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','blackout-protocol'].includes(c?.id) && c.contract ? c : null;
 };
 const fail=error=>({error});
 const key=items=>[...items].sort().join('|');
@@ -100,6 +101,7 @@ export function expansionCommand(room, student, input) {
       if(!input.snapshot||typeof input.snapshot!=='object')return fail('A run snapshot is required.');
       if(JSON.stringify(input.snapshot).length>60000)return fail('Run snapshot is too large.');
       if(c.id==='blackline'){const error=validateBlackline(r,input);if(error)return fail(error);}
+      else if(c.id==='blackout-protocol'){const error=validateBlackout(r,input);if(error)return fail(error);}
       else if(c.id==='nightfall-false-haven'){const error=validateHaven(r,input);if(error)return fail(error);}
       else if(input.snapshot){
         const s=input.snapshot,old=r.snapshot;
@@ -130,12 +132,12 @@ export function expansionCommand(room, student, input) {
         for(const [field,max] of [['health',3],['ammo',r.loadout.includes('ammo-pouch')?84:60],['vest',vest],['medkit',medkit]])if(!Number.isInteger(s[field]*(field==='health'?2:1))||s[field]<0||s[field]>max)return fail('Invalid equipment or health state.');
         if(s.damage!==(r.loadout.includes('carbine')?2:1)||old&&(s.vest>old.vest||s.medkit>old.medkit))return fail('Equipment cannot recharge during a run.');
       }
-      if(!['nightfall-false-haven','blackline'].includes(c.id)&&type==='minigame.complete'&&!['success','lost','setback','timed_out'].includes(input.outcome))return fail('Invalid finale outcome.');
+      if(!['nightfall-false-haven','blackline','blackout-protocol'].includes(c.id)&&type==='minigame.complete'&&!['success','lost','setback','timed_out'].includes(input.outcome))return fail('Invalid finale outcome.');
       r.seq=input.seq;r.activeElapsedMs=elapsed;
       if(input.snapshot)r.snapshot=input.snapshot;
       if(type==='minigame.complete'){
         r.status='terminal';r.outcome=input.outcome;r.completedAt=new Date().toISOString();
-        r.validation='client-reported; server-validated envelope';
+        r.validation=c.id==='blackout-protocol'?'client-reported; server-checked boards':'client-reported; server-validated envelope';
         room.addEvent('minigame-complete',`${student.alias}: ${r.outcome}`,t.id,student.id);settleRuns(room);
       }
     }else return fail('Unknown finale command.');

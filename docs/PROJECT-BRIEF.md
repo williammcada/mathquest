@@ -310,3 +310,19 @@ The Worker must be deployed together with the frontend because it validates shar
 ## Action difficulty revision — 13 October 2026
 
 Owner found Coastal Escape, Ironbreak and Blackline too easy and short. Change specification `change-specs/action-difficulty-2026-10-13.md`; verification `releases/action-difficulty-2026-10-13.md`. Coastal flight v0.3.0 (128 enemies, faster shells, 3× battleships, persistent supplies, sprite boss finale), Ironbreak v0.2.0 (second loop with MID2, 86 robots, faster boss, mortar), Blackline v0.3.0 (road obstacles, frequent aerial strikes). DEV review files are now built from source by `scripts/build-review-bundles.mjs`. Branch `implement/action-difficulty-2026-10-13`; not deployed. Frontend and Worker must ship together; platform version bump to happen at release. Ironbreak keeps its 300-second window (owner to confirm after playtest).
+
+## Blackout Protocol cartridge v0.2.0 — 13 October 2026
+
+Owner-approved Stage B of williammcada/blackout-protocol (spec: `change-specs/blackout-protocol-v0.2.0.md`; canonical copy in that repository). Baseline `main` `a4405f8` (MathQuest 0.10.0, Math Engine). Platform advances to **0.10.1**; the cartridge revision `blackout-protocol-0.2.0` is shown separately.
+
+- **What it is.** A circuit-puzzle cartridge on the generic expansion path, following the BLACKLINE pattern:
+  - Math Engine gates (3, 4 or 5) and an early route vote (Harbor Pumps or Northside Hospital first);
+  - slot-based equipment: Spare Fuse, Grid Scanner, Surge Stabilizer;
+  - one five-minute puzzle run per student;
+  - a final LANTERN vote and an epilogue.
+- **Puzzle core.** Vendored from williammcada/blackout-protocol by `scripts/sync-blackout.mjs`. Commit and SHA-256 are recorded in `public/games/blackout/core.provenance.json`.
+- **Server checks.** `src/cartridges/blackout/validation.js` rebuilds each restored district from the run seed and checks it is really connected. Timing and tap order remain client-reported.
+- **Shared-host change.** GameHost has an optional adapter `tap` hook (decision D2); adapters without it are unaffected.
+- **Art exception (handbook U-15).** Story art is polygon SVG drawn in code by Claude (`scripts/build-blackout-art.mjs`). This is the owner's decision for this cartridge, an exception to the 8 Oct painted direction, which was written for Ironbreak and BLACKLINE.
+- **Music.** Original synthesized score; room music is rendered to WAV by `scripts/build-blackout-audio.mjs`.
+- **Hosting limit (U-12).** Not for classroom use until the Netlify frontend migration is approved and verified. No deployment in this change.

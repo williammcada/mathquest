@@ -3,14 +3,15 @@ import {CARTRIDGES,sceneFor,gateNames} from '../public/cartridges.js';
 import {vault7Scene} from '../src/vault7.js';import {journeyScene} from '../src/cartridges/journey/server.js';
 import {splitScene} from '../public/review-presentation.js';
 const sentences=ps=>ps.flatMap(p=>p.split(/(?<=[.!?])\s+/)).sort();
-test('separating all seven cartridge scenes preserves every sentence exactly once',()=>{
+test('separating every cartridge scene preserves every sentence exactly once',()=>{
  for(const c of CARTRIDGES)for(const count of [3,4,5]){
   const names=c.id==='vault-7'?['Perimeter Power','Biometric Checkpoint','Containment Laboratory','Archive Mainframe','Isolation Core'].slice(0,count):gateNames(c,count);
   for(const stage of ['briefing','gate','decision','market','minigame','finale','victory'])for(const gateIndex of stage==='gate'?Array.from({length:count},(_,i)=>i):[0]){
    const team={stage,gateIndex,route:c.routes?.[0]?.id,finalAction:c.choices?.[0]?.id,runs:{},cipher:{}},crew=[{alias:'Learner'}];
    const scene=c.id==='vault-7'?vault7Scene(team,crew,names):c.id==='journey-west'?journeyScene(team,crew,names):sceneFor(c,team,names,crew);
    if(!scene)continue;const parts=splitScene(scene,stage,c.id);
-   assert.deepEqual(sentences([...parts.narrative,...parts.instructions]),sentences(scene.paragraphs),`${c.id} ${stage} ${gateIndex}`);
+   assert.deepEqual(sentences([...parts.narrative,...parts.instructions]),sentences([...scene.paragraphs,...(scene.instructions||[])]),`${c.id} ${stage} ${gateIndex}`);
+   if(Array.isArray(scene.instructions))assert.deepEqual(parts.instructions,scene.instructions,`${c.id} ${stage}: explicit instructions stay out of the story`);
   }
  }
 });
