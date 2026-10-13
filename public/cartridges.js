@@ -2,7 +2,7 @@ import {BLACKLINE,blacklineScene} from './cartridges/blackline.js?v=0.3.2';
 import {FALSE_HAVEN,havenScene} from './cartridges/false-haven.js?v=0.2.0';
 import {IRONBREAK,ironbreakScene} from './cartridges/ironbreak.js';
 import {COASTAL_ESCAPE,coastalScene} from './cartridges/coastal-escape.js';
-import {BLACKOUT,blackoutScene} from './cartridges/blackout.js?v=0.2.0';
+import {BLACKOUT,blackoutScene} from './cartridges/blackout.js?v=0.2.1';
 // Trusted content registry. Academic selection belongs to question-provider.js.
 export const NIGHTFALL = {
   id: 'nightfall', title: 'Nightfall: Last Bus Out', revision: 'nightfall-city-5',

@@ -246,3 +246,9 @@ Copied from williammcada/blackout-protocol (canonical spec). Deviations and deta
 - **Extra shared-host change.** GameHost now hides the Map button for adapters that set `hideMap` (Blackout), as it already did for BLACKLINE.
 - **Review bundles.** `scripts/build-review-bundles.mjs` accepts an optional name filter, so only the new Blackout bundle was built. Other cartridges' versioned review files are byte-identical.
 - **Narrative-separation test.** The test now compares against `paragraphs` plus explicit `instructions`, the documented convention for new cartridges, and asserts that explicit instructions never enter the story.
+- **Defect found in verification; delivered as v0.2.1.** Browser checks showed that the same seed built different boards in Node and in Chromium. The core picked tiles by sorting with a random comparator, whose result depends on each engine's sort internals. Safari on iPads would also differ, so the Worker's board re-check would have rejected real solutions.
+  - Fixed in the canonical core as **0.1.5**: a seeded Fisher–Yates shuffle, a no-sort guard test, a pinned fingerprint, and a browser check that Chromium matches Node.
+  - Re-vendored here. The cartridge files changed after the v0.2.0 checkpoint, so the candidate is **v0.2.1** (U-01).
+- **Two shared-host fixes found by the browser check.** Both are opt-in or confined to the new hook.
+  - **Tap mapping.** Taps are now mapped through the letterboxed canvas (`object-fit: contain`). Before this, taps landed on the wrong tile whenever the canvas box was not 16:9.
+  - **Quick presses.** Adapters can set `latchPresses` so a button press shorter than one frame still counts once. Blackout uses it for Energize and Grid Scanner. Other games' input is unchanged.

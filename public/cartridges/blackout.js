@@ -1,9 +1,9 @@
 // Blackout Protocol cartridge · A WILLIAM MCADA PRODUCT
-// Spec: williammcada/blackout-protocol docs/change-specs/v0.2-stage-b-cartridge.md (approved 2026-10-13).
+// Spec: williammcada/blackout-protocol docs/change-specs/v0.2-stage-b-cartridge.md (approved 2026-10-13). Delivered as v0.2.1 (U-01: contents changed after the v0.2.0 checkpoint).
 // Scenes supply separate story `paragraphs` and `instructions` (handbook U-11).
 // Story art: polygon scenes drawn in code by Claude (handbook U-15; owner decision 2026-10-13).
 export const BLACKOUT={
- id:'blackout-protocol',title:'Blackout Protocol',revision:'blackout-protocol-0.2.0',mapRevision:'blackout-core-0.1.4',assetRevision:'blackout-polygon-1',contract:'mq.cartridge/1.0',gameId:'blackout',activeLimitMs:300000,teamWindowMs:300000,budget:0,
+ id:'blackout-protocol',title:'Blackout Protocol',revision:'blackout-protocol-0.2.1',mapRevision:'blackout-core-0.1.5',assetRevision:'blackout-polygon-1',contract:'mq.cartridge/1.0',gameId:'blackout',activeLimitMs:300000,teamWindowMs:300000,budget:0,
  resolution:{type:'final_decision',minigamePlacement:'pre_final_decision'},
  presentation:{emblem:'BP',theme:'blackout',cover:'./assets/blackout/cover.svg',coverAlt:'The darkened Port Calder skyline seen from the lit roof of Substation 9',summary:'Port Calder has gone dark. Reroute the grid, district by district.',stageLabels:{market:'Before the Breakers Close',minigame:'District Panels',finale:'What Do We Do With LANTERN?'},practice:{title:'Blackout Protocol story and puzzle',href:'./blackout-preview.html'}},
  gates:['Cold Start',"Reading LANTERN's Logs",'The Manual Switchyard'],inserts:["Theo's Radio Net",'The Frozen Relay'],

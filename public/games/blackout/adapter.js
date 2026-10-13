@@ -237,10 +237,23 @@ export function assistedBlackout(s, root, progress) {
   root.querySelector('[data-guided-energize]').addEventListener('click', () => { sync(); g.energize(); settle(); });
 }
 
+// In short landscape views MathQuest overlays the control bar on the game. A puzzle must not hide any
+// part of its board, so on this game's screen the bar is transparent: only the two buttons remain, and
+// they sit over the right-hand info panel. Scoped to Blackout; other games are unchanged.
+const BOARD_LABEL = 'Circuit board for one city district, with the city grid, fuses and timer beside it';
+function ensureStyle() {
+  if (typeof document === 'undefined' || document.getElementById('blackout-host-style')) return;
+  const st = document.createElement('style'); st.id = 'blackout-host-style';
+  const scope = `.nf-game:has(canvas[aria-label="${BOARD_LABEL}"])`;
+  st.textContent = `${scope} .mq-thumb-controls{background:transparent;justify-content:flex-end}${scope} .mq-thumb-left:empty{display:none}`;
+  document.head.append(st);
+}
+
 export const blackoutAdapter = {
-  id: 'blackout', title: 'Blackout Protocol · Cartridge v0.2.0', revision: REVISION, activeLimitSeconds: 300,
+  id: 'blackout', title: 'Blackout Protocol · Cartridge v0.2.1', revision: REVISION, activeLimitSeconds: 300,
   kitText: 'Standard panel · 3 fuses', hideMap: true,
-  canvasLabel: 'Circuit board for one city district, with the city grid, fuses and timer beside it',
+  latchPresses: true, // a press shorter than one frame still counts once (Energize, Grid Scanner)
+  canvasLabel: BOARD_LABEL,
   controlProfile: {
     left: [],
     right: [['energize', '⚡ Energize'], ['scan', 'Grid Scanner']],
@@ -250,7 +263,7 @@ export const blackoutAdapter = {
   instructions: 'Restore five districts in five minutes. Tap tiles to turn them and connect the generator to every building, then press Energize. Padlocked tiles are already correct. Storm tiles turn by themselves. At the Central Substation, hold the grid through two surges. One classroom run; no restart. The guided route is available separately.',
   resultLabels: { success: 'All five districts restored', partial: 'Part of the city restored', lost: 'Your panel lost every fuse', timed_out: 'Your shift ended', assisted_completed: 'City restored with the guided route', teacher_advanced: 'Mission control closed your panel' },
   resultText: 'Your puzzle result is separate from mathematics. Everyone still votes on what happens to LANTERN.',
-  create: createBlackout, step: stepBlackout, tap: tapBlackout, render: renderBlackout, loadArt: async () => ({}),
+  create: createBlackout, step: stepBlackout, tap: tapBlackout, render: renderBlackout, loadArt: async () => { ensureStyle(); return {}; },
   createAudio: createBlackoutAudio,
   music: (s) => (s.game.surgeActive || C.RULES.runMs - s.game.elapsedMs <= 60000 ? 'intense' : 'play'),
   hud: (s) => `FUSES ${s.game.fuses}/${s.game.fusesMax} · DISTRICTS ${s.game.restored.length}/5 · ${Math.max(0, Math.ceil(300 - s.time))}s`,

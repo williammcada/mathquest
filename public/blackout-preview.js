@@ -1,13 +1,13 @@
 // Blackout Protocol owner story preview, practice entry and U-13 DEV playtest (?dev=action).
 // Runs the same adapter and puzzle core as the classroom cartridge, in practice mode: no server, no records.
 import {reviewParagraphs} from './review-presentation.js?v=u11';
-import {BLACKOUT as c,blackoutScene,BLACKOUT_PERSONAL} from './cartridges/blackout.js?v=0.2.0';
+import {BLACKOUT as c,blackoutScene,BLACKOUT_PERSONAL} from './cartridges/blackout.js?v=0.2.1';
 import {GameHost} from './engine/game-host.js?v=0.10.1';
-import {blackoutAdapter} from './games/blackout/adapter.js?v=0.2.0';
+import {blackoutAdapter} from './games/blackout/adapter.js?v=0.2.1';
 import C from './games/blackout/core.js';
 import {showDevPanel,devBanner,DEV_STYLE} from './engine/dev-playtest.js';
 const gateNames=(c,n)=>[...c.gates.slice(0,2),...c.inserts.slice(0,n-3),c.gates[2]];
-const DEV=new URLSearchParams(location.search).get('dev')==='action',VERSION='0.2.0';
+const DEV=new URLSearchParams(location.search).get('dev')==='action',VERSION='0.2.1';
 const root=document.querySelector('#story'),crew=[{alias:'Alex'},{alias:'Rowan'}];let gates=3,names=gateNames(c,gates),team={stage:'briefing',gateIndex:0,inventory:[],runs:{}},host;
 const audio=new Audio(c.assets.ambient);audio.loop=true;audio.volume=.25;let musicOn=false;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
