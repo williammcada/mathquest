@@ -10,6 +10,7 @@ export function splitScene(scene, stage, cartridge) {
     blackline:{briefing:[last],decision:[last],market:[last],gate:[last],minigame:[0],finale:[last]},
     'coastal-escape':{briefing:[last],market:[1,2],gate:[last],minigame:[0],finale:[2]},
     'nightfall-false-haven':{briefing:[last],decision:[last],market:[last],gate:[last],minigame:[0],finale:[last]},
+    kingsgate:{briefing:[last],decision:[last],market:[last],gate:[last],minigame:[last],finale:[last]},
     'journey-west':{gate:[0,1]}
   };
   // Sentence positions for paragraphs that mix fiction and operating directions.

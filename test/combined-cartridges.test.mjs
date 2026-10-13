@@ -24,7 +24,7 @@ test('one backend catalog exposes all seven cartridge revisions and matching fro
  const out=await worker.fetch(new Request('https://test/api/catalog'),{});
  assert.equal(out.status,200);const catalog=await out.json();
  assert.equal(catalog.version,BRAND.engineVersion);
- assert.deepEqual(catalog.cartridges.map(c=>c.id).sort(),['blackline','coastal-escape','ironbreak','journey-west','nightfall','nightfall-false-haven','vault-7']);
+ assert.deepEqual(catalog.cartridges.map(c=>c.id).sort(),['blackline','coastal-escape','ironbreak','journey-west','kingsgate','nightfall','nightfall-false-haven','vault-7']);
  for(const c of CARTRIDGES)assert.equal(catalog.cartridges.find(x=>x.id===c.id).revision,c.revision);
 });
 

@@ -1,0 +1,311 @@
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 800 360" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Kingsgate's walls and keep at dusk, with mountains behind"><defs><filter id="sil"><feColorMatrix type="matrix" values="0 0 0 0 0.05  0 0 0 0 0.06  0 0 0 0 0.09  0 0 0 1 0"/></filter>
+  <radialGradient id="glowV"><stop offset="0" stop-color="#c9a8ff" stop-opacity=".9"/><stop offset="1" stop-color="#8f5bd6" stop-opacity="0"/></radialGradient>
+  <radialGradient id="glowG"><stop offset="0" stop-color="#b6ff8f" stop-opacity=".9"/><stop offset="1" stop-color="#4fd13a" stop-opacity="0"/></radialGradient>
+  <radialGradient id="glowF"><stop offset="0" stop-color="#ffd27a" stop-opacity=".95"/><stop offset="1" stop-color="#f08a2a" stop-opacity="0"/></radialGradient>
+
+  <!-- ARCHER TOWER -->
+  <symbol id="t-archer" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="187" rx="46" ry="7" fill="#000" opacity=".35"/>
+    <polygon points="66,184 100,188 100,92 74,92" fill="#9aa3b6"/>
+    <polygon points="100,188 134,184 126,92 100,92" fill="#6b7489"/>
+    <polygon points="68,152 100,155 100,149 69,146" fill="#838ca0"/>
+    <polygon points="100,155 132,152 131,146 100,149" fill="#59617a"/>
+    <polygon points="71,120 100,122 100,116 72,114" fill="#838ca0"/>
+    <polygon points="100,122 129,120 128,114 100,116" fill="#59617a"/>
+    <rect x="97" y="126" width="6" height="16" fill="#1d2230"/>
+    <path d="M89,188 L89,168 L100,159 L111,168 L111,188 Z" fill="#4a2f1a"/>
+    <polygon points="100,159 111,168 111,188 100,188" fill="#36210f"/>
+    <!-- archer -->
+    <polygon points="93,84 107,84 105,66 95,66" fill="#2f4fa8"/>
+    <polygon points="100,84 107,84 105,66 100,66" fill="#22398a"/>
+    <polygon points="96,66 104,66 103,57 97,57" fill="#e0b48a"/>
+    <polygon points="95,59 105,59 100,49" fill="#8a93a6"/>
+    <path d="M110,48 Q120,64 110,80" fill="none" stroke="#6b4423" stroke-width="2.4"/>
+    <line x1="110" y1="48" x2="110" y2="80" stroke="#e7e2d4" stroke-width=".8"/>
+    <!-- platform + merlons -->
+    <polygon points="58,84 142,84 140,92 60,92" fill="#aab3c5"/>
+    <polygon points="60,92 140,92 136,99 64,99" fill="#4f576a"/>
+    <polygon points="60,74 71,74 71,84 60,84" fill="#aab3c5"/><polygon points="78,74 89,74 89,84 78,84" fill="#aab3c5"/>
+    <polygon points="111,74 122,74 122,84 111,84" fill="#8a93a6"/><polygon points="129,74 140,74 140,84 129,84" fill="#8a93a6"/>
+    <!-- banner -->
+    <rect x="133" y="28" width="2.5" height="48" fill="#5e3b1f"/>
+    <polygon points="135,30 162,37 135,46" fill="#e0b23e"/>
+    <polygon points="135,38 162,37 135,46" fill="#b98b1f"/>
+  </symbol>
+
+  <!-- BALLISTA TOWER -->
+  <symbol id="t-ballista" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="188" rx="52" ry="7" fill="#000" opacity=".35"/>
+    <polygon points="58,186 100,190 100,126 62,126" fill="#9aa3b6"/>
+    <polygon points="100,190 142,186 138,126 100,126" fill="#6b7489"/>
+    <polygon points="60,160 100,163 100,157 61,154" fill="#838ca0"/>
+    <polygon points="100,163 140,160 139,154 100,157" fill="#59617a"/>
+    <path d="M90,190 L90,172 L100,165 L110,172 L110,190 Z" fill="#4a2f1a"/>
+    <polygon points="54,116 146,116 142,126 58,126" fill="#aab3c5"/>
+    <polygon points="58,126 142,126 138,132 62,132" fill="#4f576a"/>
+    <!-- ballista -->
+    <polygon points="82,116 118,116 114,102 86,102" fill="#8a5a32"/>
+    <polygon points="100,116 118,116 114,102 100,102" fill="#5e3b1f"/>
+    <polygon points="68,98 138,92 138,98 68,104" fill="#a8703f"/>
+    <polygon points="68,101 138,95 138,98 68,104" fill="#7a4e28"/>
+    <polygon points="126,94 131,94 118,62 114,64" fill="#5e3b1f"/>
+    <polygon points="126,97 131,97 146,70 142,68" fill="#3f2712"/>
+    <polyline points="116,63 78,98 144,69" fill="none" stroke="#e7e2d4" stroke-width="1.2"/>
+    <polygon points="74,95 158,88 158,91 74,98" fill="#d8c8a0"/>
+    <polygon points="158,84 172,89 158,94" fill="#8a93a6"/>
+    <polygon points="66,94 74,93 74,99 66,100" fill="#e0b23e"/>
+    <!-- pennant -->
+    <rect x="58" y="72" width="2.5" height="46" fill="#5e3b1f"/>
+    <polygon points="60.5,74 80,80 60.5,86" fill="#2f4fa8"/>
+  </symbol>
+
+  <!-- MAGE TOWER -->
+  <symbol id="t-mage" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="187" rx="34" ry="6" fill="#000" opacity=".35"/>
+    <circle cx="100" cy="22" r="26" fill="url(#glowV)"/>
+    <polygon points="78,184 100,188 100,76 86,76" fill="#827d9a"/>
+    <polygon points="100,188 122,184 114,76 100,76" fill="#57536d"/>
+    <polygon points="80,150 100,152 100,147 81,145" fill="#6c6787"/>
+    <polygon points="100,152 120,150 119,145 100,147" fill="#46425c"/>
+    <polygon points="83,114 100,116 100,111 84,109" fill="#6c6787"/>
+    <polygon points="100,116 117,114 116,109 100,111" fill="#46425c"/>
+    <polygon points="96,124 104,124 104,140 100,144 96,140" fill="#b48cff"/>
+    <polygon points="97,92 103,92 103,102 97,102" fill="#b48cff"/>
+    <path d="M92,188 L92,172 L100,166 L108,172 L108,188 Z" fill="#2c2340"/>
+    <polygon points="78,76 122,76 120,82 80,82" fill="#3d3a52"/>
+    <polygon points="76,77 100,80 100,40" fill="#6d4fc0"/>
+    <polygon points="100,80 124,77 100,40" fill="#4b3590"/>
+    <g>
+      <polygon points="100,6 90,21 100,35" fill="#d9c2ff"/>
+      <polygon points="100,6 110,21 100,35" fill="#8f5bd6"/>
+      <polygon points="90,21 100,24 100,35" fill="#a77ee8"/>
+    </g>
+  </symbol>
+
+  <!-- CATAPULT TOWER -->
+  <symbol id="t-catapult" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="188" rx="54" ry="7" fill="#000" opacity=".35"/>
+    <polygon points="56,186 100,190 100,140 60,140" fill="#9aa3b6"/>
+    <polygon points="100,190 144,186 140,140 100,140" fill="#6b7489"/>
+    <polygon points="58,166 100,169 100,163 59,160" fill="#838ca0"/>
+    <polygon points="100,169 142,166 141,160 100,163" fill="#59617a"/>
+    <polygon points="52,130 148,130 144,140 56,140" fill="#aab3c5"/>
+    <polygon points="56,140 144,140 140,146 60,146" fill="#4f576a"/>
+    <!-- mangonel -->
+    <polygon points="72,130 138,130 136,121 74,121" fill="#8a5a32"/>
+    <polygon points="105,130 138,130 136,121 105,121" fill="#5e3b1f"/>
+    <polygon points="108,121 114,121 118,90 113,90" fill="#7a4e28"/>
+    <polygon points="126,121 132,121 124,90 119,90" fill="#5e3b1f"/>
+    <polygon points="108,86 128,86 128,92 108,92" fill="#a8703f"/>
+    <polygon points="114,124 120,121 70,74 65,78" fill="#c08550"/>
+    <polygon points="117,122.5 120,121 70,74 67.5,76" fill="#8a5a32"/>
+    <path d="M54,72 Q64,92 78,76 Z" fill="#5e3b1f"/>
+    <polygon points="56,70 60,58 71,56 77,65 70,74" fill="#a3a7b0"/>
+    <polygon points="71,56 77,65 70,74 66,64" fill="#757a85"/>
+    <line x1="95" y1="104" x2="88" y2="128" stroke="#d8c8a0" stroke-width="1.4"/>
+    <polygon points="138,103 146,103 146,121 138,121" fill="#5a5f6b"/>
+    <polygon points="142,103 146,103 146,121 142,121" fill="#41454f"/>
+  </symbol>
+
+  <!-- ORC RAIDER -->
+  <symbol id="e-raider" viewBox="0 0 200 200">
+    <ellipse cx="100" cy="187" rx="30" ry="5" fill="#000" opacity=".35"/>
+    <polygon points="84,186 95,186 96,150 86,150" fill="#5a3a22"/>
+    <polygon points="104,186 115,186 112,150 102,150" fill="#45291a"/>
+    <polygon points="82,187 97,187 96,180 84,180" fill="#2b1a10"/><polygon points="102,187 118,187 116,180 104,180" fill="#2b1a10"/>
+    <polygon points="82,150 118,150 116,138 84,138" fill="#7a4a2a"/>
+    <polygon points="90,150 100,150 98,164 92,164" fill="#5e3b1f"/>
+    <polygon points="80,142 100,144 100,100 74,104" fill="#74a040"/>
+    <polygon points="100,144 120,140 124,102 100,100" fill="#4f7428"/>
+    <polygon points="78,108 86,104 120,136 112,141" fill="#7a4a2a"/>
+    <polygon points="86,118 95,116 95,121 86,123" fill="#c4463a"/>
+    <polygon points="86,126 95,124 95,128 86,130" fill="#c4463a"/>
+    <polygon points="74,106 81,108 77,136 70,134" fill="#74a040"/>
+    <polygon points="68,134 78,136 77,144 68,142" fill="#4f7428"/>
+    <polygon points="66,104 84,97 88,110 71,115" fill="#6a707b"/>
+    <polygon points="70,102 66,90 76,99" fill="#e7e2d4"/>
+    <polygon points="120,104 128,107 141,86 135,81" fill="#4f7428"/>
+    <polygon points="134,96 138,96 131,42 127,42" fill="#6b4423"/>
+    <polygon points="121,50 137,40 145,58 130,62" fill="#b2b8c3"/>
+    <polygon points="130,62 145,58 139,48" fill="#757b86"/>
+    <polygon points="90,100 112,98 116,84 108,74 92,76 86,86" fill="#74a040"/>
+    <polygon points="104,99 112,98 116,84 108,74 104,75" fill="#4f7428"/>
+    <polygon points="91,95 114,93 112,103 93,105" fill="#4f7428"/>
+    <polygon points="95,96 99,96 97,88" fill="#f2ead2"/><polygon points="107,95 111,95 109,87" fill="#f2ead2"/>
+    <polygon points="89,82 101,82 101,84 89,85" fill="#2a3a14"/>
+    <polygon points="94,85 100,86 99,88 94,87" fill="#ffd23f"/><polygon points="104,85 110,84 109,87 104,88" fill="#ffd23f"/>
+    <polygon points="96,76 106,75 101,60" fill="#1b1410"/>
+  </symbol>
+
+  <!-- WOLF RIDER -->
+  <symbol id="e-wolf" viewBox="0 0 200 200">
+    <ellipse cx="102" cy="187" rx="56" ry="6" fill="#000" opacity=".35"/>
+    <polygon points="60,156 68,156 64,186 56,186" fill="#4e4840"/>
+    <polygon points="74,158 82,158 80,186 72,186" fill="#5b544b"/>
+    <polygon points="124,158 132,158 134,186 126,186" fill="#4e4840"/>
+    <polygon points="138,154 146,154 150,186 142,186" fill="#5b544b"/>
+    <polygon points="52,146 26,126 40,150" fill="#7d7468"/>
+    <polygon points="50,150 70,132 132,130 148,146 132,162 66,162" fill="#7d7468"/>
+    <polygon points="70,132 132,130 138,140 62,143" fill="#a0978a"/>
+    <polygon points="66,162 132,162 128,154 70,155" fill="#5e574d"/>
+    <polygon points="140,142 152,124 172,130 180,142 160,152" fill="#a0978a"/>
+    <polygon points="160,152 180,142 186,147 166,155" fill="#7d7468"/>
+    <polygon points="168,138 188,143 170,150" fill="#7d7468"/>
+    <polygon points="172,147 176,147 174,152" fill="#f2ead2"/><polygon points="180,145 184,145 182,149" fill="#f2ead2"/>
+    <polygon points="150,126 152,110 160,128" fill="#5e574d"/><polygon points="158,128 164,114 167,131" fill="#7d7468"/>
+    <polygon points="163,134 168,134 167,137" fill="#e04a3a"/>
+    <polygon points="84,133 118,131 114,146 88,147" fill="#c4463a"/>
+    <polygon points="101,132 118,131 114,146 101,146" fill="#8f2c22"/>
+    <polygon points="94,140 102,140 100,160 92,160" fill="#5a3a22"/>
+    <polygon points="88,134 112,132 110,104 92,106" fill="#74a040"/>
+    <polygon points="100,133 112,132 110,104 100,105" fill="#4f7428"/>
+    <polygon points="91,108 100,106 98,114 90,116" fill="#6a707b"/>
+    <polygon points="92,106 110,104 112,92 106,84 96,84 90,92" fill="#74a040"/>
+    <polygon points="104,104 110,104 112,92 106,84 104,84" fill="#4f7428"/>
+    <polygon points="95,102 98,102 96.5,96" fill="#f2ead2"/><polygon points="104,101 107,101 105.5,95" fill="#f2ead2"/>
+    <polygon points="95,92 99,93 98,95 95,94" fill="#ffd23f"/><polygon points="103,92 107,91 106,94 103,95" fill="#ffd23f"/>
+    <polygon points="76,152 79,154 150,70 147,68" fill="#6b4423"/>
+    <polygon points="146,66 160,54 152,72" fill="#b2b8c3"/>
+    <polygon points="146,74 152,70 150,80" fill="#c4463a"/>
+  </symbol>
+
+  <!-- TROLL -->
+  <symbol id="e-troll" viewBox="0 0 200 200">
+    <ellipse cx="102" cy="188" rx="48" ry="7" fill="#000" opacity=".35"/>
+    <polygon points="70,186 92,186 94,138 72,138" fill="#5f8077"/>
+    <polygon points="108,186 130,186 128,138 106,138" fill="#46635b"/>
+    <polygon points="66,140 134,140 128,122 72,122" fill="#5a3a22"/>
+    <polygon points="100,140 134,140 128,122 100,122" fill="#45291a"/>
+    <polygon points="62,128 100,132 100,58 60,68" fill="#82a398"/>
+    <polygon points="100,132 138,128 142,68 100,58" fill="#55756c"/>
+    <polygon points="78,82 122,82 117,108 83,108" fill="#6a707b"/>
+    <polygon points="100,82 122,82 117,108 100,108" fill="#4d525c"/>
+    <circle cx="84" cy="88" r="2" fill="#c9ced7"/><circle cx="116" cy="88" r="2" fill="#c9ced7"/><circle cx="86" cy="102" r="2" fill="#c9ced7"/><circle cx="114" cy="102" r="2" fill="#c9ced7"/>
+    <polygon points="56,70 70,74 64,140 50,136" fill="#82a398"/>
+    <polygon points="48,136 66,140 64,152 48,150" fill="#55756c"/>
+    <polygon points="138,70 152,76 152,128 138,124" fill="#55756c"/>
+    <polygon points="146,116 156,118 174,178 158,184" fill="#7a4e28"/>
+    <polygon points="151,117 156,118 174,178 166,181" fill="#5e3b1f"/>
+    <polygon points="160,150 152,146 158,156" fill="#c9ced7"/><polygon points="170,160 178,156 172,166" fill="#c9ced7"/><polygon points="162,172 154,172 160,178" fill="#c9ced7"/>
+    <polygon points="136,122 154,126 152,136 136,132" fill="#55756c"/>
+    <polygon points="86,62 114,62 118,46 107,32 93,32 82,46" fill="#82a398"/>
+    <polygon points="100,62 114,62 118,46 107,32 100,32" fill="#55756c"/>
+    <polygon points="97,44 104,44 108,58 99,56" fill="#46635b"/>
+    <polygon points="88,60 92,60 89,50" fill="#f2ead2"/><polygon points="108,60 112,60 111,50" fill="#f2ead2"/>
+    <polygon points="90,42 96,43 95,45 90,44" fill="#ffd23f"/><polygon points="104,43 110,42 110,44 105,45" fill="#ffd23f"/>
+    <polygon points="92,32 96,22 100,32" fill="#2a3530"/><polygon points="100,32 106,20 108,33" fill="#2a3530"/>
+  </symbol>
+
+  <!-- SHAMAN -->
+  <symbol id="e-shaman" viewBox="0 0 200 200">
+    <ellipse cx="102" cy="187" rx="34" ry="5" fill="#000" opacity=".35"/>
+    <circle cx="134" cy="42" r="22" fill="url(#glowG)"/>
+    <polygon points="74,186 100,188 100,108 84,108" fill="#6a4470"/>
+    <polygon points="100,188 126,186 116,108 100,108" fill="#46294d"/>
+    <polygon points="76,176 100,178 100,184 75,182" fill="#c4463a"/>
+    <polygon points="100,178 124,176 125,182 100,184" fill="#8f2c22"/>
+    <polygon points="129,186 133,186 137,48 133,48" fill="#6b4423"/>
+    <polygon points="114,118 122,114 134,100 130,96" fill="#6a4470"/>
+    <circle cx="90" cy="118" r="2.6" fill="#efe6cf"/><circle cx="96" cy="121" r="2.6" fill="#efe6cf"/><circle cx="102" cy="122" r="2.6" fill="#efe6cf"/><circle cx="108" cy="121" r="2.6" fill="#efe6cf"/>
+    <polygon points="82,114 118,114 114,82 100,70 86,82" fill="#46294d"/>
+    <polygon points="100,70 114,82 118,114 100,114" fill="#331c39"/>
+    <polygon points="90,110 110,110 108,90 92,90" fill="#4f7428"/>
+    <polygon points="93,98 98,99 97,101 93,100" fill="#b6ff8f"/><polygon points="102,99 107,98 107,100 103,101" fill="#b6ff8f"/>
+    <polygon points="94,108 97,108 95.5,102" fill="#f2ead2"/><polygon points="103,108 106,108 104.5,102" fill="#f2ead2"/>
+    <polygon points="98,72 92,54 102,70" fill="#c4463a"/><polygon points="102,70 108,52 106,72" fill="#efe6cf"/>
+    <polygon points="126,50 142,50 144,38 135,30 124,38" fill="#efe6cf"/>
+    <polygon points="135,30 144,38 142,50 135,50" fill="#c9bfa4"/>
+    <polygon points="128,40 133,40 132,44 128,44" fill="#1b1410"/><polygon points="137,40 141,40 141,44 137,44" fill="#1b1410"/>
+    <g><polygon points="58,120 62,114 66,120 62,126" fill="#b6ff8f"/><polygon points="150,100 153,95 156,100 153,105" fill="#b6ff8f"/><polygon points="64,90 66,86 68,90 66,94" fill="#7dff6a"/></g>
+  </symbol>
+
+  <!-- SIEGE RAM (BOSS) -->
+  <symbol id="e-ram" viewBox="-8 0 212 200">
+    <ellipse cx="98" cy="186" rx="80" ry="8" fill="#000" opacity=".4"/>
+    <rect x="96" y="40" width="3" height="58" fill="#5e3b1f"/>
+    <polygon points="99,42 126,48 99,62" fill="#c4463a"/><polygon points="99,52 126,48 99,62" fill="#8f2c22"/>
+    <polygon points="104,48 110,48 110,54 107,57 104,54" fill="#efe6cf"/>
+    <polygon points="140,124 192,118 192,130 140,138" fill="#7a4e28"/>
+    <polygon points="140,131 192,124 192,130 140,138" fill="#5e3b1f"/>
+    <polygon points="180,110 198,118 198,134 180,144" fill="#7b818c"/>
+    <polygon points="180,126 198,126 198,134 180,144" fill="#555b66"/>
+    <polygon points="184,110 178,100 190,112" fill="#c9ced7"/><polygon points="184,144 178,154 190,142" fill="#c9ced7"/>
+    <polygon points="20,164 166,164 162,152 24,152" fill="#5e3b1f"/>
+    <polygon points="26,152 98,152 98,96 46,96" fill="#a8774f"/>
+    <polygon points="98,152 160,152 146,96 98,96" fill="#7a5235"/>
+    <polygon points="44,96 150,96 140,90 54,90" fill="#c08a5f"/>
+    <path d="M40,126 L90,126 M36,140 L94,140 M48,110 L92,110" stroke="#6e4a30" stroke-width="1.4"/>
+    <path d="M104,110 L148,110 M104,126 L152,126 M104,140 L156,140" stroke="#5a3b25" stroke-width="1.4"/>
+    <polygon points="58,118 70,108 82,118 76,132 64,132" fill="#c4463a"/>
+    <polygon points="64,118 68,118 67,122" fill="#1b1410"/><polygon points="72,118 76,118 73,122" fill="#1b1410"/>
+    <g>
+      <polygon points="44,154 58,150 72,154 76,168 68,180 52,182 40,172" fill="#4a2f1a"/>
+      <polygon points="58,150 72,154 76,168 68,180 58,166" fill="#36210f"/>
+      <circle cx="58" cy="166" r="4" fill="#8a93a6"/>
+      <polygon points="118,154 132,150 146,154 150,168 142,180 126,182 114,172" fill="#4a2f1a"/>
+      <polygon points="132,150 146,154 150,168 142,180 132,166" fill="#36210f"/>
+      <circle cx="132" cy="166" r="4" fill="#8a93a6"/>
+    </g>
+  </symbol>
+
+  <!-- TERRAIN: pine, rock, build slot -->
+  <symbol id="pine" viewBox="0 0 60 80">
+    <ellipse cx="30" cy="76" rx="14" ry="3" fill="#000" opacity=".3"/>
+    <rect x="27" y="62" width="6" height="14" fill="#5e3b1f"/>
+    <polygon points="8,66 30,68 30,30" fill="#3f7a3a"/><polygon points="30,68 52,66 30,30" fill="#2b5a2a"/>
+    <polygon points="13,46 30,48 30,8" fill="#4d8f45"/><polygon points="30,48 47,46 30,8" fill="#356a32"/>
+  </symbol>
+  <symbol id="rock" viewBox="0 0 60 40">
+    <polygon points="6,34 14,16 30,8 46,14 54,32 32,38" fill="#8a8f99"/>
+    <polygon points="30,8 46,14 54,32 32,38 34,20" fill="#646974"/>
+    <polygon points="14,16 30,8 34,20" fill="#a5aab3"/>
+  </symbol>
+</defs>
+      <defs><linearGradient id="dusk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1c2340"/><stop offset=".6" stop-color="#5a3b5c"/><stop offset="1" stop-color="#e08a4a"/></linearGradient></defs>
+      <rect width="800" height="360" fill="url(#dusk)"/>
+      <!-- far peaks -->
+      <polygon points="0,220 90,110 170,200 260,80 360,190 450,95 560,200 650,70 740,180 800,130 800,260 0,260" fill="#3a3550"/>
+      <polygon points="90,110 120,150 100,148 75,128" fill="#c9c4da"/><polygon points="260,80 296,126 270,120 240,104" fill="#c9c4da"/>
+      <polygon points="450,95 480,132 456,126 432,116" fill="#c9c4da"/><polygon points="650,70 686,118 660,112 632,92" fill="#c9c4da"/>
+      <polygon points="260,80 360,190 300,200" fill="#2c2840"/><polygon points="650,70 740,180 690,190" fill="#2c2840"/><polygon points="450,95 560,200 500,205" fill="#2c2840"/>
+      <!-- near hills -->
+      <polygon points="0,250 120,200 250,240 400,205 560,240 700,200 800,230 800,300 0,300" fill="#2f4a2e"/>
+      <polygon points="120,200 250,240 160,250" fill="#253c25"/><polygon points="700,200 800,230 760,250" fill="#253c25"/>
+      <!-- keep behind -->
+      <polygon points="352,196 400,200 400,90 360,96" fill="#9aa3b6"/><polygon points="400,200 448,196 440,96 400,90" fill="#6b7489"/>
+      <polygon points="354,98 400,102 400,44" fill="#2f4fa8"/><polygon points="400,102 446,98 400,44" fill="#22398a"/>
+      <polygon points="318,200 346,202 346,130 322,132" fill="#9aa3b6"/><polygon points="346,202 368,200 364,132 346,130" fill="#6b7489"/>
+      <polygon points="318,134 346,136 346,96" fill="#2f4fa8"/><polygon points="346,136 368,134 346,96" fill="#22398a"/>
+      <polygon points="432,200 456,202 456,124 436,126" fill="#9aa3b6"/><polygon points="456,202 480,200 476,126 456,124" fill="#6b7489"/>
+      <polygon points="432,128 456,130 456,86" fill="#2f4fa8"/><polygon points="456,130 480,128 456,86" fill="#22398a"/>
+      <rect x="399" y="22" width="2.5" height="24" fill="#5e3b1f"/><polygon points="401.5,24 424,30 401.5,36" fill="#e0b23e"/>
+      <rect x="388" y="130" width="8" height="14" fill="#ffcf73"/><rect x="408" y="150" width="8" height="14" fill="#ffcf73"/>
+      <!-- curtain wall -->
+      <polygon points="60,276 400,286 400,214 70,208" fill="#8f98ab"/>
+      <polygon points="400,286 740,276 730,208 400,214" fill="#646d82"/>
+      <g fill="#8f98ab"><rect x="72" y="198" width="14" height="12"/><rect x="104" y="199" width="14" height="12"/><rect x="136" y="200" width="14" height="12"/><rect x="168" y="201" width="14" height="12"/><rect x="200" y="202" width="14" height="12"/><rect x="232" y="203" width="14" height="12"/><rect x="264" y="204" width="14" height="12"/></g>
+      <g fill="#646d82"><rect x="520" y="203" width="14" height="12"/><rect x="552" y="202" width="14" height="12"/><rect x="584" y="201" width="14" height="12"/><rect x="616" y="200" width="14" height="12"/><rect x="648" y="199" width="14" height="12"/><rect x="680" y="198" width="14" height="12"/><rect x="712" y="197" width="14" height="12"/></g>
+      <!-- gatehouse towers -->
+      <polygon points="292,292 340,296 340,170 298,168" fill="#a7b0c2"/><polygon points="340,296 364,294 360,172 340,170" fill="#757e93"/>
+      <polygon points="290,170 366,170 366,160 290,160" fill="#b5bdcd"/>
+      <g fill="#b5bdcd"><rect x="292" y="150" width="12" height="10"/><rect x="316" y="150" width="12" height="10"/></g><g fill="#8a93a6"><rect x="340" y="150" width="12" height="10"/></g>
+      <polygon points="436,294 460,296 460,170 440,172" fill="#a7b0c2"/><polygon points="460,296 508,292 502,168 460,170" fill="#757e93"/>
+      <polygon points="434,170 510,170 510,160 434,160" fill="#949db0"/>
+      <g fill="#949db0"><rect x="448" y="150" width="12" height="10"/></g><g fill="#757e93"><rect x="472" y="150" width="12" height="10"/><rect x="496" y="150" width="12" height="10"/></g>
+      <!-- gate -->
+      <polygon points="360,296 440,296 440,226 360,226" fill="#7a8397"/>
+      <path d="M370,296 L370,244 Q400,212 430,244 L430,296 Z" fill="#1d1712"/>
+      <g stroke="#5a5f6b" stroke-width="3"><line x1="380" y1="236" x2="380" y2="296"/><line x1="393" y1="228" x2="393" y2="296"/><line x1="407" y1="228" x2="407" y2="296"/><line x1="420" y1="236" x2="420" y2="296"/><line x1="372" y1="252" x2="428" y2="252"/><line x1="370" y1="272" x2="430" y2="272"/></g>
+      <polygon points="314,186 342,186 342,234 328,244 314,234" fill="#2f4fa8"/><polygon points="321,200 335,200 328,214" fill="#e0b23e"/>
+      <polygon points="458,186 486,186 486,234 472,244 458,234" fill="#2f4fa8"/><polygon points="465,200 479,200 472,214" fill="#e0b23e"/>
+      <!-- torches -->
+      <circle cx="352" cy="240" r="16" fill="url(#glowF)"/><polygon points="348,244 352,230 356,244" fill="#ffd27a"/>
+      <circle cx="448" cy="240" r="16" fill="url(#glowF)"/><polygon points="444,244 448,230 452,244" fill="#ffd27a"/>
+      <!-- road + foreground -->
+      <polygon points="0,300 800,300 800,360 0,360" fill="#2f4a2e"/>
+      <polygon points="372,296 428,296 520,360 280,360" fill="#a07a4c"/>
+      <polygon points="400,296 428,296 520,360 400,360" fill="#866238"/>
+      <polygon points="0,320 80,300 160,330 0,360" fill="#3a5a36"/><polygon points="640,330 720,300 800,316 800,360" fill="#253c25"/>
+      <use href="#pine" x="40" y="250" width="60" height="80"/><use href="#pine" x="96" y="268" width="48" height="64"/>
+      <use href="#pine" x="690" y="246" width="64" height="86"/><use href="#pine" x="640" y="270" width="46" height="62"/>
+    </svg>

@@ -2,6 +2,7 @@ import {JOURNEY_BUILD} from '../public/games/journey/config.js';
 import {isJourney,journeyCommand,journeyTeacher,syncJourney,syncJourneyTeacher,journeyProjection,acceptJourneyResult,deleteJourneyRuns} from './cartridges/journey/server.js';
 export {BrawlRun} from './cartridges/journey/durable-object.js';
 import {BLACKLINE_PERSONAL} from '../public/cartridges/blackline.js';
+import {KINGSGATE_PERSONAL} from '../public/cartridges/kingsgate.js';
 import {IRONBREAK} from '../public/cartridges/ironbreak.js';
 import {COASTAL_PERSONAL} from '../public/cartridges/coastal-escape.js';
 import {HAVEN_PERSONAL} from '../public/cartridges/false-haven.js';
@@ -643,7 +644,7 @@ export class QuestSession {
 
   fateFor(student) {
     if(isJourney(this)){const outcome=this.teamFor(student)?.journeyResult?.outcome;return {id:outcome||"pending",label:outcome?"Journey: "+outcome:"Journey not completed"};}
-    const personal=this.state.config.cartridgeId==='blackline'?BLACKLINE_PERSONAL:this.state.config.cartridgeId==='coastal-escape'?COASTAL_PERSONAL:this.state.config.cartridgeId==='nightfall-false-haven'?HAVEN_PERSONAL:null;
+    const personal=this.state.config.cartridgeId==='blackline'?BLACKLINE_PERSONAL:this.state.config.cartridgeId==='kingsgate'?KINGSGATE_PERSONAL:this.state.config.cartridgeId==='coastal-escape'?COASTAL_PERSONAL:this.state.config.cartridgeId==='nightfall-false-haven'?HAVEN_PERSONAL:null;
     if(personal){const outcome=this.teamFor(student)?.runs?.[student.id]?.outcome;return {id:outcome||'pending',label:personal[outcome]||'Operation pending'};}
     if(this.state.config.cartridgeId==='ironbreak'){const o=this.teamFor(student)?.runs?.[student.id]?.outcome;return {id:o||'pending',label:IRONBREAK.personal[o]||'Suit operation pending'};}
     if(expansionFor(this)){
