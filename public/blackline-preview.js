@@ -1,8 +1,8 @@
 import {reviewParagraphs} from './review-presentation.js?v=u11';
-import {BLACKLINE as c,blacklineScene,BLACKLINE_PERSONAL} from './cartridges/blackline.js?v=0.2.0';
+import {BLACKLINE as c,blacklineScene,BLACKLINE_PERSONAL} from './cartridges/blackline.js?v=0.3.0';
 const gateNames=(c,n)=>[...c.gates.slice(0,2),...c.inserts.slice(0,n-3),c.gates[2]];
 import {GameHost} from './engine/game-host.js?v=0.9.7';
-import {blacklineAdapter} from './games/blackline/adapter.js?v=0.9.7';
+import {blacklineAdapter} from './games/blackline/adapter.js?v=0.3.0';
 const root=document.querySelector('#story'),crew=[{alias:'Alex'},{alias:'Rowan'}];let gates=3,names=gateNames(c,gates),team={stage:'briefing',gateIndex:0,inventory:[],runs:{}},host,css,returnButton;
 const audio=new Audio(c.assets.ambient);audio.loop=true;audio.volume=.2;let musicOn=false;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -32,3 +32,6 @@ function fly(){
  root.querySelector('#story-return').onclick=()=>{team.runs.preview={outcome:host.s.outcome||'skipped'};host.destroy();host=null;team.stage='finale';render();};
 }
 render();
+
+// DEV homepage shortcut (?dev=action): straight to the race with the first route and no upgrades.
+if(new URLSearchParams(location.search).get('dev')==='action'){team.route=c.routes[0].id;fly();}

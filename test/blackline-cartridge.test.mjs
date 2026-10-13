@@ -27,6 +27,9 @@ function driver(r){
  const k=Sim.curve(r.z),n=r.v/Sim.C.max,e=r.enemies.find(e=>e.phase!=='follow');let target=0;
  if(e)target=e.type==='rammer'?-(e.side||1)*.62:e.aim>=0?-.58:.58;
  else if(r.projectiles.length)target=r.projectiles[0].x>=0?-.58:.58;
+ // v0.3.0: leave a visible strike zone; steer around obstacles ahead.
+ const k3=r.strikes.find(k=>k.age>=Sim.STRIKE.zoneAt);if(k3&&Math.abs(target-k3.aim)<.34)target=k3.aim>=0?k3.aim-.42:k3.aim+.42;
+ const o=Sim.OBSTACLES.find(o=>o.z>r.z&&o.z-r.z<r.v*1.8+10);if(o&&Math.abs(target-o.x)<.36)target=Math.max(-.62,Math.min(.62,o.x+(r.x<o.x?-.44:.44)));
  const j=Sim.nextJump(r.z);if(j&&j.start-r.z<270||r.jump)target=0;
  const desired=(k*n*n*.98+(target-r.x)*3-r.lv*.2)/(1.65*(.3+.7*n));
  // Binary keyboard/touch input, using pulse density for precise correction.
@@ -77,5 +80,5 @@ test('BLACKLINE earned equipment triggers once and reconnect retains exact state
  const stale=structuredClone(restored);delete stale.used['repair-reserve'];assert.ok(validateBlackline({...run,snapshot:s},{type:'minigame.progress',snapshot:stale,activeElapsedMs:Math.round(stale.time*1000)}));
 });
 test('BLACKLINE binary controls finish in 4–5 minutes with all jumps and both pursuers',()=>{
- const s=play({runId:'drive',route:'register',mode:'action',threat:1,loadout:[]});assert.equal(s.outcome,'success');assert.equal(s.race.landings,3);assert.ok(s.time>=240&&s.time<300);assert.ok(s.race.stats.shots>0&&s.race.stats.rams>0);console.log('BLACKLINE binary driver',s.time,s.race.hp);
+ const s=play({runId:'drive',route:'register',mode:'action',threat:1,loadout:[]});assert.equal(s.outcome,'success');assert.equal(s.race.landings,3);assert.ok(s.time>=240&&s.time<300);assert.ok(s.race.stats.shots>0&&s.race.stats.rams>0);assert.ok(s.race.stats.strikes>=50,'strikes are frequent (v0.2.0 driver saw 33 bursts)');assert.equal(s.race.stats.obstacles,0,'every obstacle is avoidable: hit '+s.race.obstaclesHit);console.log('BLACKLINE binary driver',s.time,s.race.hp,JSON.stringify(s.race.stats));
 });

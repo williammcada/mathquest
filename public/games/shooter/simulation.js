@@ -4,7 +4,12 @@ import {WORLD} from './world.js';
 export const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 export const overlap=(a,b)=>a.x<b.x+b.w&&a.x+a.w>b.x&&a.y<b.y+b.h&&a.y+a.h>b.y;
 const copy=v=>JSON.parse(JSON.stringify(v));
-const sectionRank={START:0,MID:1,BOSS:2};
+// v0.2.0: boss shots ~30% faster; mortar barrage added to the rotation.
+export const BOSS_ATTACKS=Object.freeze(['high','low','mortar','overhead']);
+export const BOSS_SHOT=Object.freeze({high:365,low:250,lowEnraged:275,overhead:455,mortarFlight:1.05,mortarGravity:600});
+const sectionRank={START:0,MID:1,MID2:2,BOSS:3};
+const ARENA=WORLD.boss,GUARD_GATES=WORLD.layers.Gates.filter(g=>g.type==='enemy_gate');
+export const SECTION_RANK=Object.freeze({...sectionRank});
 export function body(p){return {x:p.x-C.bodyWidth/2,y:p.y-p.h,w:C.bodyWidth,h:p.h};}
 // Segment versus rectangle: returns first intersection, including fast projectiles.
 export function rayRect(x,y,nx,ny,r,pad=0){
@@ -58,8 +63,8 @@ export function retry(g,now=Date.now()){
 }
 export function colliders(g){
   const solids=[...WORLD.layers.Solids];
-  if(g.enemies.find(e=>e.id==='H01').hp>0)solids.push(WORLD.layers.Gates[0]);
-  if(g.bossGate)solids.push({x:5552,y:0,w:16,h:640});
+  for(const gate of GUARD_GATES)if(g.enemies.find(e=>e.id===gate.enemy).hp>0)solids.push(gate);
+  if(g.bossGate)solids.push({id:'BOSS-GATE',x:ARENA.gateX,y:0,w:16,h:640});
   return solids;
 }
 function standingClear(g,p){return !colliders(g).some(r=>overlap({x:p.x-10,y:p.y-28,w:20,h:27.9},r));}
@@ -164,21 +169,25 @@ function boss(g,dt){
   if(e.state==='idle'){e.state='arrival';e.clock=1.2;}
   else if((e.state==='arrival'||e.state==='recover')&&e.clock<=0&&!g.bullets.some(b=>b.owner==='boss'&&b.life>0)){
     e.enraged=e.hp<=e.maxHP/2;
-    e.attack=['high','low','overhead'][e.phase%3];e.state='warning';e.clock={high:.9,low:1,overhead:1.1}[e.attack];
+    e.attack=BOSS_ATTACKS[e.phase%BOSS_ATTACKS.length];e.state='warning';e.clock={high:.9,low:1,mortar:1.1,overhead:1.1}[e.attack];
     e.strikes=e.enraged?2:1;
-    e.targetX=clamp(g.player.x,5590,6090);event(g,'boss-'+e.attack,e.x,e.y);
-    message(g,{high:'HIGH VOLLEY — duck',low:e.enraged?'DOUBLE SWEEP — jump twice':'FLOOR SWEEP — jump',overhead:e.enraged?'TWIN STRIKES — keep moving':'OVERHEAD STRIKE — move'}[e.attack]);
-  }else if(e.state==='warning'&&e.clock<=0){e.state='attack';e.clock=e.attack==='high'?.7:e.attack==='low'&&e.enraged?1.1:e.attack==='overhead'?.85:.2;e.burst=e.attack==='high'?(e.enraged?4:3):e.attack==='low'&&e.enraged?2:1;e.burstClock=0;}
+    e.targetX=clamp(g.player.x,ARENA.targetMin,ARENA.targetMax);
+    if(e.attack==='mortar'){const n=e.enraged?4:3,gap=e.enraged?64:80,first=clamp(e.targetX-gap*(n-1)/2,ARENA.targetMin,ARENA.targetMax-gap*(n-1));e.mortarTargets=Array.from({length:n},(_,i)=>first+i*gap);}else e.mortarTargets=null;
+    event(g,'boss-'+e.attack,e.x,e.y);
+    message(g,{high:'HIGH VOLLEY — duck',low:e.enraged?'DOUBLE SWEEP — jump twice':'FLOOR SWEEP — jump',mortar:'MORTAR BARRAGE — leave the marked spots',overhead:e.enraged?'TWIN STRIKES — keep moving':'OVERHEAD STRIKE — move'}[e.attack]);
+  }else if(e.state==='warning'&&e.clock<=0){e.state='attack';e.clock=e.attack==='high'?.7:e.attack==='low'&&e.enraged?1.1:e.attack==='overhead'?.85:.2;e.burst=e.attack==='high'?(e.enraged?4:3):e.attack==='low'&&e.enraged?2:e.attack==='mortar'?e.mortarTargets.length:1;e.burstClock=0;if(e.attack==='mortar')e.clock=.2;}
   if(e.state==='attack'){
     e.burstClock-=dt;if(e.burst>0&&e.burstClock<=0){
-      if(e.attack==='high')bullet(g,{x:e.x-6,y:312,vx:-280,vy:0,side:'enemy',owner:'boss',r:4,life:3});
-      else if(e.attack==='low')bullet(g,{x:e.x-6,y:329,vx:e.enraged?-210:-190,vy:0,side:'enemy',owner:'boss',r:6,life:4});
-      else bullet(g,{x:e.targetX,y:90,vx:0,vy:350,side:'enemy',owner:'boss',r:18,life:2});
-      event(g,'boss-fire',e.x,e.y);e.burst--;e.burstClock=e.attack==='low'?.95:.18;
+      if(e.attack==='high')bullet(g,{x:e.x-6,y:312,vx:-BOSS_SHOT.high,vy:0,side:'enemy',owner:'boss',r:4,life:3});
+      else if(e.attack==='low')bullet(g,{x:e.x-6,y:329,vx:-(e.enraged?BOSS_SHOT.lowEnraged:BOSS_SHOT.low),vy:0,side:'enemy',owner:'boss',r:6,life:4});
+      else if(e.attack==='mortar'){const tx=e.mortarTargets[e.mortarTargets.length-e.burst],o={x:e.x+40,y:e.y+12},t=BOSS_SHOT.mortarFlight;
+        bullet(g,{...o,vx:(tx-o.x)/t,vy:(336-o.y-.5*BOSS_SHOT.mortarGravity*t*t)/t,gravity:BOSS_SHOT.mortarGravity,side:'enemy',owner:'boss',kind:'mortar',r:8,life:3});}
+      else bullet(g,{x:e.targetX,y:90,vx:0,vy:BOSS_SHOT.overhead,side:'enemy',owner:'boss',r:18,life:2});
+      event(g,e.attack==='mortar'?'boss-mortar-fire':'boss-fire',e.x,e.y);e.burst--;e.burstClock=e.attack==='low'?.95:e.attack==='mortar'?.24:.18;
     }
     if(e.clock<=0&&!e.burst){
-      if(e.attack==='overhead'&&e.strikes>1){e.strikes--;e.state='warning';e.clock=1.1;e.targetX=clamp(g.player.x,5590,6090);event(g,'boss-overhead');message(g,'SECOND STRIKE — move again');}
-      else{e.state='recover';e.clock=e.attack==='high'?1.2:1.5;e.phase++;}
+      if(e.attack==='overhead'&&e.strikes>1){e.strikes--;e.state='warning';e.clock=1.1;e.targetX=clamp(g.player.x,ARENA.targetMin,ARENA.targetMax);event(g,'boss-overhead');message(g,'SECOND STRIKE — move again');}
+      else{e.state='recover';e.clock=e.attack==='high'?1.2:e.attack==='mortar'?1.3:1.5;e.phase++;}
     }
   }
   if(overlap(body(g.player),e))damage(g,'boss-contact');
@@ -202,7 +211,7 @@ function hitEnemy(g,e,b){
   if(e.volleyHits.includes(b.volley))return;e.volleyHits.push(b.volley);if(e.volleyHits.length>20)e.volleyHits.shift();
   e.hp=Math.max(0,e.hp-1);e.hit=.12;event(g,'robot-hit',e.x,e.y);
   if(!e.hp){g.kills++;event(g,e.type==='boss'?'boss-destroyed':'robot-destroyed',e.x,e.y);g.effects.push({x:e.x+e.w/2,y:e.y+e.h/2,color:e.type==='boss'?'#d5f044':'#ff9d54',life:.65,total:.65});
-    if(e.id==='H01')message(g,'Guard disabled — checkpoint ahead');
+    if(GUARD_GATES.some(gate=>gate.enemy===e.id))message(g,'Guard disabled — checkpoint ahead');
     if(e.type==='boss'){g.status='terminal';g.outcome='success';g.bullets=[];message(g,'Security robot disabled');}
   }
 }
@@ -224,9 +233,9 @@ function checkpoints(g){
   for(const cp of WORLD.layers.Checkpoints){
     if(sectionRank[cp.id]<=sectionRank[g.checkpoint]||g.player.x<cp.spawn_x)continue;
     if(cp.requires_enemy_defeated&&g.enemies.find(e=>e.id===cp.requires_enemy_defeated)?.hp>0)continue;
-    g.checkpoint=cp.id;message(g,cp.id==='MID'?'Midpoint checkpoint secured':'Boss checkpoint secured');event(g,'checkpoint');
+    g.checkpoint=cp.id;message(g,{MID:'Midpoint checkpoint secured',MID2:'Second loop checkpoint secured',BOSS:'Boss checkpoint secured'}[cp.id]);event(g,'checkpoint');
   }
-  if(g.player.x>5584&&!g.bossActive){g.bossActive=true;g.bossGate=true;g.bullets=g.bullets.filter(b=>b.side==='player');event(g,'boss-entry');}
+  if(g.player.x>ARENA.triggerX&&!g.bossActive){g.bossActive=true;g.bossGate=true;g.bullets=g.bullets.filter(b=>b.side==='player');event(g,'boss-entry');}
 }
 export function step(g,input={},dt=C.step){
   if(g.status!=='active')return;g.events=[];g.t+=dt;g.activeTime+=dt;
@@ -238,6 +247,6 @@ export function step(g,input={},dt=C.step){
   for(const e of g.effects)e.life-=dt;g.effects=g.effects.filter(e=>e.life>0).slice(-C.maxEffects);
   const tx=clamp(g.player.x-230,0,WORLD.world.width-C.width),ty=clamp(g.player.y-220,0,WORLD.world.height-C.height);
   g.camera.x+=(tx-g.camera.x)*Math.min(1,dt*8);g.camera.y+=(ty-g.camera.y)*Math.min(1,dt*9);
-  if(g.bossActive)g.camera.x=Math.max(5550,g.camera.x);
+  if(g.bossActive)g.camera.x=Math.max(ARENA.cameraMin,g.camera.x);
 }
 export function clearInput(g){g.prev={};g.lastDown=-10;g.player.jumpBuffer=0;}

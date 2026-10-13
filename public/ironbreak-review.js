@@ -7,6 +7,7 @@ import ending from './assets/ironbreak/ending.webp';
 import {QuestSession} from '../src/worker.js';
 import {IronbreakHost} from './games/shooter/host.js';
 import {IRONBREAK} from './cartridges/ironbreak.js';
+import {openRuns} from '../src/cartridges/ironbreak/server.js';
 import cover from './assets/ironbreak/cover.webp';
 const root=document.querySelector('#review-body'),message=document.querySelector('#review-message'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let room,state,host,working=false,credential=crypto.randomUUID();
@@ -59,4 +60,5 @@ document.querySelector('#review-reset').onclick=reset;
 document.querySelector('#review-pause').onclick=async()=>{try{await request('/command',{type:'teacher.pause',teacherKey:'review-teacher'},true);state=await request('/state?deviceId=reviewer');render();}catch(e){message.textContent=e.message;}};
 document.querySelector('#review-close').onclick=async()=>{try{await request('/command',{type:'teacher.advanceFinale',teacherKey:'review-teacher',teamId:'team-1'},true);state=await request('/state?deviceId=reviewer');render();}catch(e){message.textContent=e.message;}};
 setInterval(async()=>{if(!room||working)return;try{await room.alarm();if(state?.teams[0].stage==='minigame'){state=await request('/state?deviceId=reviewer');render();}}catch(e){message.textContent=e.message;}},1000);
-start().catch(e=>message.textContent=e.message);
+// DEV homepage shortcut (?dev=action): open the suit run directly, with no questions or upgrades.
+start().then(async()=>{if(new URLSearchParams(location.search).get('dev')!=='action')return;const team=room.state.teams['team-1'];team.route=IRONBREAK.routes[0].id;team.inventory=[];openRuns(room,team,room.members(team.id));state=await request('/state?deviceId=reviewer');message.textContent='DEV action practice · no questions or classroom records. Reload without ?dev=action for story review.';render();}).catch(e=>message.textContent=e.message);

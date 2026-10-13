@@ -50,6 +50,13 @@ class Renderer{
   const car=(e)=>{const p=world(e.z,e.x);if(!p||p.y>p.clip+12||e.z<s.z-5)return;const scale=Math.min(1.3,p.f/20);g.save();g.beginPath();g.rect(0,0,W,Math.min(H,p.clip+35*scale));g.clip();g.translate(p.x,p.y+28*scale-e.airY*9);g.scale(scale,scale);this.enemyCar(e,time);g.restore();};
   for(const e of [...s.enemies].sort((a,b)=>b.z-a.z))car(e);
   S.REPAIRS.forEach((r,i)=>{if(s.picked.includes(i)||r.z<s.z-2)return;const p=world(r.z,r.x);if(!p||p.y>p.clip)return;const size=Math.min(24,p.f*1.15);this.rect(p.x-size/2,p.y-size,size,size,'#75d8b1');this.rect(p.x-size*.1,p.y-size*.8,size*.2,size*.6,'#173c3a');this.rect(p.x-size*.3,p.y-size*.6,size*.6,size*.2,'#173c3a');});
+  // v0.3.0 road obstacles (drawn far to near, clipped by hills like repairs).
+  for(const o of [...S.OBSTACLES].reverse()){if(s.obstaclesHit?.includes(o.id)||o.z<s.z-2||o.z>s.z+620)continue;const p=world(o.z,o.x);if(!p||p.y>p.clip+2)continue;g.save();g.beginPath();g.rect(0,0,W,Math.min(H,p.clip+2));g.clip();this.obstacle(o,p,time);g.restore();}
+  // v0.3.0 aerial strikes: target zone, then a shell that approaches in five steps.
+  for(const k of s.strikes||[]){const zx=240+(k.aim*7.2-camX)*20.4;
+   if(k.age>=S.STRIKE.zoneAt){const pulse=k.locked&&this.motion?(Math.floor(time*10)%2?.24:.15):.13;g.globalAlpha=pulse;this.poly([[zx-25,265],[zx+25,265],[240+(k.aim*7.2-camX)*4+7,146],[240+(k.aim*7.2-camX)*4-7,146]],'#ff665c');g.globalAlpha=1;const c=k.locked?'#ffd27e':'#ff986e';this.rect(zx-25,240,2,18,c);this.rect(zx+23,240,2,18,c);if(k.locked){this.rect(zx-25,240,8,2,c);this.rect(zx+17,240,8,2,c);this.rect(zx-25,256,8,2,c);this.rect(zx+17,256,8,2,c);}}
+   this.shell(k,240+(k.aim*7.2-camX)*2,zx,time);}
+  for(const b of s.blasts||[]){const age=s.t-b.t,x=240+(b.x*7.2-camX)*20.4,y=246,r=8+age*60,fade=1-age/.6;g.globalAlpha=Math.max(0,fade);for(let i=0;i<10;i++){const a=i*Math.PI/5+age*3,d=r*(.6+.4*((i*37)%5)/5);this.rect(x+Math.cos(a)*d-3,y+Math.sin(a)*d*.45-3,6,6,i%3?'#ff9d54':'#ffe08a');}this.rect(x-r*.5,y-4,r,8,'#ffcf7a');this.rect(x-r*.3,y-r*.5,r*.6,r*.5,'#4a3a3f');g.globalAlpha=1;}
   for(const e of s.enemies){if(e.phase==='aim'){const x=240+(e.aim*7.2-camX)*20.4;g.globalAlpha=.15;this.poly([[x-25,265],[x+25,265],[240+(e.aim*7.2-camX)*4+7,146],[240+(e.aim*7.2-camX)*4-7,146]],'#ff665c');g.globalAlpha=1;this.rect(x-25,240,2,18,'#ff986e');this.rect(x+23,240,2,18,'#ff986e');}}
   for(const b of s.projectiles){const p=world(b.z,b.x);if(p&&p.y<=p.clip+8){this.rect(p.x-1,p.y-8,2,8,'#ffec9e');}}
   // Spark trails, shadow and suspension stay aligned with the road coordinate.
@@ -70,6 +77,17 @@ class Renderer{
   if(this.motion&&s.boosting){g.strokeStyle='#a0cfbf55';for(let i=0;i<6;i++){let side=i%2?1:-1,x=240+side*(100+i*14);g.beginPath();g.moveTo(x,175+i*9);g.lineTo(x+side*24,190+i*9);g.stroke();}}
   if(s.enemies.some(e=>e.phase==='ram'||e.phase==='ram-warn')){const e=s.enemies.find(e=>e.phase==='ram'||e.phase==='ram-warn');const side=e.side||1;this.poly([[px+side*50,py],[px+side*66,py-10],[px+side*66,py+10]],'#f4b05f');}
   g.restore();
+ }
+ obstacle(o,p,time){const w=Math.max(4,p.w*.3),h=Math.max(3,p.f*1.05),x=p.x,y=p.y;
+  if(o.kind==='barricade'){this.rect(x-w,y-h,w*2,h,'#9aa3a3');this.rect(x-w,y-h,w*2,Math.max(1,h*.18),'#c7cfc9');for(let i=0;i<4;i++)this.rect(x-w+i*w*.5+w*.06,y-h*.72,w*.22,h*.42,i%2?'#1b2125':'#f0a33c');this.rect(x-w,y-Math.max(1,h*.12),w*2,Math.max(1,h*.12),'#4a5559');if(p.f>6)this.rect(x-w*.15,y-h-Math.max(2,h*.25),w*.3,Math.max(2,h*.25),this.motion&&Math.sin(time*7+o.id)>0?'#ff7a5c':'#7a3a34');}
+  else{const c=w*.95;this.rect(x-c,y-c*.9,c*.95,c*.9,'#7b5a3a');this.rect(x+c*.05,y-c*.9,c*.95,c*.9,'#6b4d33');this.rect(x-c*.5,y-c*1.75,c*.95,c*.85,'#8a6742');for(const [bx,by,bw,bh] of [[x-c,y-c*.9,c*.95,c*.9],[x+c*.05,y-c*.9,c*.95,c*.9],[x-c*.5,y-c*1.75,c*.95,c*.85]]){this.rect(bx,by,bw,Math.max(1,bh*.12),'#b08a5c');this.rect(bx+bw*.45,by,Math.max(1,bw*.1),bh,'#4c3524');}}
+ }
+ shell(k,hx,zx,time){// Five discrete approach frames: the shell visibly steps closer.
+  const f=S.strikeFrame(k),t=[0,.25,.5,.75,.94][f],size=[3,5,9,14,22][f],x=hx+(zx-hx)*t,y=104+(236-104)*t;
+  for(let i=1;i<=3;i++){const ts=Math.max(0,t-i*.06);this.rect(hx+(zx-hx)*ts-size*.18,104+(236-104)*ts-size*.18,size*.36,size*.36,i===1?'#5b5560':'#3b3a44');}
+  this.rect(x-size*.32,y-size*.5,size*.64,size,'#2e3138');this.rect(x-size*.2,y-size*.42,size*.18,size*.7,'#69707a');
+  this.rect(x-size*.5,y-size*.62,size*.28,size*.3,'#3f444d');this.rect(x+size*.22,y-size*.62,size*.28,size*.3,'#3f444d');
+  this.rect(x-size*.24,y+size*.38,size*.48,size*.22,this.motion&&Math.floor(time*16)%2?'#ffe08a':'#ff8a4c');
  }
  enemyCar(e,time){const r=e.type==='rammer',body=r?'#ba824d':'#8d5267';
   this.rect(-27,-22,7,21,'#060e17');this.rect(20,-22,7,21,'#060e17');

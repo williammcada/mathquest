@@ -3,7 +3,7 @@ import {registerRecord} from '../../privacy.js';
 import {aerialAdapter} from './adapter.js';
 import {UPGRADES,VERSION,BUILD_VERSION} from './tuning.js';
 import {restore} from './core.js';
-const RUN='mq-aerial-practice-run-v2',LEGACY='mq-aerial-practice-run',OPTIONS='mq-aerial-practice-options',KEYS=[RUN,OPTIONS,LEGACY];
+const RUN='mq-aerial-practice-run-v3',PRIOR='mq-aerial-practice-run-v2',LEGACY='mq-aerial-practice-run',OPTIONS='mq-aerial-practice-options',KEYS=[RUN,OPTIONS,LEGACY,PRIOR];
 const root=document.querySelector('#flight'),dialog=document.querySelector('#practice-settings');
 let host,saved,loadout=[],saveError='',undo;
 try{loadout=JSON.parse(localStorage.getItem(OPTIONS)||'[]');saved=JSON.parse(localStorage.getItem(RUN)||'null');if(saved)restore(saved.config,saved);KEYS.forEach(key=>registerRecord('aerial-practice',key));}

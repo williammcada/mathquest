@@ -1,4 +1,4 @@
-export const BUILD = 'shooter-0.1.0-alpha.2';
+export const BUILD = 'shooter-0.2.0';
 export const CONFIG = Object.freeze({
   step: 1 / 60, width: 640, height: 360,
   bodyWidth: 20, bodyHeight: 28, crouchHeight: 16, proneHeight: 10,
