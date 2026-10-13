@@ -31,7 +31,7 @@ class RacerAudio{
 }
 const renderers=new WeakMap();
 export const blacklineAdapter={
- id:'blackline-racer',title:'BLACKLINE: Last Exit · Cartridge v0.3.0',revision:REVISION,activeLimitSeconds:300,kitText:'Standard interceptor · 100 integrity · rechargeable boost',
+ id:'blackline-racer',title:'BLACKLINE: Last Exit · Cartridge v0.3.1',revision:REVISION,activeLimitSeconds:300,kitText:'Standard interceptor · 100 integrity · rechargeable boost',
  canvasLabel:'Industrial highway with pursuing interceptors and armored rammers',
  controlProfile:{left:[['left','◀ Steer'],['right','Steer ▶']],right:[['brake','Brake / drift'],['boost','Boost']],keys:{a:'left',arrowleft:'left',d:'right',arrowright:'right',s:'brake',arrowdown:'brake',' ':'boost'},help:'Auto acceleration. A/D or arrows: steer. S/Down: brake before tight bends. Space: boost. Centre on ramps; every gap can be cleared without boost. Incoming shells land three seconds after they appear: leave the red zone. Escape pauses. Five active minutes; classroom crew time continues during local pauses.'},
  instructions:'Escape along 14.5 km of industrial highway. Steer clear of road barricades and crates. When a shell appears on the horizon, watch for its red target zone and leave it before impact. Evade armored rams. Keep speed and centre on all three ramps. One classroom run; no restart. Guided completion is available separately.',

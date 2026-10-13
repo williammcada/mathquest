@@ -21,6 +21,8 @@ export function createRun(config={},saved) {
     collected:[],volleyHits:[],rng:c.seed>>>0,assistedStep:0,outcome:null,message:'Move with the D-pad. Your aircraft fires automatically.',messageTick:0,
     counters:{deaths:0,shots:0,hits:0,damage:0,pickups:0,missed:0,guns:0,maxProgress:0,modeSwitchTick:null,capDeferrals:0},events:[]};
 }
+// U-13 DEV playtest: begin at a checkpoint. Active time starts at that checkpoint, as on a retry.
+export function startAtCheckpoint(s,seconds){if(!CHECKPOINTS.includes(seconds))throw Error('Unknown checkpoint');if(!seconds)return s;s.tick=s.levelTick=seconds*60;s.checkpoint=seconds;s.counters.maxProgress=s.levelTick;s.cursor=LEVEL.findIndex(e=>e.tick>=s.levelTick);if(s.cursor<0)s.cursor=LEVEL.length;return s;}
 export function snapshot(s){const v=clone(s);v.events=[];v.effects=[];return v;}
 function check(ok,message){if(!ok)throw Error(`Recovery unavailable: ${message}`);}
 const bounded=(n,min,max)=>typeof n==='number'&&Number.isFinite(n)&&n>=min&&n<=max;

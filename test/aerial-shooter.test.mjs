@@ -34,3 +34,7 @@ test('v0.3.0 dropped supplies persist until they leave the screen',()=>{
  let ticks=0;while(s.pickups.length&&ticks<5000){s.player.protection=99999;step(s);ticks++;if(s.pickups.length)assert.ok(s.pickups[0].y<=380);}
  assert.ok(ticks>1000,'pickup should drift ~17 s from the top before leaving');assert.equal(s.counters.pickups,0);
 });
+test('U-13 DEV start at each checkpoint produces a valid, restorable run',async()=>{
+ const {startAtCheckpoint,restore,snapshot}=await import('../public/games/aerial-shooter/core.js');
+ for(const cp of [0,150,225]){const s=startAtCheckpoint(createRun({loadout:['agility','armor','weapons']}),cp);const r=restore(s.config,snapshot(s));for(let i=0;i<120;i++){r.player.protection=60;step(r);}assert.equal(r.checkpoint,cp);if(cp===225)assert.ok(r.boss);}
+});

@@ -105,7 +105,9 @@ function pursuit(s,dt,oldPlayerZ){
 }
 function step(s,dt,input){const old=s.z;s.damagePending=null;s.cooldown=Math.max(0,s.cooldown-dt);s.impact=Math.max(0,s.impact-3*dt);drive(s,dt,input);if(s.mode!=='running')return;pursuit(s,dt,old);resolveDamage(s);if(s.mode==='running'&&s.z>=C.length-1e-7)finish(s,s.t<C.limit?'escaped':'timeout');if(s.mode==='running'&&s.t>=C.limit-1e-8)finish(s,'timeout');}
 function tick(s,dt,input={}){if(!Number.isFinite(dt)||dt<=0)return;if(dt>.25){pause(s);return;}if(s.mode==='countdown'){s.countdown-=dt;if(s.countdown<=0){s.mode='running';s.events.push('go');}return;}if(s.mode!=='running')return;while(dt>1e-8&&s.mode==='running'){const part=Math.min(dt,1/60,C.limit-s.t);if(part<=1e-8){finish(s,'timeout');break;}step(s,part,input);dt-=part;}}
-const api={VERSION,C,JUMPS,JUMP:JUMPS[0],REPAIRS,OBSTACLES,STRIKE,strikeFrame,SECTIONS,ENCOUNTERS,bends,curve,elevation,zone,section,nextJump,protectedRoad,attackSafe,clamp,newState,begin,pause,resume,finish,tick,spawn,damage,resolveDamage};root.BlacklineSim=api;if(typeof module!=='undefined')module.exports=api;
+// U-13 DEV playtest: begin at a section start with the earlier course treated as driven.
+function startAt(s,z){s.z=z;s.jumpIndex=JUMPS.filter(j=>j.start<z).length;s.landings=s.jumpIndex;s.encounterIndex=ENCOUNTERS.filter(e=>e.z<z).length;s.picked=REPAIRS.map((r,i)=>i).filter(i=>REPAIRS[i].z<z);s.obstaclesHit=[];}
+const api={startAt,VERSION,C,JUMPS,JUMP:JUMPS[0],REPAIRS,OBSTACLES,STRIKE,strikeFrame,SECTIONS,ENCOUNTERS,bends,curve,elevation,zone,section,nextJump,protectedRoad,attackSafe,clamp,newState,begin,pause,resume,finish,tick,spawn,damage,resolveDamage};root.BlacklineSim=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
 
 export default globalThis.BlacklineSim;

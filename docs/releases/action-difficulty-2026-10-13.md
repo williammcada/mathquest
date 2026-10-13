@@ -25,3 +25,11 @@ Review bundle hashes are in `review-hashes.txt`.
 ## Fix — Ironbreak swimming pause (13 Oct 2026)
 
 Owner playtest: staying in floor water for more than about a second paused the run ("Crossing paused") and Resume did nothing. Cause (also present in v0.1.0): the progress validator rejected the 22-pixel swimming body height, and Resume kept resending the same rejected update. Fixes: the validator accepts the swimming height; when the server rejects an update (not a network failure), Resume now restores the last accepted position instead of resending. Regression test: six seconds of swimming with live validation each second. Chromium: eight seconds in the Coolant Works water, run stays active.
+
+## U-13 DEV playtest (13 Oct 2026)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Banner, all power-ups selectable, starting point selectable, no question shown | Passed | Chromium from the offline files: Blackline started at 6.8 km with all three upgrades (jumps 2/3); Ironbreak at BOSS with spread/armor/agility (health 4/4); Coastal at boss checkpoint with all upgrades (hull 150/150, 1:15 left). `u13-dev-playtest.png`. |
+| Start from every checkpoint/section | Passed | Unit tests for all Coastal checkpoints (restorable) and all six Blackline sections; Ironbreak checkpoints use the existing tested `createGame` path. |
+| Suite | 261 / 271 | Same ten `happy-dom` files Not run. |

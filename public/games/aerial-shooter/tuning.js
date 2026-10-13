@@ -1,5 +1,5 @@
 // v0.3.0 difficulty revision (13 Oct 2026). Earlier practice saves remain stored separately.
-export const BUILD_VERSION='0.3.0';
+export const BUILD_VERSION='0.3.1';
 export const VERSION = Object.freeze({game:'0.3.0', engine:'aerial/1', level:'coast/3', tuning:'standard/3', assets:'coast-art/1'});
 export const T = Object.freeze({hz:60, width:640, height:360, limit:18000, lives:3, health:100, armor:150,
   speed:198, agility:1.2, damage:10, heavyDamage:20, protection:60, respawnProtection:120,

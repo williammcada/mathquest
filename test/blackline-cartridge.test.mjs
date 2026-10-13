@@ -82,3 +82,6 @@ test('BLACKLINE earned equipment triggers once and reconnect retains exact state
 test('BLACKLINE binary controls finish in 4–5 minutes with all jumps and both pursuers',()=>{
  const s=play({runId:'drive',route:'register',mode:'action',threat:1,loadout:[]});assert.equal(s.outcome,'success');assert.equal(s.race.landings,3);assert.ok(s.time>=240&&s.time<300);assert.ok(s.race.stats.shots>0&&s.race.stats.rams>0);assert.ok(s.race.stats.strikes>=50,'strikes are frequent (v0.2.0 driver saw 33 bursts)');assert.equal(s.race.stats.obstacles,0,'every obstacle is avoidable: hit '+s.race.obstaclesHit);console.log('BLACKLINE binary driver',s.time,s.race.hp,JSON.stringify(s.race.stats));
 });
+test('U-13 DEV start at each section keeps jump and repair history consistent',()=>{
+ for(const sec of Sim.SECTIONS){const s=createBlackline({runId:'dev',route:'register',mode:'action',threat:1,loadout:['impact-plating','boost-capacitor','repair-reserve']});Sim.startAt(s.race,sec.start);for(let i=0;i<120;i++)stepBlackline(s,{},1/60);assert.ok(s.race.z>=sec.start);assert.equal(s.race.jumpIndex,Sim.JUMPS.filter(j=>j.start<s.race.z).length);assert.notEqual(s.race.mode,'result');}
+});

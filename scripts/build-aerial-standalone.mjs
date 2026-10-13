@@ -16,7 +16,7 @@ if(path.endsWith('/aerial-shooter/render.js')){
  .replace('new URL(a.path,BASE).href','EMBEDDED_ART[a.path]');
 }
 if(path.endsWith('/aerial-shooter/adapter.js'))source=source.replace("const audio=new URL('../../assets/aerial-shooter/audio/',import.meta.url);",`const EMBEDDED_AUDIO=${JSON.stringify(audio)};`).replace(/new URL\(([^,\n]+),audio\)\.href/g,'EMBEDDED_AUDIO[$1]');
-if(path.endsWith('/aerial-shooter/practice.js'))source=source.replace('crypto.randomUUID()',"(globalThis.crypto?.randomUUID?.()||'practice-'+Date.now()+'-'+Math.random().toString(16).slice(2))").replace('Five-minute flight · touch recovery update · device verification pending','Standalone candidate 2026-10-01.3 · all media embedded · device verification pending');
+if(path.endsWith('/aerial-shooter/practice.js'))source=source.replace('crypto.randomUUID()',"(globalThis.crypto?.randomUUID?.()||'practice-'+Date.now()+'-'+Math.random().toString(16).slice(2))").replace('Five-minute flight · touch recovery update · device verification pending',`Standalone v${V} · all media embedded · device verification pending`);
 if(path.endsWith('/engine/action-host.js'))source=source.replace('href="./index.html"','href="#" aria-label="MathQuest aerial practice"');
 return {contents:source,loader:'js'};
 });}}]});

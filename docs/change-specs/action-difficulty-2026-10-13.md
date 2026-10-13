@@ -44,3 +44,7 @@ Coastal flight 0.2.0 → 0.3.0 (level `coast/3`, tuning `standard/3`); Ironbreak
 ## Verification required
 
 Unit/regression tests; deterministic headless runs (bounded populations, boss completion within limits, strike/obstacle avoidability); Chromium rendering of each game's new elements; DEV links open the new versions. Physical iOS checks remain Not run.
+
+## Addendum — U-13 DEV playtest mode (13 Oct 2026)
+
+Owner approved handbook U-13 (handbook commit `0304be1`). Applied here: shared `public/engine/dev-playtest.js` panel (banner "DEV PLAYTEST · [Game] v[version] · no questions, no records", every power-up selectable, starting point selectable, Start; return to setup). Blackline v0.3.1 (sections), Ironbreak v0.2.1 (START/MID/MID2/BOSS), Coastal Escape flight v0.3.1 (take-off/midpoint/boss). Display versions advance per U-01 because the playtest files changed; data contracts (`blackline-racer-0.3.0`, `ironbreak-0.2.0`, aerial `0.3.0` config) are unchanged. Vault Seven, Nightfall and False Haven are not yet migrated.
