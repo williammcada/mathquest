@@ -54,3 +54,16 @@ Owner playtest: staying in floor water for more than about a second paused the r
 | Mixed patterns on screen | Passed (visual) | `coastal-v0.4.0-patterns.png`. |
 | Suite | 263 / 273 | Same ten `happy-dom` files Not run. |
 | Owner playtest | Passed | Owner, 13 Oct 2026 13:39: "Way better. Felt like playing 1942." |
+
+## Verified checkpoint — 13 Oct 2026
+
+Candidate: `6940ce6183345695aa09712238ed2727b71d6eb2` (Coastal Escape flight v0.4.0, Ironbreak v0.2.1, Blackline v0.3.2, U-13 DEV mode).
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Full suite including the ten DOM runtime files (held input, Blackline/Ironbreak runtime, migration UI) | Passed 317/317 | GitHub Actions run 38354941205 on the exact candidate. |
+| `npm run build` | Passed | Same run. |
+| Owner playtest of all three games | Passed | Owner, 13 Oct 2026 14:05: played all three; "significantly better". |
+| Physical iPhone/iPad held input, zoom, native menus | Not run | Not claimed. |
+| Classroom Worker + frontend deployment, school network | Not run | Release/deploy stages follow. |
+| Known limitation accepted by owner | Recorded | Blackline interceptors stay off-screen behind the player and their attack is indistinguishable from artillery; owner chose to leave as is (13 Oct 2026). |
