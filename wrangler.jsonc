@@ -34,7 +34,7 @@
     "enabled": false
   },
   "vars": {
-    "CORS_ALLOWED_ORIGINS": "https://williammcada.github.io,https://vault7mathquest.netlify.app",
+    "CORS_ALLOWED_ORIGINS": "https://williammcada.github.io,https://vault7mathquest.netlify.app,https://mcada-mathquest.onrender.com",
     "COMBAT_PUBLIC_BASE": "https://mathquest-prototype.willmcada-apps.workers.dev"
   }
 }

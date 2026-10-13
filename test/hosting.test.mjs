@@ -166,3 +166,36 @@ test('all browser API calls omit cookies and referrers while preserving the comm
     assert.ok(observed.init.signal instanceof AbortSignal);
   } finally { globalThis.fetch = old; }
 });
+
+test('Render front door keeps API calls, session and QR links on the Render address', async () => {
+  const render = 'https://mcada-mathquest.onrender.com';
+  for (const href of [`${render}/`, `${render}/index.html?session=OLD&teacher=PRIVATE#secret`]) {
+    const hosting = hostingFor(href);
+    assert.equal(hosting.apiBase, `${render}/api/`);
+    assert.equal(hosting.api('sessions/ABC123/state?deviceId=ipad'), `${render}/api/sessions/ABC123/state?deviceId=ipad`);
+    assert.equal(hosting.sessionLink('ABC123', { student: true, teacherKey: 'PRIVATE' }), `${render}/?session=ABC123&student=1`);
+  }
+  // The Worker accepts the Render origin both from its configured allowlist and its built-in default.
+  const wrangler = await readFile(new URL('../wrangler.jsonc', import.meta.url), 'utf8');
+  const configured = wrangler.match(/"CORS_ALLOWED_ORIGINS":\s*"([^"]+)"/)[1];
+  assert.ok(configured.split(',').includes(render));
+  for (const extra of [{}, { CORS_ALLOWED_ORIGINS: configured }]) {
+    const env = { ...environment(), ...extra };
+    const pre = await worker.fetch(preflight('sessions', 'POST', 'content-type', render), env);
+    assert.equal(pre.status, 204);
+    assert.equal(pre.headers.get('access-control-allow-origin'), render);
+    const health = await worker.fetch(request('health', 'POST', { check: 'classroom-connectivity' }, render), env);
+    assert.equal(health.status, 200);
+    assert.equal(health.headers.get('access-control-allow-origin'), render);
+  }
+});
+
+test('Render Blueprint publishes public/ and rewrites only /api/ to the existing Worker', async () => {
+  const blueprint = await readFile(new URL('../render.yaml', import.meta.url), 'utf8');
+  assert.match(blueprint, /runtime:\s*static/);
+  assert.match(blueprint, /staticPublishPath:\s*\.\/public/);
+  assert.match(blueprint, /source:\s*\/api\/\*\s*\n\s*destination:\s*https:\/\/mathquest-prototype\.willmcada-apps\.workers\.dev\/api\/\*/);
+  const html = await readFile(new URL('../public/connection-test.html', import.meta.url), 'utf8');
+  assert.match(html, /https:\/\/mcada-mathquest\.onrender\.com\/connection-test\.html/);
+  assert.doesNotMatch(html, /github\.io\/mathquest\/connection-test/);
+});

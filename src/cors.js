@@ -1,6 +1,7 @@
 const DEFAULT_ORIGINS = [
   'https://williammcada.github.io',
-  'https://vault7mathquest.netlify.app'
+  'https://vault7mathquest.netlify.app',
+  'https://mcada-mathquest.onrender.com'
 ];
 const METHODS = ['GET', 'POST'];
 const HEADERS = ['content-type', 'accept','authorization'];
