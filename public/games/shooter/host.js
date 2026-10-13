@@ -31,6 +31,7 @@ export class IronbreakHost{
  async audioStart(){try{await this.audio.start();this.audio.pause(this.blocked());}catch{this.status.textContent='Sound unavailable; you can continue.';}}
  async resume(){
   if(this.busy||this.teacherPaused||this.run.status==='terminal')return;
+  if(this.pending&&this.rejected){this.pending=null;this.rejected=false;try{localStorage.removeItem(this.key);}catch{}this.s=adapter.create(this.run);this.seq=this.run.seq;this.clear();this.networkError=false;this.status.textContent='Restored your last saved position.';}
   if(this.pending&&!await this.flush())return;
   if(this.run.status==='not_started'){await this.act('start',{mode:this.ctx?'action':'assisted'});return;}
   if(this.run.mode==='action'&&this.portrait)return;
@@ -62,7 +63,10 @@ export class IronbreakHost{
   if(this.sending)return false;if(!this.pending)return true;
   const pending=this.pending;this.sending=true;
   try{const result=await this.send('ironbreak.progress',pending);if(this.dead)return true;this.accept(result);if(this.pending===pending)this.pending=null;try{localStorage.removeItem(this.key);}catch{}this.networkError=false;return true;}
-  catch(e){this.networkError=true;this.pause();this.status.textContent=`Connection or validation interrupted: ${e.message}. Resume retries the saved update.`;return false;}
+  catch(e){this.networkError=true;this.pause();
+   // A reply that rejects the update will reject it again; Resume then restores the last accepted position.
+   this.rejected=!/fetch|network|load failed|timeout|offline/i.test(`${e.name} ${e.message}`);
+   this.status.textContent=this.rejected?`The last update was rejected: ${e.message}. Resume continues from your last saved position.`:`Connection interrupted: ${e.message}. Resume retries the saved update.`;return false;}
   finally{this.sending=false;}
  }
  update(run,paused,deadline,action={}){

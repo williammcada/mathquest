@@ -70,3 +70,11 @@ test('real boss fight snapshots pass the live validator through success; checkpo
  const other=await fixture();await runCmd(other.r,other.t,'start',{mode:'action'});const run=other.t.runs.s0;run.snapshot=createGame({upgrades:run.loadout,checkpoint:'MID',timed:false});run.checkpoint='MID';const down=structuredClone(run.snapshot);while(down.player.hp){down.player.immunity=0;damage(down);}assert.equal((await progress(other.r,other.t,down)).http,200);await runCmd(other.r,other.t,'retry');assert.equal(run.snapshot.enemies.find(e=>e.id==='H01').hp,0);assert.equal(run.checkpoint,'MID');assert.equal(run.snapshot.player.hp,3);
  }finally{Date.now=real;}
 });
+test('swimming in floor water for several seconds keeps passing the live validator',async()=>{
+ const real=Date.now;let now=real();Date.now=()=>now;
+ try{const {r,t}=await fixture();await runCmd(r,t,'start',{mode:'action'});const s=structuredClone(t.runs.s0.snapshot);
+  const water=WORLD.layers.Water[0];Object.assign(s.player,{x:water.x+200,y:water.surface_y-40,vy:0,grounded:false});
+  for(const e of s.enemies)e.hp=e.hp;for(const h of s.hazards)h.armed=false;
+  for(let k=0;k<6;k++){for(let i=0;i<60;i++){s.player.immunity=Math.min(s.player.immunity,1.5);step(s,{x:k%2?1:-1},1/60);}now+=1000;assert.ok(s.player.swimming||k===0);const out=await progress(r,t,s);assert.equal(out.http,200,`${k}: ${out.error}`);}
+ }finally{Date.now=real;}
+});

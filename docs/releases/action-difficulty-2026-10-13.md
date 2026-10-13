@@ -21,3 +21,7 @@ Scope: `docs/change-specs/action-difficulty-2026-10-13.md`. Branch `implement/ac
 | Classroom Worker + frontend deployment | Not run | Requires the paired deployment described in the change spec. |
 
 Review bundle hashes are in `review-hashes.txt`.
+
+## Fix — Ironbreak swimming pause (13 Oct 2026)
+
+Owner playtest: staying in floor water for more than about a second paused the run ("Crossing paused") and Resume did nothing. Cause (also present in v0.1.0): the progress validator rejected the 22-pixel swimming body height, and Resume kept resending the same rejected update. Fixes: the validator accepts the swimming height; when the server rejects an update (not a network failure), Resume now restores the last accepted position instead of resending. Regression test: six seconds of swimming with live validation each second. Chromium: eight seconds in the Coolant Works water, run stays active.

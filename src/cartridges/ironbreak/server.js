@@ -45,7 +45,7 @@ export function validateSnapshot(r,s,elapsed,now=Date.now()){
  if(!['active','downed','terminal'].includes(s.status)||!Object.hasOwn(rank,s.checkpoint)||rank[s.checkpoint]<rank[r.checkpoint])return 'Invalid run state or checkpoint.';
  const p=s.player,capacity=r.loadout.includes('armor')?4:3;
  if(!p||['x','y','vx','vy','h','facing','aimX','aimY','hp','maxHP','immunity','shot','coyote','jumpBuffer','jumps','dropUntil'].some(k=>!Number.isFinite(p[k]))||['grounded','swimming'].some(k=>typeof p[k]!=='boolean')||!p.safe||!Number.isFinite(p.safe.x)||!Number.isFinite(p.safe.y))return 'Invalid suit fields.';
- if(!p||!Number.isInteger(p.hp)||p.hp<0||p.hp>capacity||p.maxHP!==capacity||p.x<0||p.x>WIDTH||p.y<0||p.y>700||Math.abs(p.vx)>500||Math.abs(p.vy)>1200||p.immunity<0||p.immunity>1.51||![10,16,28].includes(p.h))return 'Invalid suit health or position.';
+ if(!p||!Number.isInteger(p.hp)||p.hp<0||p.hp>capacity||p.maxHP!==capacity||p.x<0||p.x>WIDTH||p.y<0||p.y>700||Math.abs(p.vx)>500||Math.abs(p.vy)>1200||p.immunity<0||p.immunity>1.51||![10,16,22,28].includes(p.h))return 'Invalid suit health or position.';
  if(!['stand','crouch','prone'].includes(p.stance)||p.climbing!==null&&!WORLD.layers.Ladders.some(l=>l.id===p.climbing)||!p.safe||p.safe.x<0||p.safe.x>WIDTH||p.safe.y<0||p.safe.y>640||p.shot<0||p.shot>.17||p.jumps<0||p.jumps>2||p.dropUntil>s.t+.4)return 'Invalid suit movement state.';
  for(const k of ['damage','kills','volley'])if(!Number.isInteger(s[k])||s[k]<old[k]||s[k]>100000)return 'Counters cannot reset.';
  const dead=p.hp===0;
