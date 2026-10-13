@@ -1,5 +1,5 @@
 export const IRONBREAK={
- id:'ironbreak',title:'Ironbreak',revision:'ironbreak-0.1.0',contract:'mq.cartridge/1.0',gameId:'ironbreak',activeLimitMs:300000,teamWindowMs:300000,budget:0,
+ id:'ironbreak',title:'Ironbreak',revision:'ironbreak-0.2.0',contract:'mq.cartridge/1.0',gameId:'ironbreak',activeLimitMs:300000,teamWindowMs:300000,budget:0,
  resolution:{type:'final_decision',minigamePlacement:'pre_final_decision'},
  presentation:{emblem:'IB',theme:'ironbreak',cover:'./assets/ironbreak/cover.webp',coverAlt:'Mara prepares a remote maintenance machine beside the flooded foundry',summary:'Break the lockdown. Restore the pumps. Decide who controls the factory.',stageLabels:{decision:'Choose a Priority',market:'Suit Preparation',minigame:'Break the Lockdown',finale:'Who Holds the Controls?'},practice:{title:'Ironbreak · robot foundry',href:'./practice-shooter.html'}},
  gates:['A Signal Behind Steel','The Pump Circuit','Override Ready'],inserts:['The Crane Ledger','An Open Channel'],
@@ -33,7 +33,7 @@ export function ironbreakScene(team,names,crew){
  'Override Ready':['Mara has assembled the shutdown sequence. The last checks protect the pumps when the security controller disconnects.','Finish your assigned work to unlock suit preparation. Then choose your resources and enter the factory.']};
  scenes.gate=[names[team.gateIndex],...(bodies[names[team.gateIndex]]||[])];
  }
- const s=scenes[team.stage];return s?{title:s[0],paragraphs:s.slice(1),eyebrow:'IRONBREAK · v0.1.0',image:IRONBREAK.assets[["finale","victory"].includes(team.stage)?"ending":team.stage==="market"?"market":["gate","decision"].includes(team.stage)?"radio":"cover"]}:null;
+ const s=scenes[team.stage];return s?{title:s[0],paragraphs:s.slice(1),eyebrow:'IRONBREAK · v0.2.0',image:IRONBREAK.assets[["finale","victory"].includes(team.stage)?"ending":team.stage==="market"?"market":["gate","decision"].includes(team.stage)?"radio":"cover"]}:null;
 }
 export const GUIDED=[
  {title:'The crane warning',text:'An amber light flashes above a marked landing zone. What is your next move?',options:[['wait','Wait outside the marked zone until the load falls.'],['rush','Stand beneath the load and fire upward.']],answer:'wait',explanation:'The marking shows where the load will land. Wait beside it, then cross after it clears.'},

@@ -7,6 +7,10 @@ import ending from './assets/ironbreak/ending.webp';
 import {QuestSession} from '../src/worker.js';
 import {IronbreakHost} from './games/shooter/host.js';
 import {IRONBREAK} from './cartridges/ironbreak.js';
+import {openRuns} from '../src/cartridges/ironbreak/server.js';
+import {createGame} from './games/shooter/simulation.js';
+import {showDevPanel} from './engine/dev-playtest.js';
+const VERSION='0.2.1';
 import cover from './assets/ironbreak/cover.webp';
 const root=document.querySelector('#review-body'),message=document.querySelector('#review-message'),esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 let room,state,host,working=false,credential=crypto.randomUUID();
@@ -59,4 +63,10 @@ document.querySelector('#review-reset').onclick=reset;
 document.querySelector('#review-pause').onclick=async()=>{try{await request('/command',{type:'teacher.pause',teacherKey:'review-teacher'},true);state=await request('/state?deviceId=reviewer');render();}catch(e){message.textContent=e.message;}};
 document.querySelector('#review-close').onclick=async()=>{try{await request('/command',{type:'teacher.advanceFinale',teacherKey:'review-teacher',teamId:'team-1'},true);state=await request('/state?deviceId=reviewer');render();}catch(e){message.textContent=e.message;}};
 setInterval(async()=>{if(!room||working)return;try{await room.alarm();if(state?.teams[0].stage==='minigame'){state=await request('/state?deviceId=reviewer');render();}}catch(e){message.textContent=e.message;}},1000);
-start().catch(e=>message.textContent=e.message);
+// DEV homepage shortcut (?dev=action): open the suit run directly, with no questions or upgrades.
+// U-13 DEV playtest: choose power-ups and a checkpoint, then open the suit run directly.
+async function devStart({items,start}){const team=room.state.teams['team-1'];team.route=IRONBREAK.routes[0].id;team.inventory=[...items];openRuns(room,team,room.members(team.id));
+ for(const r of Object.values(team.runs)){r.snapshot=createGame({upgrades:r.loadout,checkpoint:start,timed:false});r.checkpoint=start;}
+ state=await request('/state?deviceId=reviewer');message.innerHTML='';const back=document.createElement('button');back.textContent='Back to DEV setup';back.onclick=()=>location.reload();message.append(`DEV PLAYTEST · Ironbreak v${VERSION} · ${items.length?items.join(', '):'no power-ups'} · start ${start} `,back);render();}
+start().then(()=>{if(new URLSearchParams(location.search).get('dev')!=='action')return;
+ showDevPanel(root,{game:'Ironbreak',version:VERSION,items:IRONBREAK.items.map(i=>({id:i.id,title:i.title,detail:i.text})),starts:[['START','Level start'],['MID','Midpoint checkpoint'],['MID2','Second loop checkpoint'],['BOSS','Boss chamber']].map(([id,label])=>({id,label})),story:location.pathname.split('/').pop()},choice=>devStart(choice).catch(e=>message.textContent=e.message));}).catch(e=>message.textContent=e.message);

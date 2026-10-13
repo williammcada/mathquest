@@ -1,5 +1,5 @@
 export const BLACKLINE={
- id:'blackline',title:'BLACKLINE: Last Exit',revision:'blackline-cartridge-0.2.0',mapRevision:'blackline-racer-0.2.0',assetRevision:'blackline-art-1',contract:'mq.cartridge/1.0',gameId:'blackline-racer',activeLimitMs:300000,teamWindowMs:300000,budget:40,
+ id:'blackline',title:'BLACKLINE: Last Exit',revision:'blackline-cartridge-0.3.2',mapRevision:'blackline-racer-0.3.2',assetRevision:'blackline-art-1',contract:'mq.cartridge/1.0',gameId:'blackline-racer',activeLimitMs:300000,teamWindowMs:300000,budget:40,
  resolution:{type:'final_decision',minigamePlacement:'pre_final_decision'},
  presentation:{emblem:'BL',theme:'nightfall',cover:'./assets/blackline/cover.webp',coverAlt:'A stolen interceptor beneath the industrial city’s surveillance towers',summary:'Carry the names. Outdrive the Directorate. Choose what survives.',stageLabels:{minigame:'Last Exit',finale:'Beyond the Line'},practice:{title:'BLACKLINE story and race',href:'./blackline-preview.html'}},
  gates:['Dead Grid','The Cargo We Carry','Last Green Light'],inserts:['The Missing Addresses','Signal Through the Smoke'],

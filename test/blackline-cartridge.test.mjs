@@ -27,12 +27,16 @@ function driver(r){
  const k=Sim.curve(r.z),n=r.v/Sim.C.max,e=r.enemies.find(e=>e.phase!=='follow');let target=0;
  if(e)target=e.type==='rammer'?-(e.side||1)*.62:e.aim>=0?-.58:.58;
  else if(r.projectiles.length)target=r.projectiles[0].x>=0?-.58:.58;
+ // v0.3.0: leave a visible strike zone; steer around obstacles ahead.
+ const k3=r.strikes.find(k=>k.age>=Sim.STRIKE.zoneAt);if(k3&&Math.abs(target-k3.aim)<.34)target=k3.aim>=0?k3.aim-.42:k3.aim+.42;
+ const o=Sim.OBSTACLES.find(o=>o.z>r.z&&o.z-r.z<r.v*1.8+10);if(o&&Math.abs(target-o.x)<.36)target=Math.max(-.62,Math.min(.62,o.x+(r.x<o.x?-.44:.44)));
  const j=Sim.nextJump(r.z);if(j&&j.start-r.z<270||r.jump)target=0;
  const desired=(k*n*n*.98+(target-r.x)*3-r.lv*.2)/(1.65*(.3+.7*n));
  // Binary keyboard/touch input, using pulse density for precise correction.
  driver.error=(driver.error||0)+Math.max(-1,Math.min(1,desired));let direction=0;
  if(driver.error>.5){direction=1;driver.error-=1;}else if(driver.error<-.5){direction=-1;driver.error+=1;}
- return {left:direction<0,right:direction>0,brake:Math.abs(k)>1.2&&r.v>46};
+ const ramp=j&&j.start-r.z<260&&j.start>r.z;
+ return {left:direction<0,right:direction>0,brake:!ramp&&Math.abs(k)>1.2&&r.v>46,boost:ramp};
 }
 function play(run){driver.error=0;const s=createBlackline(run);let prior={...run};
  for(let i=0;i<18001&&!s.outcome;i++){
@@ -77,5 +81,25 @@ test('BLACKLINE earned equipment triggers once and reconnect retains exact state
  const stale=structuredClone(restored);delete stale.used['repair-reserve'];assert.ok(validateBlackline({...run,snapshot:s},{type:'minigame.progress',snapshot:stale,activeElapsedMs:Math.round(stale.time*1000)}));
 });
 test('BLACKLINE binary controls finish in 4–5 minutes with all jumps and both pursuers',()=>{
- const s=play({runId:'drive',route:'register',mode:'action',threat:1,loadout:[]});assert.equal(s.outcome,'success');assert.equal(s.race.landings,3);assert.ok(s.time>=240&&s.time<300);assert.ok(s.race.stats.shots>0&&s.race.stats.rams>0);console.log('BLACKLINE binary driver',s.time,s.race.hp);
+ const s=play({runId:'drive',route:'register',mode:'action',threat:1,loadout:[]});assert.equal(s.outcome,'success');assert.equal(s.race.landings,3);assert.ok(s.time>=240&&s.time<300);assert.ok(s.race.stats.shots>0&&s.race.stats.rams>0);assert.ok(s.race.stats.strikes>=50,'strikes are frequent (v0.2.0 driver saw 33 bursts)');assert.equal(s.race.stats.obstacles,0,'every obstacle is avoidable: hit '+s.race.obstaclesHit);console.log('BLACKLINE binary driver',s.time,s.race.hp,JSON.stringify(s.race.stats));
+});
+test('U-13 DEV start at each section keeps jump and repair history consistent',()=>{
+ for(const sec of Sim.SECTIONS){const s=createBlackline({runId:'dev',route:'register',mode:'action',threat:1,loadout:['impact-plating','boost-capacitor','repair-reserve']});Sim.startAt(s.race,sec.start);for(let i=0;i<120;i++)stepBlackline(s,{},1/60);assert.ok(s.race.z>=sec.start);assert.equal(s.race.jumpIndex,Sim.JUMPS.filter(j=>j.start<s.race.z).length);assert.notEqual(s.race.mode,'result');}
+});
+
+test('v0.3.2 gaps need boost; a strike zone can be outrun with boost or avoided by braking',()=>{
+ for(const j of Sim.JUMPS)assert.ok((j.end-j.start)/j.flight>Sim.C.max&&(j.end-j.start)/j.flight<Sim.C.boostMax-2,'gap needs boost but boost clears it');
+ const flat=4755; // straight road between the 4.75 km bend and the first ramp's protected approach
+ for(const [input,hit] of [[{},true],[{boost:true},false],[{brake:true},false]]){
+  const s=Sim.newState();s.mode='running';s.z=flat;s.v=Sim.C.max;s.x=0;s.artilleryTimer=999;s.encounterIndex=Sim.ENCOUNTERS.length;
+  s.strikes=[{id:1,source:'artillery',owner:null,age:Sim.STRIKE.lockAt,aim:0,z:s.z+s.v*(Sim.STRIKE.flight-Sim.STRIKE.lockAt),locked:true}];s.strikeSerial=1;
+  for(let i=0;i<Math.round((Sim.STRIKE.flight-Sim.STRIKE.lockAt)*60)+2;i++)Sim.tick(s,1/60,input);
+  assert.equal(s.lastHit==='strike',hit,JSON.stringify({input,hp:s.hp,z:s.z}));
+ }
+});
+test('v0.3.2 a gap taken at full speed without boost is lost',()=>{
+ const s=Sim.newState();s.mode='running';s.z=4900;s.v=Sim.C.max;s.encounterIndex=Sim.ENCOUNTERS.length;s.artilleryTimer=999;
+ for(let i=0;i<600&&s.mode==='running';i++)Sim.tick(s,1/60,{});assert.equal(s.reason,'jump-too-slow');
+ const b=Sim.newState();b.mode='running';b.z=4900;b.v=Sim.C.max;b.encounterIndex=Sim.ENCOUNTERS.length;b.artilleryTimer=999;
+ for(let i=0;i<600&&b.mode==='running'&&b.landings<1;i++)Sim.tick(b,1/60,{boost:b.z<5050});assert.equal(b.landings,1);
 });
