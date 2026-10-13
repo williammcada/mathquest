@@ -1,6 +1,6 @@
 import { CARTRIDGES } from './cartridges.js?v=0.9.7';
 
-export const BRAND = Object.freeze({name:'MathQuest',mark:'MQ',credit:'A WILLIAM MCADA PRODUCT',version:'0.9.8',engineVersion:'0.9.8'});
+export const BRAND = Object.freeze({name:'MathQuest',mark:'MQ',credit:'A WILLIAM MCADA PRODUCT',version:'0.10.0',engineVersion:'0.10.0'});
 export const escapeBrand = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 
 // Resolve only registered metadata; missing/unknown IDs never inherit a cartridge.
@@ -10,7 +10,7 @@ export function presentationFor(id, registry=CARTRIDGES) {
 }
 export function setBrandContext(doc, id, registry=CARTRIDGES) {
   const p=presentationFor(id,registry);
-  doc.title=p ? `${BRAND.name} — ${p.title}` : BRAND.name;
+  doc.title=p ? `${BRAND.name} ${BRAND.version} — ${p.title}` : `${BRAND.name} ${BRAND.version}`;
   doc.documentElement.dataset.cartridge=p?.id||'';
   doc.documentElement.dataset.theme=p?.theme||'mathquest';
   return p;

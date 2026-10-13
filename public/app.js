@@ -1,12 +1,13 @@
 import {splitScene,instructionPanel} from './review-presentation.js?v=u11';
-import {JourneyHost} from './games/journey/host.js?v=jttw-stage9-art1';
+import {JourneyHost} from './games/journey/host.js?v=0.10.0';
 let journeyHost=null;
 import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.9.7';
 import {IronbreakHost} from './games/shooter/host.js?v=ironbreak-0.2.0';
 import {RescueHost} from './games/nightfall/rescue-host.js?v=0.9.7';
 import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.9.7';
 import { hostingFor, fetchApi } from './hosting.js?v=0.9.7';
-import { CATALOG } from './catalog.js?v=0.9.7';
+import { CATALOG } from './catalog.js?v=0.9.7'; // retired MathQuest module titles only
+import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.10.0';
 import { StealthRuntime } from './stealth.js?v=0.9.7';
 import { SceneAssets } from './vault7-assets.js?v=0.9.7';
 import { TeacherAudio } from './teacher-audio.js?v=0.9.7';
@@ -15,10 +16,10 @@ import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.9.7';
 import { FinaleHost } from './finale-host.js?v=0.9.7';
 import { CartridgeAudio } from './cartridge-audio.js?v=0.9.7';
 import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.9.7';
-import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.9.7-0.9.8';
+import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.10.0';
 import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.9.7';
 forgetExpiredRooms();
-import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.9.8';
+import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.10.0';
 let setupCartridge='';
 let finaleHost=null;
 const app = document.querySelector("#app");
@@ -41,12 +42,32 @@ let customModules = [];
 let setupTeams = "Cipher, Vector";
 let setupGates = 3;
 let setupBulkCount = 3;
-let setupBulkBand = "intermediate";
 let setupDiscipline = "mathematics";
 let activeCommand = "";
 
 const selectedDefaults = { 'number.integer-operations':4, 'number.gcf':2, 'number.lcm':2, 'fraction.simplify':3, 'number.fdp-conversion':3 };
-const PRESETS = CATALOG.map(({id,title}) => ({id,title,selected:id in selectedDefaults,itemCount:selectedDefaults[id]||3,defaultItemCount:selectedDefaults[id]||3,band:'intermediate'}));
+// Math content comes from the Math Engine (K–Algebra 2). Retired MathQuest module names remain as
+// ready-made sets that expand to their mapped engine skills.
+const LEGACY_TITLES = Object.fromEntries(CATALOG.map(({id,title}) => [id,title]));
+const ENGINE_INDEX = new Map(ENGINE_ROWS.map(([id,name,layer,grade,bankId,lesson,order]) => [id,{id,name,layer,grade,bankId,lesson,order}]));
+const COURSE_NAMES = Object.fromEntries(ENGINE_COURSES.map(c => [c.bankId,c.course]));
+let selectedMath = Object.entries(selectedDefaults).map(([id,count]) => ({id,itemCount:count,defaultItemCount:count}));
+let pickerLevel = 'mathquest', pickerQuery = '', pickerLimit = 40, mathPreview = null;
+const mathTitle = id => LEGACY_TITLES[id] || ENGINE_INDEX.get(id)?.name || id;
+function mathWhere(id) {
+  if (LEGACY_MODULE_MAP[id]) return `MathQuest set · ${LEGACY_MODULE_MAP[id].length} engine skill${LEGACY_MODULE_MAP[id].length===1?'':'s'}`;
+  const e = ENGINE_INDEX.get(id); if (!e) return '';
+  return e.layer === 'skill' ? `Grade ${e.grade}` : e.layer === 'bank' ? `${COURSE_NAMES[e.bankId]||'Course'}${e.lesson?` · ${e.lesson}`:''}` : 'Math Engine extra';
+}
+function pickerRows() {
+  const q = pickerQuery.trim().toLowerCase();
+  let rows = pickerLevel === 'mathquest' ? Object.keys(LEGACY_MODULE_MAP).map(id => ({id,name:LEGACY_TITLES[id]||id,lesson:''}))
+    : [...ENGINE_INDEX.values()].filter(e => pickerLevel === 'all' || (pickerLevel.startsWith('grade:') ? e.layer === 'skill' && e.grade === pickerLevel.slice(6) : pickerLevel.startsWith('bank:') ? e.bankId === pickerLevel.slice(5) : pickerLevel === 'extras' && e.layer === 'continuity'));
+  if (q) rows = rows.filter(r => `${r.name} ${r.lesson||''}`.toLowerCase().includes(q));
+  // Course items in teaching order (lesson order from the engine); others keep catalog order.
+  if (pickerLevel.startsWith('bank:')) rows = rows.map((r,i) => [r,i]).sort((a,b) => (a[0].order??1e9)-(b[0].order??1e9) || a[1]-b[1]).map(x => x[0]);
+  return rows;
+}
 let extractionRuntime = null;
 const teacherAudio = new TeacherAudio();
 const cartridgeAudio = new CartridgeAudio();
@@ -115,10 +136,10 @@ function shell(content, compact = false) {
   </div>`;
 }
 
-function selectedPresetCount() { return PRESETS.filter(record => record.selected).length; }
+function selectedPresetCount() { return selectedMath.length; }
 function moduleCount() { return selectedPresetCount() + customModules.length; }
 function totalQuestions() {
-  return PRESETS.filter(record => record.selected).reduce((sum, record) => sum + Number(record.itemCount || 0), 0)
+  return selectedMath.reduce((sum, record) => sum + Number(record.itemCount || 0), 0)
     + customModules.reduce((sum, module) => sum + module.items.length, 0);
 }
 function gateLoads(total, count) {
@@ -127,11 +148,9 @@ function gateLoads(total, count) {
 }
 
 function syncSetup() {
-  document.querySelectorAll("[data-module]").forEach(card => {
-    const record = PRESETS.find(item => item.id === card.dataset.module);
-    record.selected = card.querySelector("[data-select]").checked;
-    record.itemCount = Math.max(1, Math.min(50, Number(card.querySelector("[data-count]").value) || 1));
-    record.band = card.querySelector("[data-band]").value;
+  document.querySelectorAll("[data-selected-math]").forEach(card => {
+    const record = selectedMath.find(item => item.id === card.dataset.selectedMath);
+    if (record) record.itemCount = Math.max(1, Math.min(50, Number(card.querySelector("[data-count]").value) || 1));
   });
 }
 
@@ -139,13 +158,17 @@ function renderLanding() {
   const gateCount = setupGates;
   const questionTotal = totalQuestions();
   const distribution = gateLoads(questionTotal, gateCount);
-  const selectedPresets = PRESETS.filter(record => record.selected);
-  const countOverrides = selectedPresets.filter(record => record.itemCount !== setupBulkCount);
-  const bandOverrides = selectedPresets.filter(record => record.band !== setupBulkBand);
-  const presetCards = PRESETS.map(record => `<article class="module-card ${record.selected ? "selected" : ""}" data-module="${record.id}">
-    <label class="module-check"><input type="checkbox" data-select ${record.selected ? "checked" : ""}><span><b>${escapeHtml(record.title)}</b><small>Preset generator</small></span></label>
-    <div class="module-settings"><label>Questions<input type="number" data-count min="1" max="50" value="${record.itemCount}"></label><label>Level<select data-band><option value="beginner" ${record.band === "beginner" ? "selected" : ""}>Foundation</option><option value="intermediate" ${record.band === "intermediate" ? "selected" : ""}>Standard</option><option value="advanced" ${record.band === "advanced" ? "selected" : ""}>Challenge</option></select></label></div>
+  const countOverrides = selectedMath.filter(record => record.itemCount !== setupBulkCount);
+  const rows = pickerRows(), chosen = new Set(selectedMath.map(r => r.id));
+  const levelOptions = [['mathquest','MathQuest sets (former modules)'],['all','All levels · search'],...['K','1','2','3','4','5','6','7'].map(g=>[`grade:${g}`,`Grade ${g} skills`]),...ENGINE_COURSES.map(c=>[`bank:${c.bankId}`,`${c.course} (${c.count})`]),['extras','Math Engine extras']];
+  const pickerMarkup = `<div class="engine-picker"><div class="form-row"><label>Level<select id="math-level">${levelOptions.map(([v,l])=>`<option value="${v}" ${pickerLevel===v?'selected':''}>${escapeHtml(l)}</option>`).join('')}</select></label><label>Search<input id="math-search" type="search" value="${escapeHtml(pickerQuery)}" placeholder="e.g. fractions, GCF, slope" autocomplete="off"></label></div>
+      <div class="engine-results" role="group" aria-label="Math Engine skills">${rows.slice(0,pickerLimit).map(r=>`<label class="engine-row ${chosen.has(r.id)?'selected':''}"><input type="checkbox" data-pick-math="${escapeHtml(r.id)}" ${chosen.has(r.id)?'checked':''}><span><b>${escapeHtml(r.name)}</b><small>${escapeHtml(mathWhere(r.id))}</small></span></label>`).join('')||'<p class="fine">No skills match. Try another level or search word.</p>'}</div>
+      <p class="fine">${rows.length} match${rows.length===1?'':'es'}${rows.length>pickerLimit?` · showing ${pickerLimit}`:''}. ${rows.length>pickerLimit?'<button class="quiet" id="math-more">Show more</button>':''}</p></div>`;
+  const presetCards = selectedMath.map(record => `<article class="module-card selected" data-selected-math="${escapeHtml(record.id)}">
+    <div><b>${escapeHtml(mathTitle(record.id))}</b><small>${escapeHtml(mathWhere(record.id))}</small></div>
+    <div class="module-settings"><label>Questions<input type="number" data-count min="1" max="50" value="${record.itemCount}"></label><button class="quiet" data-preview-math="${escapeHtml(record.id)}">Preview</button><button class="remove-module" data-remove-math="${escapeHtml(record.id)}" aria-label="Remove ${escapeHtml(mathTitle(record.id))}">Remove</button></div>
   </article>`).join("");
+  const previewMarkup = mathPreview ? `<section class="engine-preview" aria-live="polite"><div class="section-title"><h3>Preview · ${escapeHtml(mathPreview.title)}</h3><button class="quiet" id="close-math-preview">Close preview</button></div>${mathPreview.error?`<p class="notice bad">${escapeHtml(mathPreview.error)}</p>`:mathPreview.items?mathPreview.items.map(q=>`<article class="preview-question"><small>${escapeHtml(q.title)}</small><div class="problem">${q.promptMarkup||escapeHtml(q.prompt)}</div><p class="fine">Answer: <b>${escapeHtml(q.answer)}</b></p></article>`).join(''):'<p class="fine">Loading sample questions…</p>'}<p class="fine">Preview only. Nothing is saved and no student data changes.</p></section>` : '';
   const customCards = customModules.map((module, index) => `<article class="module-card selected custom"><div><b>${escapeHtml(module.title)}</b><small>Teacher module · ${module.items.length} questions</small></div><button class="remove-module" data-remove-custom="${index}" aria-label="Remove ${escapeHtml(module.title)}">Remove</button></article>`).join("");
   app.innerHTML = shell(`
     <section class="hero platform-hero"><div><p class="eyebrow">TEACHER SESSION BUILDER</p><h1>${BRAND.name}</h1><p>Choose the story. Control every question.</p></div>${markMarkup()}</section>
@@ -157,15 +180,17 @@ function renderLanding() {
       <div class="form-row"><label>Team names <small>Separate with commas; 1–6 teams. Empty teams are removed at launch.</small><input id="teams" value="${escapeHtml(setupTeams)}"></label><label>Mission gates<select id="gate-count"><option value="3" ${gateCount === 3 ? "selected" : ""}>3 · Condensed mission</option><option value="4" ${gateCount === 4 ? "selected" : ""}>4 · Standard mission</option><option value="5" ${gateCount === 5 ? "selected" : ""}>5 · Full mission</option></select></label></div>
     </section>
     <section class="panel setup-builder">
-      <div class="section-title"><div><h2>2 · Academic Content</h2><p>Choose a discipline, then select up to 20 preset or teacher-built modules. Every selected question is used.</p></div><span class="selection-count">${moduleCount()} / 20 modules</span></div>
-      <div class="content-source-row"><label>Discipline<select id="discipline"><option value="mathematics" selected>Mathematics</option><option disabled>Science · coming later</option><option disabled>Humanities · coming later</option><option disabled>Languages · coming later</option></select></label><label>Course bank<select id="course-bank"><option value="prealgebra">Prealgebra</option><option disabled>Elementary · coming later</option><option disabled>Algebra 1 · coming later</option><option disabled>Algebra 2 · coming later</option></select></label><div><b>Content source</b><span>Presets + teacher imports</span></div></div>
-      <h3 class="library-heading">Prealgebra · 25 reusable modules</h3>
+      <div class="section-title"><div><h2>2 · Academic Content</h2><p>Choose up to 20 Math Engine skills, MathQuest sets or teacher-built modules. Every selected question is used.</p></div><span class="selection-count">${moduleCount()} / 20 modules</span></div>
+      <div class="content-source-row"><label>Discipline<select id="discipline"><option value="mathematics" selected>Mathematics</option><option disabled>Science · coming later</option><option disabled>Humanities · coming later</option><option disabled>Languages · coming later</option></select></label><div><b>Content source</b><span>Math Engine + teacher imports</span></div></div>
+      <h3 class="library-heading">Math Engine ${escapeHtml(ENGINE_VERSION)} · Kindergarten to Algebra 2</h3>
+      ${pickerMarkup}
+      <h3 class="library-heading">Selected for this session</h3>
       <div class="bulk-controls">
         <div class="bulk-control"><label>Questions per selected module<input id="bulk-count" type="number" min="1" max="50" value="${setupBulkCount}"></label><button class="secondary" id="apply-bulk-count">Apply count to selected</button><button class="quiet" id="reset-bulk-count">Reset question counts</button></div>
-        <div class="bulk-control"><label>Difficulty for selected modules<select id="bulk-band"><option value="beginner" ${setupBulkBand === "beginner" ? "selected" : ""}>Foundation</option><option value="intermediate" ${setupBulkBand === "intermediate" ? "selected" : ""}>Standard</option><option value="advanced" ${setupBulkBand === "advanced" ? "selected" : ""}>Challenge</option></select></label><button class="secondary" id="apply-bulk-band">Apply difficulty to selected</button><button class="quiet" id="reset-bulk-band">Reset difficulty</button></div>
+        
       </div>
-      <p class="bulk-summary"><b>Bulk defaults:</b> ${setupBulkCount} questions · ${({beginner:"Foundation",intermediate:"Standard",advanced:"Challenge"})[setupBulkBand]} difficulty. ${countOverrides.length} count override${countOverrides.length === 1 ? "" : "s"}; ${bandOverrides.length} difficulty override${bandOverrides.length === 1 ? "" : "s"}.</p>
-      <div class="module-grid">${presetCards}${customCards}</div>
+      <p class="bulk-summary"><b>Bulk defaults:</b> ${setupBulkCount} questions per selected skill. ${countOverrides.length} count override${countOverrides.length === 1 ? "" : "s"}. Difficulty is set per student on the dashboard: Foundation and Challenge use the engine's reviewed easier or harder related skill when one exists.</p>
+      <div class="module-grid">${presetCards}${customCards}</div>${previewMarkup}
       <div class="import-zone"><div><b>Import a teacher module</b><small>CSV or JSON fields: module, prompt, answer_type, answer, accepted_answers, options, hint, image_url, image_alt, image_caption. Images use HTTPS links in this prototype.</small></div><label class="file-button">Choose file<input id="module-file" type="file" accept=".csv,.json,text/csv,application/json"></label></div>
     </section>
     <section class="panel setup-builder allocation">
@@ -173,14 +198,32 @@ function renderLanding() {
       <div class="gate-allocation">${distribution.map((count, index) => `<span><b>Gate ${index + 1}</b>${count} questions</span>`).join("")}</div>
       ${questionTotal > 200 ? `<p class="notice bad">Reduce the session to 200 questions or fewer.</p>` : questionTotal < gateCount ? `<p class="notice bad">Select at least ${gateCount} questions so every gate contains mathematics.</p>` : ""}
       <button class="primary wide" id="create" ${!presentationFor(setupCartridge)||questionTotal < gateCount || questionTotal > 200 || moduleCount() > 20 ? "disabled" : ""}>${presentationFor(setupCartridge)?`Create ${escapeHtml(presentationFor(setupCartridge).title)} session`:'Choose a cartridge to continue'}</button>
-      <p class="fine">Difficulty labels are provisional until their exact module definitions are finalized. Imported questions use the answer type supplied by the teacher.</p>
+      <p class="fine">Math Engine ${escapeHtml(ENGINE_VERSION)} generates and checks every preset question. Imported questions use the answer type supplied by the teacher.</p>
     </section>`);
   bindSetup();
 }
 
 function bindSetup() {
   document.querySelector('#cartridge-select')?.addEventListener('change',e=>{captureSetup();setupCartridge=e.target.value;renderLanding();});
-  document.querySelectorAll("[data-module] input, [data-module] select").forEach(control => control.addEventListener("change", () => { captureSetup(); renderLanding(); }));
+  document.querySelectorAll("[data-selected-math] input[data-count]").forEach(control => control.addEventListener("change", () => { captureSetup(); renderLanding(); }));
+  document.querySelectorAll("[data-pick-math]").forEach(box => box.addEventListener("change", () => {
+    captureSetup();
+    const id = box.dataset.pickMath;
+    if (box.checked) { if (moduleCount() >= 20) { alert("A session can contain no more than 20 modules."); } else if (!selectedMath.some(r => r.id === id)) selectedMath.push({ id, itemCount: setupBulkCount, defaultItemCount: setupBulkCount }); }
+    else selectedMath = selectedMath.filter(r => r.id !== id);
+    renderLanding();
+  }));
+  document.querySelectorAll("[data-remove-math]").forEach(button => button.onclick = () => { captureSetup(); selectedMath = selectedMath.filter(r => r.id !== button.dataset.removeMath); renderLanding(); });
+  document.querySelectorAll("[data-preview-math]").forEach(button => button.onclick = () => previewMath(button.dataset.previewMath));
+  document.querySelector("#close-math-preview")?.addEventListener("click", () => { mathPreview = null; renderLanding(); });
+  document.querySelector("#math-level")?.addEventListener("change", event => { captureSetup(); pickerLevel = event.target.value; pickerLimit = 40; renderLanding(); });
+  document.querySelector("#math-more")?.addEventListener("click", () => { captureSetup(); pickerLimit += 40; renderLanding(); });
+  let searchTimer = null;
+  document.querySelector("#math-search")?.addEventListener("input", event => {
+    clearTimeout(searchTimer);
+    const value = event.target.value;
+    searchTimer = setTimeout(() => { captureSetup(); pickerQuery = value; pickerLimit = 40; if (pickerLevel === 'mathquest' && value.trim()) pickerLevel = 'all'; renderLanding(); const input = document.querySelector("#math-search"); if (input) { input.focus(); input.setSelectionRange(input.value.length, input.value.length); } }, 250);
+  });
   document.querySelector("#gate-count")?.addEventListener("change", () => { captureSetup(); renderLanding(); });
   document.querySelector("#discipline")?.addEventListener("change", event => { setupDiscipline = event.target.value; });
   document.querySelector("#teams")?.addEventListener("input", event => { setupTeams = event.target.value; });
@@ -189,8 +232,20 @@ function bindSetup() {
   document.querySelector("#create")?.addEventListener("click", createSession);
   document.querySelector("#apply-bulk-count")?.addEventListener("click", applyBulkQuestionCount);
   document.querySelector("#reset-bulk-count")?.addEventListener("click", resetBulkQuestionCounts);
-  document.querySelector("#apply-bulk-band")?.addEventListener("click", applyBulkDifficulty);
-  document.querySelector("#reset-bulk-band")?.addEventListener("click", resetBulkDifficulty);
+}
+
+async function previewMath(id) {
+  captureSetup();
+  const ids = LEGACY_MODULE_MAP[id] || [id];
+  mathPreview = { title: mathTitle(id), items: null };
+  renderLanding();
+  try {
+    const result = await parseResponse(await fetchApi(hosting.api('engine-preview'), { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ids }) }));
+    if (mathPreview?.title === mathTitle(id)) mathPreview.items = result.items || [];
+  } catch (error) {
+    if (mathPreview) mathPreview.error = `Preview unavailable: ${error.message}`;
+  }
+  renderLanding();
 }
 
 function captureSetup() {
@@ -202,27 +257,13 @@ function captureSetup() {
 function applyBulkQuestionCount() {
   captureSetup();
   setupBulkCount = Math.max(1, Math.min(50, Number(document.querySelector("#bulk-count")?.value) || 1));
-  PRESETS.filter(record => record.selected).forEach(record => { record.itemCount = setupBulkCount; });
+  selectedMath.forEach(record => { record.itemCount = setupBulkCount; });
   renderLanding();
 }
 
 function resetBulkQuestionCounts() {
   captureSetup();
-  PRESETS.filter(record => record.selected).forEach(record => { record.itemCount = record.defaultItemCount; });
-  renderLanding();
-}
-
-function applyBulkDifficulty() {
-  captureSetup();
-  setupBulkBand = document.querySelector("#bulk-band")?.value || "intermediate";
-  PRESETS.filter(record => record.selected).forEach(record => { record.band = setupBulkBand; });
-  renderLanding();
-}
-
-function resetBulkDifficulty() {
-  captureSetup();
-  setupBulkBand = "intermediate";
-  PRESETS.filter(record => record.selected).forEach(record => { record.band = "intermediate"; });
+  selectedMath.forEach(record => { record.itemCount = record.defaultItemCount || 3; });
   renderLanding();
 }
 
@@ -307,7 +348,7 @@ async function createSession() {
     if(catalog.version!==BRAND.engineVersion||!catalog.cartridges?.some(c=>c.id===setupCartridge&&c.revision===cartridgeFor(setupCartridge).revision))throw new Error(`This front end requires session engine v${BRAND.engineVersion}. Update the backend with the deployment batch, then reload this page.`);
     const teamNames = setupTeams.split(",").map(value => value.trim()).filter(Boolean);
     const modules = [
-      ...PRESETS.filter(record => record.selected).map(record => ({ id: record.id, source: "preset", band: record.band, itemCount: Number(record.itemCount) })),
+      ...selectedMath.map(record => ({ id: record.id, title: mathTitle(record.id), source: LEGACY_MODULE_MAP[record.id] ? "preset" : "engine", itemCount: Number(record.itemCount) })),
       ...customModules.map(module => ({ title: module.title, source: "custom", items: module.items }))
     ];
     const response = await fetchApi(hosting.api("sessions"), {
@@ -317,7 +358,7 @@ async function createSession() {
         teamNames,
         cartridgeId: setupCartridge,
         disciplineId: setupDiscipline,
-        courseBankId: "prealgebra",
+        courseBankId: "math-engine",
         gateCount: setupGates,
         modules,
         excludedSecretIds: recentSecretIds()
@@ -627,7 +668,15 @@ function answerMarkup(item) {
   if(item.answerType==='ratio') return `${slot('left','First value')} : ${slot('right','Second value')}`;
   return `${item.answerType==='money'?escapeHtml(item.currency||'$'):''}${slot('main','Answer')}${item.answerType==='percent'?'%':item.answerType==='unit'?`<span class="answer-unit">${escapeHtml(item.unit||'')}</span>`:''}`;
 }
+function engineInput(item) {
+  if(item.answerType==='engine-text') return `<label class="engine-text-answer">Answer<input id="engine-text-answer" type="text" value="${escapeHtml(draft.main)}" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" enterkeyhint="done"></label><p class="fine">Type your answer, then submit.</p>`;
+  const extras=(item.keys||[]).filter(k=>!/^[0-9]$/.test(k)&&!['-','.','/'].includes(k));
+  const base=['7','8','9','4','5','6','1','2','3'];
+  return `<div class="answer-display math-answer" aria-live="polite"><button class="answer-slot active" data-answer-field="main" aria-label="Answer">${escapeHtml(draft.main||'□')}</button></div><p class="fine">Use the keypad or your keyboard. Space separates parts of an answer.</p>
+    <div class="keypad math-native engine-keys" aria-label="Math answer keypad">${base.map(k=>`<button data-answer-key="${k}">${k}</button>`).join('')}<button data-answer-text="-" aria-label="Minus">−</button><button data-answer-key="0">0</button><button data-answer-key="backspace" aria-label="Delete">⌫</button><button data-answer-text=".">.</button><button data-answer-text="/">/</button><button data-answer-text=" " aria-label="Space">space</button>${extras.map(k=>`<button data-answer-text="${escapeHtml(k)}">${escapeHtml(k)}</button>`).join('')}</div>`;
+}
 function mathInput(item) {
+  if(item.answerType==='engine-keys'||item.answerType==='engine-text'){activeField='main';return engineInput(item);}
   if(item.answerType==='choice') return `<div class="answer-options">${item.options.map(option=>`<button class="answer-option ${draft.choice===option?'selected':''}" aria-pressed="${draft.choice===option}" data-answer-choice="${escapeHtml(option)}"><span class="selection-check">✓</span>${escapeHtml(option)}</button>`).join('')}</div>`;
   const fields=item.answerType==='fraction'&&draft.integerMode? [['numerator','Integer answer']]:inputParts(item.answerType);
   if(!fields.some(([key])=>key===activeField))activeField=fields[0][0];
@@ -755,10 +804,20 @@ function bindStudentActions(item, student) {
     if (key === "backspace") draft[activeField] = draft[activeField].slice(0, -1);
     else if (key === "minus") draft[activeField] = draft[activeField].startsWith("-") ? draft[activeField].slice(1) : `-${draft[activeField]}`;
     else if (key === "." && !draft[activeField].includes(".")) draft[activeField] += ".";
-    else if (/^\d$/.test(key) && draft[activeField].length < 12) draft[activeField] += key;
+    else if (/^\d$/.test(key) && draft[activeField].length < (document.querySelector(".engine-keys") ? 60 : 12)) draft[activeField] += key;
     renderStudent();
   });
   document.querySelectorAll("[data-answer-choice]").forEach(button => button.onclick = () => { draft.choice = button.dataset.answerChoice; renderStudent(); });
+  document.querySelectorAll("[data-answer-text]").forEach(button => button.onclick = () => {
+    const key = button.dataset.answerText, word = /^(AM|PM)$/.test(key);
+    if (draft.main.length < 60) draft.main += word && draft.main && !draft.main.endsWith(' ') ? ` ${key}` : key;
+    renderStudent();
+  });
+  const engineText = document.querySelector("#engine-text-answer");
+  if (engineText) {
+    engineText.addEventListener("input", () => { draft.main = engineText.value; });
+    engineText.addEventListener("keydown", event => { if (event.key === "Enter") { event.preventDefault(); draft.main = engineText.value; document.querySelector('[data-action="math.submit"]')?.click(); } });
+  }
   document.querySelectorAll("[data-code-key]").forEach(button => button.onclick = () => {
     const key = button.dataset.codeKey;
     draft.main = key === "backspace" ? draft.main.slice(0, -1) : (draft.main + key).slice(0, 20);
@@ -841,7 +900,8 @@ app.addEventListener('error', event => { if(event.target.matches?.('.scene-image
 document.addEventListener('keydown',event=>{
   if(teacherKey||extractionRuntime||state?.student?.gateComplete||currentTeam()?.stage!=='gate'||document.activeElement?.matches('input,select,textarea')||event.ctrlKey||event.metaKey||event.altKey)return;
   const key=/^\d$/.test(event.key)?event.key:event.key==='Backspace'?'backspace':event.key==='-'?'minus':event.key==='.'?'.':null;
-  if(key){const button=document.querySelector(`[data-answer-key="${key}"]`);if(button){event.preventDefault();button.click();}}
+  if(key){const button=document.querySelector(`[data-answer-key="${key}"]`);if(button){event.preventDefault();button.click();return;}}
+  if(event.key.length===1){const typed=event.key;const buttons=[...document.querySelectorAll('[data-answer-text]')];const button=buttons.find(b=>b.dataset.answerText.toLowerCase()===typed.toLowerCase()||(typed==='*'&&b.dataset.answerText==='×'))||(/^[ap]$/i.test(typed)?buttons.find(b=>b.dataset.answerText===typed.toUpperCase()+'M'):null);if(button){event.preventDefault();button.click();}}
   if(event.key==='Enter'){event.preventDefault();document.querySelector('[data-action="math.submit"]')?.click();}
 });
 app.addEventListener("click", handleDelegatedTeacherControl);

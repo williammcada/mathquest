@@ -1,4 +1,4 @@
-import {answerInput,readAnswer} from './math-input.js';
+import {answerInput,readAnswer} from './math-input.js?v=0.10.0';
 import {HEROES,UPGRADES,JOURNEY_BUILD,PROTOCOL,LIMITS} from './config.js';
 import {JourneyRenderer} from './renderer.js?v=art1';
 import {bindJourneyInput} from './input.js';
@@ -64,7 +64,7 @@ export class JourneyHost {
     box.hidden=!open;if(!open)return;
     const key=JSON.stringify([o.item?.id,o.progress,o.earned,o.item?.attempts]);if(key===this.optionalKey)return;this.optionalKey=key;
     if(o.item){const i=o.item;box.innerHTML='<h3>Optional math · '+o.progress+'/'+o.total+'</h3><p class="j-question"></p><p class="j-form-hint"></p>'+'<div class="j-answer-fields">'+answerInput(i)+'</div>'+'<button class="j-submit">Submit answer</button><button class="j-stop">Stop optional questions</button>';
-      box.querySelector('.j-question').textContent=i.prompt;box.querySelector('.j-form-hint').textContent=i.expectedForm||'';
+      if(i.promptMarkup)box.querySelector('.j-question').innerHTML=i.promptMarkup;else box.querySelector('.j-question').textContent=i.prompt;box.querySelector('.j-form-hint').textContent=i.expectedForm||'';
       const submit=()=>this.action('journey.optional.answer',{itemId:i.id,answer:readAnswer(box,i.answerType)});box.querySelector('.j-submit').onclick=submit;box.querySelectorAll('[data-answer-part]').forEach(field=>field.onkeydown=e=>{if(e.key==='Enter')submit();});box.querySelector('.j-stop').onclick=()=>this.action('journey.optional.stop');
     }else{box.innerHTML='<p>Only completed blocks earn upgrades. Your team starts when ready or when the minute ends.</p><button class="j-extra" '+(o.earned>=3?'disabled':'')+'>'+(o.earned>=3?'All upgrade choices earned':'Earn another upgrade with math')+'</button>';box.querySelector('.j-extra').onclick=()=>this.action('journey.optional.start');}}
   renderHud(){const s=this.snap;this.root.querySelector('.j-hud').innerHTML=s.players.filter(p=>p.started||s.phase==='ready').map(p=>'<div class="j-player '+(p.id===this.id?'mine':'')+'"><b>'+esc(p.alias)+'</b><span>'+esc(HEROES.find(h=>h.id===p.hero)?.name||'Choosing hero')+'</span><small>'+(p.started?'HP '+Math.ceil(p.hp)+' · Lives '+p.lives+' · Magic '+p.magic+'/'+p.capacity:p.ready?'Ready':'Preparing')+'</small></div>').join('');}

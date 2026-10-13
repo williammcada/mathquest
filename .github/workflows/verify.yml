@@ -1,0 +1,42 @@
+name: Verify MathQuest candidate
+# Runs the checks that need a normal package install (happy-dom DOM tests, wrangler packaging).
+# Read-only: builds and tests; never deploys. Failures are echoed as annotations so they are
+# readable without downloading logs.
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci
+      - name: Release validation
+        run: node scripts/validate-release.mjs
+      - name: Full test suite (including DOM runtime tests)
+        run: |
+          set +e
+          node --test --test-reporter=tap test/*.test.mjs > test-output.tap 2>&1
+          status=$?
+          grep -E '^# (tests|pass|fail)' test-output.tap
+          # One annotation per failing test, with the start of its error.
+          awk '/^not ok|^    not ok|^  not ok/{name=$0; n=0; next} name!="" && n<14 && /error:|expected|actual|message|Error|at /{msg=msg" "$0; n++} name!="" && n>=14{print "::error title=" name "::" substr(msg,1,900); name=""; msg=""} END{if(name!="")print "::error title=" name "::" substr(msg,1,900)}' test-output.tap | head -40
+          exit $status
+      - name: Worker packaging dry run and startup check (no deployment)
+        if: always()
+        run: |
+          set +e
+          npx wrangler deploy --dry-run --outdir build/worker > dry-run.txt 2>&1; s1=$?
+          size=$(grep -m1 'Total Upload' dry-run.txt | tr -s ' ')
+          gz=$(gzip -9 -c build/worker/*.js | wc -c)
+          npx wrangler check startup > startup.txt 2>&1; s2=$?
+          startup=$(grep -iE 'startup|cpu|ms|error' startup.txt | tail -4 | tr '\n' ' ' | tr -s ' ')
+          echo "::warning title=Worker size and startup::dry-run exit $s1; $size; worker gzip bytes $gz; startup exit $s2; $startup"
+          exit $((s1|s2))

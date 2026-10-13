@@ -1,4 +1,5 @@
-import {checkItem,hashSeed} from '../../math.js';
+import {hashSeed} from '../../math.js';
+import {checkAnswerFor} from '../../answer-check.js';
 import {JOURNEY_BUILD,PROTOCOL} from '../../../public/games/journey/config.js';
 import {ENVIRONMENTS} from '../../../public/games/journey/environment-art.js';
 import {JOURNEY_STORY} from '../../../public/games/journey/story.js';
@@ -53,9 +54,9 @@ export function journeyProjection(room,team,viewer){
   const item=current?.item;
   return {runId:team.journey?.runId,snapshot:s||null,result:team.journeyResult||null,
     optional:prep?{earned:prep.earned,completed:prep.blocks.length,progress:current?.index||0,total:current?.assignments.length||0,
-      item:item?{id:item.id,prompt:item.prompt,answerType:item.answerType,options:item.options||[],promptMarkup:item.promptMarkup||null,unit:item.unit||'',attempts:item.attempts||0,expectedForm:['fraction','mixed'].includes(item.answerType)?'Give your answer in simplest form':item.expectedForm||null}:null}:null};
+      item:item?{id:item.id,prompt:item.prompt,answerType:item.answerType,options:item.options||[],keys:item.keys||[],promptMarkup:item.promptMarkup||null,unit:item.unit||'',attempts:item.attempts||0,expectedForm:item.source==='math-engine'?null:['fraction','mixed'].includes(item.answerType)?'Give your answer in simplest form':item.expectedForm||null}:null}:null};
 }
-function availableModules(room,t){return room.state.config.modules.filter(m=>(!t.supply?.moduleIds?.length||t.supply.moduleIds.includes(m.id))&&(m.source==='preset'||t.supply?.allowReuse));}
+function availableModules(room,t){return room.state.config.modules.filter(m=>(!t.supply?.moduleIds?.length||t.supply.moduleIds.includes(m.id))&&((m.source==='engine'||m.source==='preset')||t.supply?.allowReuse));}
 function optionalOpen(room,team,student){const s=team.journey.snapshot,p=s?.players.find(p=>p.id===student.id);
   return !room.state.paused&&s?.phase==='ready'&&!s.paused&&s.readyMs>0&&!p?.ready;
 }
@@ -93,7 +94,7 @@ export async function journeyCommand(room,student,input){const t=room.teamFor(st
   if(input.type==='journey.optional.answer'){
     const current=prep.current,item=optionalItem(room,student);if(!item)return error('Open an optional block first.');
     if(input.itemId!==item.id)return error('This question has changed.');
-    const checked=checkItem(item,input.answer);if(!checked.valid)return error(checked.error);item.attempts++;
+    const checked=checkAnswerFor(item,input.answer);if(!checked.valid)return error(checked.error);item.attempts++;
     room.state.attempts.push({at:new Date().toISOString(),studentId:student.id,alias:student.alias,teamId:t.id,gateIndex:t.gateIndex,gateName:'Optional personal preparation',moduleId:item.moduleId,moduleTitle:item.moduleTitle,itemId:item.id,prompt:item.prompt,answerType:item.answerType,disciplineId:item.disciplineId||'mathematics',courseBankId:item.courseBankId||'prealgebra',subskillId:item.subskillId||item.moduleId,source:item.source||'mathquest-preset',standards:item.standards||[],DOK:item.DOK||1,hintUsed:item.attempts>1&&!!item.hint,expected:item.answer,assignedDifficulty:item.assignedDifficulty||item.band||'teacher-authored',submitted:String(input.answer),normalized:checked.normalized,attempt:item.attempts,correct:checked.correct,answerPolicy:'MATH-FRAC-01',rejectionReason:checked.reason||null,firstAttempt:item.attempts===1,extensionBatchId:current.id,purpose:'journey-personal-preparation'});
     let message=checked.error||item.hint||'Check your work and try again.';
     if(checked.correct){student.correct++;student.itemsCompleted++;if(item.attempts===1)student.firstAttemptCorrect++;current.index++;current.item=null;message='Correct. Contribution recorded.';

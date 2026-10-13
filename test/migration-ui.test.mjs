@@ -61,10 +61,10 @@ async function mount(href, entry = 'app.js', fail = false, identity = null) {
 test('neutral builder requires an explicit cartridge and switches metadata without changing the platform brand',async()=>{
  const ui=await mount(page),doc=ui.win.document;
  try{
-  assert.equal(doc.title,'MathQuest');assert.equal(doc.querySelector('#create').disabled,true);assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('.game-card'),null);
+  assert.equal(doc.title,'MathQuest 0.10.0');assert.equal(doc.querySelector('#create').disabled,true);assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('.game-card'),null);
   for(const [id,title] of [['vault-7','Vault 7'],['nightfall','Nightfall: Last Bus Out'],['','']]){
    const select=doc.querySelector('#cartridge-select');select.value=id;select.dispatchEvent(new ui.win.Event('change'));
-   assert.equal(doc.title,'MathQuest');assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('#create').disabled,!id);
+   assert.equal(doc.title,'MathQuest 0.10.0');assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('#create').disabled,!id);
    if(id)assert.equal(doc.querySelector('.game-card b').textContent,title);else assert.equal(doc.querySelector('.game-card'),null);
   }
  }finally{await ui.close();}
@@ -122,15 +122,15 @@ test('Nightfall join starts neutral, resolves while typing, and clears cartridge
   const pin=doc.querySelector('#pin');pin.focus();pin.value='ABCD';
   await ui.timers[0]();
   assert.equal(doc.querySelector('#pin'),pin);assert.equal(pin.value,'ABCD');assert.equal(doc.querySelector('#join').disabled,false);
-  assert.equal(doc.querySelector('[data-join-title]').textContent,'Nightfall: Last Bus Out');assert.equal(doc.title,'MathQuest — Nightfall: Last Bus Out');assert.equal(doc.querySelector('.mq-mark').textContent,'NF');
+  assert.equal(doc.querySelector('[data-join-title]').textContent,'Nightfall: Last Bus Out');assert.equal(doc.title,'MathQuest 0.10.0 — Nightfall: Last Bus Out');assert.equal(doc.querySelector('.mq-mark').textContent,'NF');
   ui.win.dispatchEvent(new ui.win.CustomEvent('mq-session-gone',{detail:{code:created.code}}));
-  assert.equal(doc.title,'MathQuest');assert.equal(doc.documentElement.dataset.theme,'mathquest');assert.doesNotMatch(doc.body.textContent,/Nightfall|VII|Vault 7/);assert.match(doc.body.textContent,/Session closed/);
+  assert.equal(doc.title,'MathQuest 0.10.0');assert.equal(doc.documentElement.dataset.theme,'mathquest');assert.doesNotMatch(doc.body.textContent,/Nightfall|VII|Vault 7/);assert.match(doc.body.textContent,/Session closed/);
  }finally{await ui.close();}
 });
 
 test('failed session lookup displays the connection error without a cartridge fallback',async()=>{
  const ui=await mount(`${page}?session=BAD123&student=1`,'app.js',true);
- try{await ui.timers[0]();assert.match(ui.win.document.body.textContent,/HTTP 404/);assert.doesNotMatch(ui.win.document.body.textContent,/Vault 7|VII|Nightfall/);assert.equal(ui.win.document.title,'MathQuest');}finally{await ui.close();}
+ try{await ui.timers[0]();assert.match(ui.win.document.body.textContent,/HTTP 404/);assert.doesNotMatch(ui.win.document.body.textContent,/Vault 7|VII|Nightfall/);assert.equal(ui.win.document.title,'MathQuest 0.10.0');}finally{await ui.close();}
 });
 
 test('connection page completes both checks and exposes the game link only on success', async () => {

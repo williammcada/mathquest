@@ -1,0 +1,23 @@
+/* MathQuest 0.10.0 — Math Engine picker, previews and answer inputs */
+.engine-picker{border:1px solid var(--line);border-radius:14px;padding:12px 14px;background:#f8fafc;margin:10px 0 16px}
+.engine-picker label{display:grid;gap:6px;font-weight:800}
+.engine-picker select,.engine-picker input[type=search]{min-height:46px;border:1px solid #c9d1df;border-radius:10px;padding:8px 10px;background:#fff;width:100%}
+.engine-results{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px;max-height:420px;overflow:auto;margin-top:10px;padding:2px}
+.engine-row{display:flex!important;align-items:flex-start;gap:10px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:10px;cursor:pointer;font-weight:600!important}
+.engine-row.selected{border-color:var(--blue);background:#eef2ff}
+.engine-row input{margin-top:3px;width:20px;height:20px;flex:none}
+.engine-row b{display:block;font-size:14px;line-height:1.3}
+.engine-row small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+.engine-preview{border:1px solid var(--line);border-radius:14px;padding:12px 14px;margin-top:14px;background:#fff}
+.engine-preview .section-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.preview-question{border-top:1px solid #edf0f4;padding:10px 0}
+.preview-question .problem{font-size:18px;text-align:left;padding:6px 0;font-weight:700}
+.engine-question p{margin:0 0 8px}
+.engine-question svg,.problem svg{max-width:100%;height:auto;display:block;margin:8px auto;background:#fff}
+.problem .engine-question{font-size:clamp(20px,4.6vw,30px);line-height:1.3}
+.engine-keys{grid-template-columns:repeat(3,1fr)}
+.engine-keys button{font-size:20px}
+.engine-text-answer{display:grid;gap:6px;font-weight:800;margin:6px 0}
+.engine-text-answer input{min-height:56px;font-size:24px;border:2px solid #c5ccda;border-radius:12px;padding:8px 12px;background:#f9fafc}
+.answer-display .answer-slot{font-size:clamp(20px,6vw,34px);overflow-wrap:anywhere}
+@media(max-width:460px){.engine-results{grid-template-columns:1fr}}
