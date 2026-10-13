@@ -53,3 +53,4 @@ Owner playtest: staying in floor water for more than about a second paused the r
 | Relative difficulty | Measured | Same dodge heuristic with armor: 10 hull damage over v0.3.1's 225 s approach vs 100 over v0.4.0's 150 s approach; no lives lost. Not a student-playability claim. |
 | Mixed patterns on screen | Passed (visual) | `coastal-v0.4.0-patterns.png`. |
 | Suite | 263 / 273 | Same ten `happy-dom` files Not run. |
+| Owner playtest | Passed | Owner, 13 Oct 2026 13:39: "Way better. Felt like playing 1942." |
