@@ -2,6 +2,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {QuestSession} from './authenticated-session.mjs';
 import {step,damage} from '../public/games/shooter/simulation.js';
+import {WORLD} from '../public/games/shooter/world.js';
+const LOOP=WORLD.boss.entryX-5376;
 import {IRONBREAK,GUIDED,ironbreakScene} from '../public/cartridges/ironbreak.js';
 import {cartridgeFor,gateNames} from '../public/cartridges.js';
 import {fixture,call,cmd,runCmd,progress} from './ironbreak-fixture.mjs';
@@ -59,12 +61,20 @@ test('real boss fight snapshots pass the live validator through success; checkpo
  a.snapshot=createGame({upgrades:a.loadout,checkpoint:'BOSS',timed:false});a.checkpoint='BOSS';let s=structuredClone(a.snapshot);
  let seconds=0;
  for(let n=0;n<12000&&s.status==='active';n++){
-  const p=s.player,b=s.enemies.find(e=>e.type==='boss');let x=p.x<5840?1:p.x>6040?-1:0,y=0,jump=p.vy<0;
-  if(s.bossActive){if(s.bullets.some(a=>a.side==='enemy'&&a.vx<0&&a.y>322&&a.x-p.x<75&&a.x>p.x-20)&&p.grounded)jump=true;if(s.bullets.some(a=>a.side==='enemy'&&a.vx<0&&a.y>300&&a.y<320&&a.x-p.x<180&&a.x>p.x-20)&&p.grounded)y=1;if(b.attack==='overhead'&&(b.state==='warning'||b.state==='attack')&&Math.abs(p.x-b.targetX)<55)x=b.targetX<5920?1:-1;else if(x===0&&p.facing<0)x=1;}
+  const p=s.player,b=s.enemies.find(e=>e.type==='boss');let x=p.x<(5840+LOOP)?1:p.x>(6040+LOOP)?-1:0,y=0,jump=p.vy<0;
+  if(s.bossActive){if(s.bullets.some(a=>a.side==='enemy'&&a.vx<0&&a.y>322&&a.x-p.x<75&&a.x>p.x-20)&&p.grounded)jump=true;if(s.bullets.some(a=>a.side==='enemy'&&a.vx<0&&a.y>300&&a.y<320&&a.x-p.x<180&&a.x>p.x-20)&&p.grounded)y=1;if(b.attack==='overhead'&&(b.state==='warning'||b.state==='attack')&&Math.abs(p.x-b.targetX)<55)x=b.targetX<(5920+LOOP)?1:-1;else if(x===0&&p.facing<0)x=1;if(b.mortarTargets&&(b.state==='warning'||b.state==='attack')){const m=b.mortarTargets.find(t=>Math.abs(p.x-t)<36);if(m!==undefined)x=p.x<m?-1:1;}}
   step(s,{x,y,jump,fire:true});now+=1000/60;
   if(n%60===59||s.status!=='active'){const result=await progress(r,t,s);assert.equal(result.http,200,result.error);seconds++;}
  }
  assert.equal(a.outcome,'success');assert.ok(seconds>=20);assert.equal(a.snapshot.enemies.find(e=>e.type==='boss').hp,0);
  const other=await fixture();await runCmd(other.r,other.t,'start',{mode:'action'});const run=other.t.runs.s0;run.snapshot=createGame({upgrades:run.loadout,checkpoint:'MID',timed:false});run.checkpoint='MID';const down=structuredClone(run.snapshot);while(down.player.hp){down.player.immunity=0;damage(down);}assert.equal((await progress(other.r,other.t,down)).http,200);await runCmd(other.r,other.t,'retry');assert.equal(run.snapshot.enemies.find(e=>e.id==='H01').hp,0);assert.equal(run.checkpoint,'MID');assert.equal(run.snapshot.player.hp,3);
+ }finally{Date.now=real;}
+});
+test('swimming in floor water for several seconds keeps passing the live validator',async()=>{
+ const real=Date.now;let now=real();Date.now=()=>now;
+ try{const {r,t}=await fixture();await runCmd(r,t,'start',{mode:'action'});const s=structuredClone(t.runs.s0.snapshot);
+  const water=WORLD.layers.Water[0];Object.assign(s.player,{x:water.x+200,y:water.surface_y-40,vy:0,grounded:false});
+  for(const e of s.enemies)e.hp=e.hp;for(const h of s.hazards)h.armed=false;
+  for(let k=0;k<6;k++){for(let i=0;i<60;i++){s.player.immunity=Math.min(s.player.immunity,1.5);step(s,{x:k%2?1:-1},1/60);}now+=1000;assert.ok(s.player.swimming||k===0);const out=await progress(r,t,s);assert.equal(out.http,200,`${k}: ${out.error}`);}
  }finally{Date.now=real;}
 });

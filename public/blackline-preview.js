@@ -1,8 +1,11 @@
 import {reviewParagraphs} from './review-presentation.js?v=u11';
-import {BLACKLINE as c,blacklineScene,BLACKLINE_PERSONAL} from './cartridges/blackline.js?v=0.2.0';
+import {BLACKLINE as c,blacklineScene,BLACKLINE_PERSONAL} from './cartridges/blackline.js?v=0.3.0';
 const gateNames=(c,n)=>[...c.gates.slice(0,2),...c.inserts.slice(0,n-3),c.gates[2]];
 import {GameHost} from './engine/game-host.js?v=0.9.7';
-import {blacklineAdapter} from './games/blackline/adapter.js?v=0.9.7';
+import {blacklineAdapter} from './games/blackline/adapter.js?v=0.3.2';
+import Sim from './games/blackline/sim.js';
+import {showDevPanel} from './engine/dev-playtest.js';
+const DEV=new URLSearchParams(location.search).get('dev')==='action',VERSION='0.3.2';
 const root=document.querySelector('#story'),crew=[{alias:'Alex'},{alias:'Rowan'}];let gates=3,names=gateNames(c,gates),team={stage:'briefing',gateIndex:0,inventory:[],runs:{}},host,css,returnButton;
 const audio=new Audio(c.assets.ambient);audio.loop=true;audio.volume=.2;let musicOn=false;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -23,12 +26,17 @@ function render(){
  root.querySelector('#skip')?.addEventListener('click',()=>{team.stage='finale';render();});root.querySelector('#endings')?.addEventListener('click',()=>{team.stage='finale';render();});root.querySelector('#fly')?.addEventListener('click',fly);
  const next=['finale','victory'].includes(team.stage)?c.assets.finale:c.assets.ambient;if(!audio.src.endsWith(next.slice(1))){audio.src=next;music();}music();window.scrollTo(0,0);
 }
-function fly(){
- team.inventory=[...root.querySelectorAll('input:checked')].map(i=>i.value);audio.pause();
- root.innerHTML='<div id="preview-game"></div><button id="story-return">Continue to the final story decision</button>';
+function fly(dev=null){
+ team.inventory=dev?dev.items:[...root.querySelectorAll('input:checked')].map(i=>i.value);audio.pause();
+ root.innerHTML=dev?'<div id="preview-game"></div><button id="story-return">Back to DEV setup</button>':'<div id="preview-game"></div><button id="story-return">Continue to the final story decision</button>';
  const run={runId:crypto.randomUUID(),configRevision:c.revision,loadout:team.inventory,route:team.route,threat:1,status:'not_started',mode:'action',seq:0};
  host=new GameHost(root.querySelector('#preview-game'),{adapter:blacklineAdapter,items:c.items,run,practice:true,send:async()=>{}});
  host.root.querySelector('[data-restart]')?.remove();
+ if(dev){Sim.startAt(host.s.race,Number(dev.start)||0);root.querySelector('#story-return').onclick=()=>{host.destroy();host=null;devSetup();};return;}
  root.querySelector('#story-return').onclick=()=>{team.runs.preview={outcome:host.s.outcome||'skipped'};host.destroy();host=null;team.stage='finale';render();};
 }
 render();
+
+// DEV homepage shortcut (?dev=action): straight to the race with the first route and no upgrades.
+function devSetup(){team.route=c.routes[0].id;showDevPanel(root,{game:'BLACKLINE',version:VERSION,items:c.items.map(i=>({id:i.id,title:i.title,detail:i.text})),starts:Sim.SECTIONS.map(x=>({id:String(x.start),label:`${x.name} · ${(x.start/1000).toFixed(1)} km`})),story:location.pathname.split('/').pop()},choice=>fly(choice));}
+if(DEV)devSetup();

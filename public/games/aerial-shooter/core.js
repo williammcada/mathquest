@@ -21,6 +21,8 @@ export function createRun(config={},saved) {
     collected:[],volleyHits:[],rng:c.seed>>>0,assistedStep:0,outcome:null,message:'Move with the D-pad. Your aircraft fires automatically.',messageTick:0,
     counters:{deaths:0,shots:0,hits:0,damage:0,pickups:0,missed:0,guns:0,maxProgress:0,modeSwitchTick:null,capDeferrals:0},events:[]};
 }
+// U-13 DEV playtest: begin at a checkpoint. Active time starts at that checkpoint, as on a retry.
+export function startAtCheckpoint(s,seconds){if(!CHECKPOINTS.includes(seconds))throw Error('Unknown checkpoint');if(!seconds)return s;s.tick=s.levelTick=seconds*60;s.checkpoint=seconds;s.counters.maxProgress=s.levelTick;s.cursor=LEVEL.findIndex(e=>e.tick>=s.levelTick);if(s.cursor<0)s.cursor=LEVEL.length;return s;}
 export function snapshot(s){const v=clone(s);v.events=[];v.effects=[];return v;}
 function check(ok,message){if(!ok)throw Error(`Recovery unavailable: ${message}`);}
 const bounded=(n,min,max)=>typeof n==='number'&&Number.isFinite(n)&&n>=min&&n<=max;
@@ -40,18 +42,18 @@ export function restore(config,saved) {
   check(Array.isArray(s.collected)&&new Set(s.collected).size===s.collected.length&&s.collected.every(id=>OPPORTUNITIES.includes(id)),'supplies');
   check(Array.isArray(s.volleyHits)&&s.volleyHits.length<=300&&s.volleyHits.every(h=>typeof h.key==='string'&&h.key.length<150&&bounded(h.tick,0,s.tick)),'volley history');
   check(s.bonus===null||(Object.hasOwn(BONUS_SECONDS,s.bonus?.kind)&&bounded(s.bonus.ticks,0,BONUS_SECONDS[s.bonus.kind]*60)),'temporary bonus');
-  for(const [key,cap] of Object.entries({enemies:12,friendly:96,hostile:64,pickups:6,pending:120,effects:40}))check(Array.isArray(s[key])&&s[key].length<=cap,key);
+  for(const [key,cap] of Object.entries({enemies:40,friendly:96,hostile:96,pickups:6,pending:120,effects:40}))check(Array.isArray(s[key])&&s[key].length<=cap,key);
   const allIds=new Set();
   for(const e of [...s.enemies,...s.friendly,...s.hostile,...s.pickups]){check(typeof e.id==='string'&&e.id.length<120&&!allIds.has(e.id),'entity IDs');allIds.add(e.id);check(bounded(e.x,-700,1300)&&bounded(e.y,-300,700),'entity positions');}
   for(const e of s.enemies)check(T.enemies[e.kind]&&bounded(e.hp,0,T.enemies[e.kind].hp)&&bounded(e.age,0,T.limit)&&bounded(e.nextAttack,0,T.limit)&&bounded(e.baseX,0,640)&&bounded(e.w,1,100)&&bounded(e.h,1,100)&&bounded(e.phase,-10,10),'enemy data');
   for(const b of [...s.friendly,...s.hostile])check(bounded(b.vx,-500,500)&&bounded(b.vy,-500,500)&&bounded(b.damage,0,20)&&bounded(b.radius,1,8),'projectile');
-  for(const p of s.pickups)check(OPPORTUNITIES.includes(p.opportunity)&&['repair',...Object.keys(BONUS_SECONDS)].includes(p.kind)&&bounded(p.ticks,0,480),'pickup data');
-  for(const p of s.pending)check(bounded(p.due,0,T.limit+240)&&typeof p.owner==='string'&&Array.isArray(p.shots)&&p.shots.length<=7&&p.shots.every(b=>bounded(b.angle,-10,10)&&bounded(b.speed,0,120)&&[10,20].includes(b.damage)),'pending attack');
+  for(const p of s.pickups)check(OPPORTUNITIES.includes(p.opportunity)&&['repair',...Object.keys(BONUS_SECONDS)].includes(p.kind),'pickup data');
+  for(const p of s.pending)check(bounded(p.due,0,T.limit+240)&&typeof p.owner==='string'&&Array.isArray(p.shots)&&p.shots.length<=7&&p.shots.every(b=>bounded(b.angle,-10,10)&&bounded(b.speed,0,160)&&[10,20].includes(b.damage)),'pending attack');
   check(Number.isInteger(s.cursor)&&bounded(s.cursor,0,LEVEL.length)&&Number.isInteger(s.nextId)&&bounded(s.nextId,1,100000),'event cursor');
   check(Number.isInteger(s.rng)&&bounded(s.rng,0,4294967295)&&Number.isInteger(s.assistedStep)&&bounded(s.assistedStep,0,3),'random/accessibility state');
   check(s.counters&&s.counters.deaths===s.attempt&&s.counters.pickups===s.collected.length,'evidence counters');
   for(const [key,n] of Object.entries(s.counters))check((key==='modeSwitchTick'&&n===null)||bounded(n,0,1000000),'evidence bounds');
-  if(s.boss){const b=s.boss;check(['entry','guns','transition','core','destroyed'].includes(b.phase)&&bounded(b.x,285,355)&&bounded(b.y,-80,88)&&bounded(b.age,0,T.limit)&&bounded(b.core,0,600)&&Array.isArray(b.guns)&&b.guns.length===2&&b.guns.every(h=>bounded(h,0,240))&&bounded(b.nextLeft,0,T.limit+240)&&bounded(b.nextRight,0,T.limit+240)&&bounded(b.nextCore,0,T.limit+240)&&bounded(b.phaseTick,0,T.limit)&&bounded(b.quietUntil,0,T.limit+180),'boss');}
+  if(s.boss){const b=s.boss;check(['entry','guns','transition','core','destroyed'].includes(b.phase)&&bounded(b.x,285,355)&&bounded(b.y,-80,88)&&bounded(b.age,0,T.limit)&&bounded(b.core,0,T.boss.coreHP)&&Array.isArray(b.guns)&&b.guns.length===2&&b.guns.every(h=>bounded(h,0,T.boss.gunHP))&&bounded(b.nextLeft,0,T.limit+240)&&bounded(b.nextRight,0,T.limit+240)&&bounded(b.nextCore,0,T.limit+240)&&bounded(b.phaseTick,0,T.limit)&&bounded(b.quietUntil,0,T.limit+180),'boss');}
   s.events=[];s.effects=[];return s;
 }
 function message(s,text){s.message=text;s.messageTick=s.tick;}
@@ -78,7 +80,7 @@ function retire(s,includeSupplies=false){
   s.enemies=s.enemies.filter(e=>!includeSupplies&&e.kind==='supply');s.hostile=[];s.pending=[];
 }
 function beginBoss(s){
-  retire(s,true);s.boss={x:320,y:-65,age:0,phase:'entry',phaseTick:s.tick,core:600,guns:[240,240],nextLeft:s.tick+159,nextRight:s.tick+267,nextCore:s.tick+120,quietUntil:0};
+  retire(s,true);s.boss={x:320,y:-65,age:0,phase:'entry',phaseTick:s.tick,core:T.boss.coreHP,guns:[T.boss.gunHP,T.boss.gunHP],nextLeft:s.tick+159,nextRight:s.tick+267,nextCore:s.tick+120,quietUntil:0};
   message(s,'Boss: destroy the two outer wing guns first.');emit(s,'boss');
 }
 function events(s){
@@ -109,10 +111,10 @@ function updateEnemies(s){
       e.nextAttack=e.age+T.enemies[e.kind].period;
       e.warningUntil=s.tick+delay;
       const angle=aim?aimed(e,s.player):0;
-      if(heavy)schedule(s,e.id,delay,fan(5,64*Math.PI/180),65,20);
-      else if(ground(e))for(const d of [0,12,24])schedule(s,e.id,delay+d,[angle],85,10);
-      else if(e.kind==='interceptor')schedule(s,e.id,delay,[angle],100,10);
-      else for(const d of [0,18])schedule(s,e.id,d,[0],85,10);
+      if(heavy)schedule(s,e.id,delay,fan(5,64*Math.PI/180),T.shell.heavy,20);
+      else if(ground(e))for(const d of [0,12,24])schedule(s,e.id,delay+d,[angle],T.shell.ground,10);
+      else if(e.kind==='interceptor')schedule(s,e.id,delay,[angle],T.shell.aimed,10);
+      else for(const d of [0,18])schedule(s,e.id,d,[0],T.shell.light,10);
     }
   }
   s.enemies=s.enemies.filter(e=>{if(e.y<410)return true;if(e.opportunity&&!s.collected.includes(e.opportunity))s.counters.missed++;return false;});
@@ -123,8 +125,8 @@ function updateBoss(s){
   if(b.phase==='guns'&&b.guns.every(h=>h<=0)){b.phase='transition';b.phaseTick=s.tick;s.hostile=[];s.pending=s.pending.filter(p=>!p.owner.startsWith('boss'));emit(s,'expose');message(s,'Armor broken — target the exposed center');return;}
   if(b.phase==='transition'&&s.tick-b.phaseTick>=60){b.phase='core';b.nextCore=s.tick+39;}
   if(s.tick<b.quietUntil)return;
-  if(b.phase==='guns')for(let i=0;i<2;i++){const key=i?'nextRight':'nextLeft';if(s.tick>=b[key]){b[key]+=T.boss.gunPeriod;if(b.guns[i]>0)schedule(s,`boss-${i}`,0,fan(5,72*Math.PI/180),85,10);}}
-  if(b.phase==='core'&&s.tick>=b.nextCore){b.nextCore=s.tick+T.boss.corePeriod;b.warningUntil=s.tick+39;for(let i=0;i<7;i++)schedule(s,'boss-core',39+i*11,[-.7+i*(1.4/6)],65,20);}
+  if(b.phase==='guns')for(let i=0;i<2;i++){const key=i?'nextRight':'nextLeft';if(s.tick>=b[key]){b[key]+=T.boss.gunPeriod;if(b.guns[i]>0)schedule(s,`boss-${i}`,0,fan(5,72*Math.PI/180),T.shell.light,10);}}
+  if(b.phase==='core'&&s.tick>=b.nextCore){b.nextCore=s.tick+T.boss.corePeriod;b.warningUntil=s.tick+39;for(let i=0;i<7;i++)schedule(s,'boss-core',39+i*11,[-.7+i*(1.4/6)],T.shell.heavy,20);}
 }
 function executeAttacks(s){
   const future=[];
@@ -141,7 +143,7 @@ function inEllipse(a,b,rx,ry){return ((a.x-b.x)/rx)**2+((a.y-b.y)/ry)**2<=1;}
 export function damagePlayer(s,amount){if(s.outcome||s.player.protection>0||s.mode!=='action')return false;s.health=Math.max(0,s.health-amount);s.player.protection=T.protection;s.counters.damage++;emit(s,'hurt');effect(s,s.player.x,s.player.y,'hit');return true;}
 function enemyKilled(s,e){
   effect(s,e.x,e.y);emit(s,'explosion');
-  if(e.opportunity&&!s.collected.includes(e.opportunity))s.pickups.push({id:`pickup-${e.opportunity}-${s.attempt}`,opportunity:e.opportunity,kind:e.pickup,x:clamp(e.x,24,616),y:clamp(e.y,24,316),ticks:T.pickupLifetime});
+  if(e.opportunity&&!s.collected.includes(e.opportunity))s.pickups.push({id:`pickup-${e.opportunity}-${s.attempt}`,opportunity:e.opportunity,kind:e.pickup,x:clamp(e.x,24,616),y:clamp(e.y,24,316)});
 }
 function hits(s){
   const spent=new Set(),volleyHits=new Set(s.volleyHits.map(h=>h.key));
@@ -193,6 +195,7 @@ export function step(s,input={},dt=1/60){
   events(s);shoot(s);updateEnemies(s);updateBoss(s);executeAttacks(s);
   for(const side of ['friendly','hostile']){for(const b of s[side]){b.x+=b.vx/60;b.y+=b.vy/60;}s[side]=s[side].filter(b=>b.x>-20&&b.x<660&&b.y>-30&&b.y<390);}
   hits(s);
-  s.pickups=s.pickups.filter(p=>{p.y+=T.pickupSpeed/60;p.ticks--;if(inEllipse(p,s.player,24,28)){collect(s,p);return false;}if(p.ticks<=0||p.y>380){s.counters.missed++;return false;}return true;});
+  // v0.3.0: supplies persist until they drift off the bottom of the screen.
+  s.pickups=s.pickups.filter(p=>{p.y+=T.pickupSpeed/60;if(inEllipse(p,s.player,24,28)){collect(s,p);return false;}if(p.y>380){s.counters.missed++;return false;}return true;});
   s.effects=s.effects.filter(e=>++e.age<36);s.volleyHits=s.volleyHits.filter(h=>s.tick-h.tick<120);resolveTerminal(s);
 }
