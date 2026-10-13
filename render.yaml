@@ -1,0 +1,22 @@
+# Render Blueprint — MathQuest student front door.
+# Static site publishing public/ (the same files GitHub Pages serves under /public/).
+# /api/* is rewritten to the existing Cloudflare Worker, so student browsers make
+# their HTTP API calls to this Render address only. The Worker, its Durable
+# Object storage and the session protocol are unchanged.
+# See docs/change-specs/render-frontend-migration-2026-10-14.md.
+services:
+  - type: web
+    runtime: static
+    name: mcada-mathquest
+    branch: main
+    buildCommand: echo "Static site - no build step"
+    staticPublishPath: ./public
+    autoDeployTrigger: commit
+    buildFilter:
+      paths:
+        - "public/**"
+        - "render.yaml"
+    routes:
+      - type: rewrite
+        source: /api/*
+        destination: https://mathquest-prototype.willmcada-apps.workers.dev/api/*

@@ -1,6 +1,6 @@
 # MathQuest frontend migration to Netlify — change specification
 
-**Stage:** CHANGE SPEC — proposed 13 October 2026 (Asia/Shanghai); awaiting owner approval. No implementation, deployment or verification is claimed by this document.
+**Stage:** SUPERSEDED 14 October 2026 by [render-frontend-migration-2026-10-14.md](render-frontend-migration-2026-10-14.md); never approved or implemented. Originally proposed 13 October 2026 (Asia/Shanghai). No implementation, deployment or verification is claimed by this document.
 **Owner:** William McAda · A WILLIAM MCADA PRODUCT
 **Source baseline:** `main` at `e79fdb8960cb4416e4953bba422bcbd8be545389` (frontend `public/` and session engine `src/`, both 0.9.7).
 **Live service observed 13 October 2026:** `https://vault7mathquest.netlify.app/api/health` reported `version 0.9.7`, `journeyBuild jttw-0.1.0-stage9-feedback`, `transport https-polling`.

@@ -10,7 +10,7 @@ MathQuest is a cartridge-based classroom mathematics game platform. Teachers con
 
 ## Current address
 
-[Open MathQuest](https://williammcada.github.io/mathquest/) · [Cartridge reviews](https://williammcada.github.io/mathquest/public/cartridge-review.html). Six games are available through Developer tools; the full six-cartridge classroom deployment is being consolidated. Earlier version sections below are historical.
+[Open MathQuest](https://mcada-mathquest.onrender.com/) · [Cartridge reviews](https://mcada-mathquest.onrender.com/cartridge-review.html). MathQuest moves from GitHub Pages to Render (static site from `render.yaml`; the Cloudflare session engine is unchanged) — see the [Render migration specification](docs/change-specs/render-frontend-migration-2026-10-14.md). Until that move is verified, the GitHub Pages address `https://williammcada.github.io/mathquest/` keeps working; afterwards it forwards to Render. Six games are available through Developer tools; the full six-cartridge classroom deployment is being consolidated. Earlier version sections below are historical.
 
 ## Historical v0.9.4 project status
 
