@@ -4,6 +4,8 @@
 
 MathQuest is a cartridge-based classroom mathematics game platform. Teachers configure academic content and a shared classroom session; students complete mathematics, team decisions, resource choices, and individual action-game sequences inside cartridge-specific narratives.
 
+**v0.11.0** (13 Oct 2026): adds **Kingsgate**, a tower defense cartridge. See [v0.11.0 release notes](docs/releases/v0.11.0.md); deploy the frontend and the Cloudflare session engine together.
+
 **v0.9.8** (13 Oct 2026): harder, longer action games — Coastal Escape flight v0.4.0, Ironbreak v0.2.1, Blackline v0.3.2 — and the U-13 DEV playtest mode. Includes Vault Seven, Nightfall: Last Bus Out, False Haven, Ironbreak, Coastal Escape and Blackline. See [v0.9.8 release notes](docs/releases/v0.9.8.md); the frontend and the Cloudflare session engine must be deployed together.
 
 ## Current address

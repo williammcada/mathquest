@@ -313,4 +313,4 @@ Owner found Coastal Escape, Ironbreak and Blackline too easy and short. Change s
 
 ## Kingsgate cartridge v0.1 — 13 October 2026
 
-New tower defense cartridge, approved specification in `williammcada/kingsgate`. MathQuest notes: [kingsgate-v0.1](change-specs/kingsgate-v0.1.md). Implemented on `implement/kingsgate-v0.1` from `main` `a4405f8`. Gates use MathQuest's Math Engine questions; there are no questions inside the defense. Not yet merged or deployed; the Math Arcade entry follows separately.
+New tower defense cartridge, approved specification in `williammcada/kingsgate`. MathQuest notes: [kingsgate-v0.1](change-specs/kingsgate-v0.1.md). Implemented on `implement/kingsgate-v0.1` from `main` `a4405f8`. Gates use MathQuest's Math Engine questions; there are no questions inside the defense. Owner playtest accepted 13 October 2026. Released as MathQuest v0.11.0 (see `releases/v0.11.0.md`). The Math Arcade entry follows separately.
