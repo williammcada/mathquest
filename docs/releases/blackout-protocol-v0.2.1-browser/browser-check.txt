@@ -1,0 +1,27 @@
+PASS  Teacher dashboard renders Blackout Protocol room
+PASS  Teacher room soundtrack panel plays the Blackout room music
+PASS  Start screen shows the puzzle instructions and controls help
+PASS  Run started on the server
+PASS  U-10: canvas touch-action none
+PASS  Server accepted progress: 3 districts restored, boards re-checked
+PASS  Server recorded the blown fuse (Spare Fuse: 4 → 3)
+PASS  iPad landscape: board and controls on screen, no sideways scroll
+PASS  U-10: a native context menu on the board is suppressed and the run pauses safely
+PASS  Phone landscape: board renders, no sideways scroll
+PASS  Phone landscape: no control covers any board tile
+PASS  Phone portrait: platform rotate prompt shown
+PASS  Teacher closure ends both panels
+PASS  Finale vote shows the three LANTERN choices
+PASS  Epilogue and personal record shown
+PASS  BLACKLINE practice still starts and runs on the shared host without errors
+PASS  False Haven practice still starts and runs on the shared host without errors
+PASS  Nightfall practice still starts and runs on the shared host without errors
+PASS  DEV banner text and version
+PASS  DEV lists all three power-ups and five districts
+PASS  DEV starts at District 5 with all power-ups, banner during play
+PASS  Touch tap on the canvas turns that tile (GameHost tap hook)
+PASS  Surge appears after first Energize at the Substation
+PASS  Story preview: briefing with polygon art, Story and instructions panels
+PASS  Offline review bundle opens DEV with no errors
+PASS  No page errors overall
+0 failed of 26
