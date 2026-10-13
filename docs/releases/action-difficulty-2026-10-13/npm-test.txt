@@ -1,0 +1,1835 @@
+
+> mathquest-prototype@0.9.7 test
+> node --test test/*.test.mjs
+
+TAP version 13
+# Subtest: teacher N is explicit for unequal gates; block counts are pinned and all members finish
+ok 1 - teacher N is explicit for unequal gates; block counts are pinned and all members finish
+  ---
+  duration_ms: 3.021952
+  type: 'test'
+  ...
+# Subtest: shared clock includes late start and disconnect; teacher pause freezes it
+ok 2 - shared clock includes late start and disconnect; teacher pause freezes it
+  ---
+  duration_ms: 1.048816
+  type: 'test'
+  ...
+# Subtest: authenticated commands, duplicate IDs, health monotonicity and terminal precedence
+ok 3 - authenticated commands, duplicate IDs, health monotonicity and terminal precedence
+  ---
+  duration_ms: 5.560847
+  type: 'test'
+  ...
+# Subtest: assisted result records separately with unchanged academic fields
+ok 4 - assisted result records separately with unchanged academic fields
+  ---
+  duration_ms: 1.23186
+  type: 'test'
+  ...
+# Subtest: completion queue survives an in-flight progress request; outage requires resume
+ok 5 - completion queue survives an in-flight progress request; outage requires resume
+  ---
+  duration_ms: 5.152852
+  type: 'test'
+  ...
+# Subtest: fixed step, normalized opposing/diagonal movement, clamps
+ok 6 - fixed step, normalized opposing/diagonal movement, clamps
+  ---
+  duration_ms: 8.324965
+  type: 'test'
+  ...
+# Subtest: save/restore resumes exact enemies, cooldowns, bullets and events
+ok 7 - save/restore resumes exact enemies, cooldowns, bullets and events
+  ---
+  duration_ms: 72.668142
+  type: 'test'
+  ...
+# Subtest: all eight loadouts implement exact movement, hull and damage
+ok 8 - all eight loadouts implement exact movement, hull and damage
+  ---
+  duration_ms: 2.904041
+  type: 'test'
+  ...
+# Subtest: ordinary and heavy damage honor one second protection
+ok 9 - ordinary and heavy damage honor one second protection
+  ---
+  duration_ms: 2.124817
+  type: 'test'
+  ...
+# Subtest: three lives; midpoint rewinds progress not time; armor and spent supplies survive
+ok 10 - three lives; midpoint rewinds progress not time; armor and spent supplies survive
+  ---
+  duration_ms: 0.994256
+  type: 'test'
+  ...
+# Subtest: boss checkpoint restores all components and clears threats
+ok 11 - boss checkpoint restores all components and clears threats
+  ---
+  duration_ms: 0.518379
+  type: 'test'
+  ...
+# Subtest: six stable supply opportunities, replacement, capped repair and replay suppression
+ok 12 - six stable supply opportunities, replacement, capped repair and replay suppression
+  ---
+  duration_ms: 0.20895
+  type: 'test'
+  ...
+# Subtest: terminal precedence: defeat, then boss kill, then active expiry; immutable
+ok 13 - terminal precedence: defeat, then boss kill, then active expiry; immutable
+  ---
+  duration_ms: 0.90882
+  type: 'test'
+  ...
+# Subtest: assisted route freezes action clock, retries and cannot reopen terminal
+ok 14 - assisted route freezes action clock, retries and cannot reopen terminal
+  ---
+  duration_ms: 1.950276
+  type: 'test'
+  ...
+# Subtest: malformed/revision-mismatched snapshots fail explicitly
+ok 15 - malformed/revision-mismatched snapshots fail explicitly
+  ---
+  duration_ms: 1.38024
+  type: 'test'
+  ...
+# Subtest: surface artwork does not damage aircraft; aircraft does
+ok 16 - surface artwork does not damage aircraft; aircraft does
+  ---
+  duration_ms: 0.459758
+  type: 'test'
+  ...
+# Subtest: full authored timeline stays bounded with deterministic evasive input
+ok 17 - full authored timeline stays bounded with deterministic evasive input
+  ---
+  duration_ms: 338.309483
+  type: 'test'
+  ...
+# Subtest: baseline and upgraded aircraft can mechanically complete boss within the 75-second boss section
+ok 18 - baseline and upgraded aircraft can mechanically complete boss within the 75-second boss section
+  ---
+  duration_ms: 37.499349
+  type: 'test'
+  ...
+# Subtest: v0.3.0 five-minute level quadruples formations to 128 combatants and retains six unique supplies
+ok 19 - v0.3.0 five-minute level quadruples formations to 128 combatants and retains six unique supplies
+  ---
+  duration_ms: 126.95206
+  type: 'test'
+  ...
+# Subtest: v0.3.0 tuning: ships triple hull, enemy shells 25% faster, tougher boss
+ok 20 - v0.3.0 tuning: ships triple hull, enemy shells 25% faster, tougher boss
+  ---
+  duration_ms: 0.861156
+  type: 'test'
+  ...
+# Subtest: v0.3.0 dropped supplies persist until they leave the screen
+ok 21 - v0.3.0 dropped supplies persist until they leave the screen
+  ---
+  duration_ms: 7.58722
+  type: 'test'
+  ...
+# BLACKLINE binary driver 266.21579166377376 29 {"spawned":3,"shots":64,"rams":10,"hits":5,"enemyCrashes":0,"evaded":59,"strikes":64,"obstacles":0}
+# Subtest: BLACKLINE authenticated 3/4/5 gates, both cargo choices, all endings, persistence and evidence separation
+ok 22 - BLACKLINE authenticated 3/4/5 gates, both cargo choices, all endings, persistence and evidence separation
+  ---
+  duration_ms: 569.176517
+  type: 'test'
+  ...
+# Subtest: BLACKLINE deadline, absent drivers, teacher pause and teacher closure
+ok 23 - BLACKLINE deadline, absent drivers, teacher pause and teacher closure
+  ---
+  duration_ms: 62.594495
+  type: 'test'
+  ...
+# Subtest: BLACKLINE ownership, stale sequence, forged configuration, distance, time and resources rejected
+ok 24 - BLACKLINE ownership, stale sequence, forged configuration, distance, time and resources rejected
+  ---
+  duration_ms: 30.353108
+  type: 'test'
+  ...
+# Subtest: BLACKLINE earned equipment triggers once and reconnect retains exact state
+ok 25 - BLACKLINE earned equipment triggers once and reconnect retains exact state
+  ---
+  duration_ms: 2.829299
+  type: 'test'
+  ...
+# Subtest: BLACKLINE binary controls finish in 4–5 minutes with all jumps and both pursuers
+ok 26 - BLACKLINE binary controls finish in 4–5 minutes with all jumps and both pursuers
+  ---
+  duration_ms: 224.147093
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/blackline-runtime.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/blackline-runtime.test.mjs
+not ok 4 - test/blackline-runtime.test.mjs
+  ---
+  duration_ms: 75.453181
+  type: 'test'
+  location: '/home/claude/mathquest/test/blackline-runtime.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: Coastal 3/4/5 gates, both routes, all endings, personal assisted results and restored classroom records
+ok 28 - Coastal 3/4/5 gates, both routes, all endings, personal assisted results and restored classroom records
+  ---
+  duration_ms: 369.373374
+  type: 'test'
+  ...
+# Subtest: Coastal rejects cross-player, legacy minigame and unearned upgrades; closure preserves votes
+ok 29 - Coastal rejects cross-player, legacy minigame and unearned upgrades; closure preserves votes
+  ---
+  duration_ms: 40.4546
+  type: 'test'
+  ...
+# Subtest: Coastal teacher pause shifts deadline once; alarm closes absent flights
+ok 30 - Coastal teacher pause shifts deadline once; alarm closes absent flights
+  ---
+  duration_ms: 29.35057
+  type: 'test'
+  ...
+# Subtest: Unequal gate loads require explicit extra-upgrade count and teacher setting enables it
+ok 31 - Unequal gate loads require explicit extra-upgrade count and teacher setting enables it
+  ---
+  duration_ms: 27.001131
+  type: 'test'
+  ...
+# Subtest: one backend catalog exposes all seven cartridge revisions and matching frontend version
+ok 32 - one backend catalog exposes all seven cartridge revisions and matching frontend version
+  ---
+  duration_ms: 60.468574
+  type: 'test'
+  ...
+# Subtest: other cartridges cannot consume Ironbreak, Coastal or rescue commands
+ok 33 - other cartridges cannot consume Ironbreak, Coastal or rescue commands
+  ---
+  duration_ms: 100.573978
+  type: 'test'
+  ...
+# Subtest: existing supported room versions reload without losing their issued configuration
+ok 34 - existing supported room versions reload without losing their issued configuration
+  ---
+  duration_ms: 21.196249
+  type: 'test'
+  ...
+# Subtest: combined reports retain cartridge-specific assisted and terminal labels
+ok 35 - combined reports retain cartridge-specific assisted and terminal labels
+  ---
+  duration_ms: 13.677838
+  type: 'test'
+  ...
+# Subtest: Nightfall runs full 3/4/5 gate journeys with all work and independent results
+ok 36 - Nightfall runs full 3/4/5 gate journeys with all work and independent results
+  ---
+  duration_ms: 307.910335
+  type: 'test'
+  ...
+# Subtest: Nightfall rejects unearned baskets, stale stage commands and another player run
+ok 37 - Nightfall rejects unearned baskets, stale stage commands and another player run
+  ---
+  duration_ms: 44.895165
+  type: 'test'
+  ...
+# Subtest: deadline, teacher pause and teacher advancement settle missing players
+ok 38 - deadline, teacher pause and teacher advancement settle missing players
+  ---
+  duration_ms: 74.847087
+  type: 'test'
+  ...
+# Subtest: equipment has concrete, independent effects and cannot recharge on restore
+ok 39 - equipment has concrete, independent effects and cannot recharge on restore
+  ---
+  duration_ms: 0.610362
+  type: 'test'
+  ...
+# Subtest: baseline no-shooting route is completable; movement is normalized and walls block shots
+ok 40 - baseline no-shooting route is completable; movement is normalized and walls block shots
+  ---
+  duration_ms: 30.588908
+  type: 'test'
+  ...
+# Subtest: two teams freeze independent conditions and students see only their own results
+ok 41 - two teams freeze independent conditions and students see only their own results
+  ---
+  duration_ms: 109.058641
+  type: 'test'
+  ...
+# Subtest: command replay produces one result; stale and modified condition payloads are rejected
+ok 42 - command replay produces one result; stale and modified condition payloads are rejected
+  ---
+  duration_ms: 35.051144
+  type: 'test'
+  ...
+# Subtest: third disconnected teammate receives a neutral shared-window closure and cannot block epilogues
+ok 43 - third disconnected teammate receives a neutral shared-window closure and cannot block epilogues
+  ---
+  duration_ms: 25.591359
+  type: 'test'
+  ...
+# Subtest: teacher can pause deadlines, enable accessible route, and advance only unfinished players
+ok 44 - teacher can pause deadlines, enable accessible route, and advance only unfinished players
+  ---
+  duration_ms: 20.397619
+  type: 'test'
+  ...
+# Subtest: Durable Object restart retains checkpoint, integrity and report evidence without changing mastery
+ok 45 - Durable Object restart retains checkpoint, integrity and report evidence without changing mastery
+  ---
+  duration_ms: 17.191504
+  type: 'test'
+  ...
+# Subtest: empty or malformed numeric input never counts as a wrong attempt
+ok 46 - empty or malformed numeric input never counts as a wrong attempt
+  ---
+  duration_ms: 6.354486
+  type: 'test'
+  ...
+# Subtest: intensive review snapshots above one storage value restore complete assessment evidence
+ok 47 - intensive review snapshots above one storage value restore complete assessment evidence
+  ---
+  duration_ms: 72.238603
+  type: 'test'
+  ...
+# Subtest: False Haven authenticated 3/4/5 gate journeys, both leads/routes, all endings and separate evidence
+ok 48 - False Haven authenticated 3/4/5 gate journeys, both leads/routes, all endings and separate evidence
+  ---
+  duration_ms: 253.022643
+  type: 'test'
+  ...
+# Subtest: False Haven team deadline is authoritative, alarm closes absent players and pause extends it
+ok 49 - False Haven team deadline is authoritative, alarm closes absent players and pause extends it
+  ---
+  duration_ms: 63.518541
+  type: 'test'
+  ...
+# Subtest: False Haven ownership and server envelope reject forged config, machinery, resources, enemies and mode
+ok 50 - False Haven ownership and server envelope reject forged config, machinery, resources, enemies and mode
+  ---
+  duration_ms: 30.250373
+  type: 'test'
+  ...
+# Subtest: False Haven reload retains ammunition, mode and monotonic gameplay counters
+ok 51 - False Haven reload retains ammunition, mode and monotonic gameplay counters
+  ---
+  duration_ms: 2.512089
+  type: 'test'
+  ...
+# Subtest: geometry cache preserves collisions and invalidates restored door/window values
+ok 52 - geometry cache preserves collisions and invalidates restored door/window values
+  ---
+  duration_ms: 5.361352
+  type: 'test'
+  ...
+# Subtest: water, trolley and barricades invalidate both geometry and navigation fields
+ok 53 - water, trolley and barricades invalidate both geometry and navigation fields
+  ---
+  duration_ms: 70.699055
+  type: 'test'
+  ...
+# Subtest: combat and save restoration cannot serialize or reuse another run’s derived geometry
+ok 54 - combat and save restoration cannot serialize or reuse another run’s derived geometry
+  ---
+  duration_ms: 117.425726
+  type: 'test'
+  ...
+# Subtest: mandatory introduction explains the known breach and authority abandonment with distinct chapter art
+ok 55 - mandatory introduction explains the known breach and authority abandonment with distinct chapter art
+  ---
+  duration_ms: 0.8695
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/false-haven-runtime.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/false-haven-runtime.test.mjs
+not ok 11 - test/false-haven-runtime.test.mjs
+  ---
+  duration_ms: 85.22966
+  type: 'test'
+  location: '/home/claude/mathquest/test/false-haven-runtime.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# AREA {"chapter1Cells":2936,"chapter2Cells":6872,"ratio":2.3405994550408717,"boundsRatio":2.25}
+# ROUTE {"activeSeconds":148.63333333334376,"walkingDistance":12286.666666665773}
+# Subtest: new world is 2.25x bounds and at least twice reachable area
+ok 57 - new world is 2.25x bounds and at least twice reachable area
+  ---
+  duration_ms: 123.965354
+  type: 'test'
+  ...
+# Subtest: all authored actors spawn in free space, roster stays the same
+ok 58 - all authored actors spawn in free space, roster stays the same
+  ---
+  duration_ms: 3.591939
+  type: 'test'
+  ...
+# Subtest: physical movement and real Use input finish required route without ammunition
+ok 59 - physical movement and real Use input finish required route without ammunition
+  ---
+  duration_ms: 1612.682837
+  type: 'test'
+  ...
+# Subtest: puzzle ordering, occupied track and local speaker cooldown remain recoverable
+ok 60 - puzzle ordering, occupied track and local speaker cooldown remain recoverable
+  ---
+  duration_ms: 1.277056
+  type: 'test'
+  ...
+# Subtest: save restores topology, ammo, elapsed time and terminal state without cross-chapter mutation
+ok 61 - save restores topology, ammo, elapsed time and terminal state without cross-chapter mutation
+  ---
+  duration_ms: 4.159405
+  type: 'test'
+  ...
+# Subtest: bundled QR generator exposes the matrix API used by the teacher dashboard
+ok 62 - bundled QR generator exposes the matrix API used by the teacher dashboard
+  ---
+  duration_ms: 20.550404
+  type: 'test'
+  ...
+# Subtest: join polling does not steal focus from alias or team-code fields
+ok 63 - join polling does not steal focus from alias or team-code fields
+  ---
+  duration_ms: 0.625608
+  type: 'test'
+  ...
+# Subtest: teacher builder exposes cartridge, discipline, module, import, and balanced allocation controls
+ok 64 - teacher builder exposes cartridge, discipline, module, import, and balanced allocation controls
+  ---
+  duration_ms: 0.335996
+  type: 'test'
+  ...
+# Subtest: teacher launch controls survive polling and expose progress and errors
+ok 65 - teacher launch controls survive polling and expose progress and errors
+  ---
+  duration_ms: 0.480367
+  type: 'test'
+  ...
+# Subtest: student interface uses math-native controls and unmistakable team cues
+ok 66 - student interface uses math-native controls and unmistakable team cues
+  ---
+  duration_ms: 11.125676
+  type: 'test'
+  ...
+# Subtest: teacher can privately adjust each student's next unissued preset question
+ok 67 - teacher can privately adjust each student's next unissued preset question
+  ---
+  duration_ms: 0.578072
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/held-input.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/held-input.test.mjs
+not ok 14 - test/held-input.test.mjs
+  ---
+  duration_ms: 77.226412
+  type: 'test'
+  location: '/home/claude/mathquest/test/held-input.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: GitHub navigation and QR links preserve the project directory and strip teacher credentials
+ok 69 - GitHub navigation and QR links preserve the project directory and strip teacher credentials
+  ---
+  duration_ms: 3.554371
+  type: 'test'
+  ...
+# Subtest: GitHub paths resolve every scene, style, script, soundtrack, and sprite inside the repository
+ok 70 - GitHub paths resolve every scene, style, script, soundtrack, and sprite inside the repository
+  ---
+  duration_ms: 24.288025
+  type: 'test'
+  ...
+# Subtest: JSON preflight succeeds at the relay without touching session storage; other origins and headers fail
+ok 71 - JSON preflight succeeds at the relay without touching session storage; other origins and headers fail
+  ---
+  duration_ms: 61.630916
+  type: 'test'
+  ...
+# Subtest: cross-origin create, two-player join, launch, answers, polling, and teacher exports retain authorization
+ok 72 - cross-origin create, two-player join, launch, answers, polling, and teacher exports retain authorization
+  ---
+  duration_ms: 49.27625
+  type: 'test'
+  ...
+# Subtest: legacy Netlify and no-Origin requests remain compatible; health check never creates a room
+ok 73 - legacy Netlify and no-Origin requests remain compatible; health check never creates a room
+  ---
+  duration_ms: 1.288086
+  type: 'test'
+  ...
+# Subtest: all browser API calls omit cookies and referrers while preserving the command abort signal
+ok 74 - all browser API calls omit cookies and referrers while preserving the command abort signal
+  ---
+  duration_ms: 0.923288
+  type: 'test'
+  ...
+# Subtest: explicit integer mode serializes positive, negative and zero values without a student denominator
+ok 75 - explicit integer mode serializes positive, negative and zero values without a student denominator
+  ---
+  duration_ms: 4.093476
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/ironbreak-input.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/ironbreak-input.test.mjs
+not ok 17 - test/ironbreak-input.test.mjs
+  ---
+  duration_ms: 79.026299
+  type: 'test'
+  location: '/home/claude/mathquest/test/ironbreak-input.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: Ironbreak 3/4/5 gates, both priorities and every ending retain complete story and separate math evidence
+ok 77 - Ironbreak 3/4/5 gates, both priorities and every ending retain complete story and separate math evidence
+  ---
+  duration_ms: 1383.308004
+  type: 'test'
+  ...
+# Subtest: extra mathematics alone unlocks multiple distinct frozen upgrades; loadout tampering is rejected
+ok 78 - extra mathematics alone unlocks multiple distinct frozen upgrades; loadout tampering is rejected
+  ---
+  duration_ms: 82.356626
+  type: 'test'
+  ...
+# Subtest: server alarm closes unstarted/disconnected suits; teacher pause shifts deadline once and stale starts cannot reopen
+ok 79 - server alarm closes unstarted/disconnected suits; teacher pause shifts deadline once and stale starts cannot reopen
+  ---
+  duration_ms: 49.902612
+  type: 'test'
+  ...
+# Subtest: three lives, authoritative retries, new attempt identities and idempotency preserve equipment and elapsed time
+ok 80 - three lives, authoritative retries, new attempt identities and idempotency preserve equipment and elapsed time
+  ---
+  duration_ms: 73.486285
+  type: 'test'
+  ...
+# Subtest: real simulation progress persists and restores without refilling; known identities and bounded state reject tampering
+ok 81 - real simulation progress persists and restores without refilling; known identities and bounded state reject tampering
+  ---
+  duration_ms: 238.982672
+  type: 'test'
+  ...
+# Subtest: guided wrong responses preserve steps; switch is irreversible; student sees only own run; deletion removes saved server state
+ok 82 - guided wrong responses preserve steps; switch is irreversible; student sees only own run; deletion removes saved server state
+  ---
+  duration_ms: 41.600583
+  type: 'test'
+  ...
+# Subtest: real boss fight snapshots pass the live validator through success; checkpoint retries reset only the issued section
+ok 83 - real boss fight snapshots pass the live validator through success; checkpoint retries reset only the issued section
+  ---
+  duration_ms: 594.65372
+  type: 'test'
+  ...
+# Subtest: two opening slots, contextual gates and distinct endings
+ok 84 - two opening slots, contextual gates and distinct endings
+  ---
+  duration_ms: 1.153222
+  type: 'test'
+  ...
+# Subtest: audio deduplicates events, switches boss theme and silences pause/background
+ok 85 - audio deduplicates events, switches boss theme and silences pause/background
+  ---
+  duration_ms: 0.448426
+  type: 'test'
+  ...
+# Subtest: music scheduler bounds lookahead and independent effect mute
+ok 86 - music scheduler bounds lookahead and independent effect mute
+  ---
+  duration_ms: 0.585717
+  type: 'test'
+  ...
+# Subtest: Foley cues have distinct layers and remain independently muted/rate limited
+ok 87 - Foley cues have distinct layers and remain independently muted/rate limited
+  ---
+  duration_ms: 0.493252
+  type: 'test'
+  ...
+# Subtest: authored wave counts, roles and IDs scale with frozen starting roster
+ok 88 - authored wave counts, roles and IDs scale with frozen starting roster
+  ---
+  duration_ms: 8.202687
+  type: 'test'
+  ...
+# Subtest: entrance warnings cannot damage players or accept attacks before entrance ends
+ok 89 - entrance warnings cannot damage players or accept attacks before entrance ends
+  ---
+  duration_ms: 0.502494
+  type: 'test'
+  ...
+# Subtest: cleared stages progress in order and release authored crate supplies once
+ok 90 - cleared stages progress in order and release authored crate supplies once
+  ---
+  duration_ms: 0.715033
+  type: 'test'
+  ...
+# Subtest: 117-second warning and forced boss preserve resources, supplies and starting-party scaling
+ok 91 - 117-second warning and forced boss preserve resources, supplies and starting-party scaling
+  ---
+  duration_ms: 0.391686
+  type: 'test'
+  ...
+# Subtest: full meters leave health, health is personal and capped at max HP
+ok 92 - full meters leave health, health is personal and capped at max HP
+  ---
+  duration_ms: 0.780424
+  type: 'test'
+  ...
+# Subtest: ordinary enemies commit warnings without tracking a moved target
+ok 93 - ordinary enemies commit warnings without tracking a moved target
+  ---
+  duration_ms: 0.665628
+  type: 'test'
+  ...
+# Subtest: shield reduces frontal ordinary damage, but flanks and magic remain useful
+ok 94 - shield reduces frontal ordinary damage, but flanks and magic remain useful
+  ---
+  duration_ms: 0.216681
+  type: 'test'
+  ...
+# Subtest: Nezha rotates target and move; low-health change leaves warnings intact
+ok 95 - Nezha rotates target and move; low-health change leaves warnings intact
+  ---
+  duration_ms: 0.732329
+  type: 'test'
+  ...
+# Subtest: boss normal damage never cancels windup; special recovery stagger is rate-limited
+ok 96 - boss normal damage never cancels windup; special recovery stagger is rate-limited
+  ---
+  duration_ms: 0.523965
+  type: 'test'
+  ...
+# Subtest: spear warning precedes two hits, hurt protection prevents an immediate double hit
+ok 97 - spear warning precedes two hits, hurt protection prevents an immediate double hit
+  ---
+  duration_ms: 0.87224
+  type: 'test'
+  ...
+# Subtest: ring travels outbound and back with one hit per pass
+ok 98 - ring travels outbound and back with one hit per pass
+  ---
+  duration_ms: 0.558758
+  type: 'test'
+  ...
+# Subtest: rush commits its lane and direction and can be evaded by depth movement
+ok 99 - rush commits its lane and direction and can be evaded by depth movement
+  ---
+  duration_ms: 0.262721
+  type: 'test'
+  ...
+# Subtest: pause and all-team recovery freeze boss/projectiles and never restore HP
+ok 100 - pause and all-team recovery freeze boss/projectiles and never restore HP
+  ---
+  duration_ms: 0.480113
+  type: 'test'
+  ...
+# Subtest: boss death and final-player death before deadline resolve one immutable victory
+ok 101 - boss death and final-player death before deadline resolve one immutable victory
+  ---
+  duration_ms: 0.328075
+  type: 'test'
+  ...
+# Subtest: exact deadline excludes pending damage; real level reaches boss before retreat
+ok 102 - exact deadline excludes pending damage; real level reaches boss before retreat
+  ---
+  duration_ms: 44.118594
+  type: 'test'
+  ...
+# Subtest: double crates, typed loot, hit events and no duplicate supplies after boss arrival
+ok 103 - double crates, typed loot, hit events and no duplicate supplies after boss arrival
+  ---
+  duration_ms: 5.544171
+  type: 'test'
+  ...
+# Subtest: four distinct environments with shared supply/boss courtyard
+ok 104 - four distinct environments with shared supply/boss courtyard
+  ---
+  duration_ms: 2.31347
+  type: 'test'
+  ...
+# Subtest: loaded scenery covers canvas without changing snapshot; failed image is safe
+ok 105 - loaded scenery covers canvas without changing snapshot; failed image is safe
+  ---
+  duration_ms: 0.820047
+  type: 'test'
+  ...
+# Subtest: horse spends one charge, prevents recast and jump, returns after 3600 active ms
+ok 106 - horse spends one charge, prevents recast and jump, returns after 3600 active ms
+  ---
+  duration_ms: 7.350322
+  type: 'test'
+  ...
+# Subtest: horse collision has no instant pulse, 600ms interval, two hit cap and Focus bonus
+ok 107 - horse collision has no instant pulse, 600ms interval, two hit cap and Focus bonus
+  ---
+  duration_ms: 0.667997
+  type: 'test'
+  ...
+# Subtest: horse steering respects lease, pause freezes timer, disconnect suppresses collisions
+ok 108 - horse steering respects lease, pause freezes timer, disconnect suppresses collisions
+  ---
+  duration_ms: 0.823124
+  type: 'test'
+  ...
+# Subtest: damage does not grant immunity or lose horse animation; death cancels charge
+ok 109 - damage does not grant immunity or lose horse animation; death cancels charge
+  ---
+  duration_ms: 0.617585
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/journey-input.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/journey-input.test.mjs
+not ok 23 - test/journey-input.test.mjs
+  ---
+  duration_ms: 79.863379
+  type: 'test'
+  location: '/home/claude/mathquest/test/journey-input.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: normal team code joining caps only Journey at five and allows authenticated rejoin
+ok 111 - normal team code joining caps only Journey at five and allows authenticated rejoin
+  ---
+  duration_ms: 85.972489
+  type: 'test'
+  ...
+# Subtest: required gates hand off once without extra team joining or academic completion shortcuts
+ok 112 - required gates hand off once without extra team joining or academic completion shortcuts
+  ---
+  duration_ms: 28.827969
+  type: 'test'
+  ...
+# Subtest: optional math earns a personal choice and keeps team inventory unchanged
+ok 113 - optional math earns a personal choice and keeps team inventory unchanged
+  ---
+  duration_ms: 23.355612
+  type: 'test'
+  ...
+# Subtest: teacher team controls and terminal result produce one separate engagement record
+ok 114 - teacher team controls and terminal result produce one separate engagement record
+  ---
+  duration_ms: 22.068238
+  type: 'test'
+  ...
+# Subtest: forged result rejected; hosted session deletion includes child runs
+ok 115 - forged result rejected; hosted session deletion includes child runs
+  ---
+  duration_ms: 8.762668
+  type: 'test'
+  ...
+# Subtest: approved existing Worker issues secure combat tickets; invalid endpoints preserve the run
+ok 116 - approved existing Worker issues secure combat tickets; invalid endpoints preserve the run
+  ---
+  duration_ms: 21.800093
+  type: 'test'
+  ...
+# Subtest: wukong timed damage, one charge and completion
+ok 117 - wukong timed damage, one charge and completion
+  ---
+  duration_ms: 2.807367
+  type: 'test'
+  ...
+# Subtest: bajie timed damage, one charge and completion
+ok 118 - bajie timed damage, one charge and completion
+  ---
+  duration_ms: 0.297248
+  type: 'test'
+  ...
+# Subtest: wujing timed damage, one charge and completion
+ok 119 - wujing timed damage, one charge and completion
+  ---
+  duration_ms: 0.336155
+  type: 'test'
+  ...
+# Subtest: tang timed damage, one charge and completion
+ok 120 - tang timed damage, one charge and completion
+  ---
+  duration_ms: 0.355693
+  type: 'test'
+  ...
+# Subtest: pause freezes special; death cancels; ordinary attacks cannot overlap cast
+ok 121 - pause freezes special; death cancels; ordinary attacks cannot overlap cast
+  ---
+  duration_ms: 1.375742
+  type: 'test'
+  ...
+# Subtest: river wave hits a target once, passes forward and never pushes boss
+ok 122 - river wave hits a target once, passes forward and never pushes boss
+  ---
+  duration_ms: 0.55468
+  type: 'test'
+  ...
+# Subtest: lotus ward does not heal or extend an existing shield
+ok 123 - lotus ward does not heal or extend an existing shield
+  ---
+  duration_ms: 0.332368
+  type: 'test'
+  ...
+# Subtest: disconnect cancels delayed damage without refund
+ok 124 - disconnect cancels delayed damage without refund
+  ---
+  duration_ms: 0.301357
+  type: 'test'
+  ...
+# Subtest: five authenticated clients receive the same authoritative run and movement
+ok 125 - five authenticated clients receive the same authoritative run and movement
+  ---
+  duration_ms: 79.110715
+  type: 'test'
+  ...
+# Subtest: tickets are single-use; unauthenticated, wrong-run input cannot control a player
+ok 126 - tickets are single-use; unauthenticated, wrong-run input cannot control a player
+  ---
+  duration_ms: 2.286889
+  type: 'test'
+  ...
+# Subtest: reconnect replaces controller; old socket close cannot disconnect the replacement
+ok 127 - reconnect replaces controller; old socket close cannot disconnect the replacement
+  ---
+  duration_ms: 2.829894
+  type: 'test'
+  ...
+# Subtest: teacher termination delivers one result and purge closes all five sockets
+ok 128 - teacher termination delivers one result and purge closes all five sockets
+  ---
+  duration_ms: 17.042586
+  type: 'test'
+  ...
+# Subtest: server-resolved boss victory reaches every socket and the outbox exactly once
+ok 129 - server-resolved boss victory reaches every socket and the outbox exactly once
+  ---
+  duration_ms: 16.034323
+  type: 'test'
+  ...
+# Subtest: all-ready launches early; active time excludes ready and countdown
+ok 130 - all-ready launches early; active time excludes ready and countdown
+  ---
+  duration_ms: 2.605727
+  type: 'test'
+  ...
+# Subtest: one-minute expiry selects ready subset and freezes party size
+ok 131 - one-minute expiry selects ready subset and freezes party size
+  ---
+  duration_ms: 2.178621
+  type: 'test'
+  ...
+# Subtest: zero-ready expiry stays unstarted and late readiness gets no new minute
+ok 132 - zero-ready expiry stays unstarted and late readiness gets no new minute
+  ---
+  duration_ms: 0.408996
+  type: 'test'
+  ...
+# Subtest: optional entitlement is personal and closed at authoritative cutoff
+ok 133 - optional entitlement is personal and closed at authoritative cutoff
+  ---
+  duration_ms: 0.301861
+  type: 'test'
+  ...
+# Subtest: unique hero reservations and invalid upgrades cannot be bypassed
+ok 134 - unique hero reservations and invalid upgrades cannot be bypassed
+  ---
+  duration_ms: 0.561635
+  type: 'test'
+  ...
+# Subtest: input authority rejects stale epochs, replayed edges and forged movement
+ok 135 - input authority rejects stale epochs, replayed edges and forged movement
+  ---
+  duration_ms: 2.521195
+  type: 'test'
+  ...
+# Subtest: network lease stops stale movement but permits refreshed stationary held input
+ok 136 - network lease stops stale movement but permits refreshed stationary held input
+  ---
+  duration_ms: 2.037968
+  type: 'test'
+  ...
+# Subtest: teacher pause freezes readiness, launch, active time and recovery independently
+ok 137 - teacher pause freezes readiness, launch, active time and recovery independently
+  ---
+  duration_ms: 0.457138
+  type: 'test'
+  ...
+# Subtest: single disconnect continues; all-team recovery preserves elapsed and resources
+ok 138 - single disconnect continues; all-team recovery preserves elapsed and resources
+  ---
+  duration_ms: 0.812902
+  type: 'test'
+  ...
+# Subtest: all-team recovery timeout is interrupted and a duplicate terminal cannot overwrite it
+ok 139 - all-team recovery timeout is interrupted and a duplicate terminal cannot overwrite it
+  ---
+  duration_ms: 0.899844
+  type: 'test'
+  ...
+# Subtest: death retains upgrades/magic and third life ends in defeat
+ok 140 - death retains upgrades/magic and third life ends in defeat
+  ---
+  duration_ms: 0.901956
+  type: 'test'
+  ...
+# Subtest: only the collector receives a pickup and a full meter leaves it
+ok 141 - only the collector receives a pickup and a full meter leaves it
+  ---
+  duration_ms: 0.284079
+  type: 'test'
+  ...
+# Subtest: active deadline produces retreat with no late victory and expiry interrupts
+ok 142 - active deadline produces retreat with no late victory and expiry interrupts
+  ---
+  duration_ms: 36.654157
+  type: 'test'
+  ...
+# Subtest: all 25 preset generators are deterministic and self-checking
+ok 143 - all 25 preset generators are deterministic and self-checking
+  ---
+  duration_ms: 45.907715
+  type: 'test'
+  ...
+# Subtest: math checker supports every v0.4 answer contract
+ok 144 - math checker supports every v0.4 answer contract
+  ---
+  duration_ms: 0.587411
+  type: 'test'
+  ...
+# Subtest: teacher questions are validated before a session begins
+ok 145 - teacher questions are validated before a session begins
+  ---
+  duration_ms: 1.105938
+  type: 'test'
+  ...
+# Subtest: negative exponents render the entire signed exponent as superscript
+ok 146 - negative exponents render the entire signed exponent as superscript
+  ---
+  duration_ms: 0.341837
+  type: 'test'
+  ...
+# Subtest: teacher questions can include a validated HTTPS image
+ok 147 - teacher questions can include a validated HTTPS image
+  ---
+  duration_ms: 0.370545
+  type: 'test'
+  ...
+# Subtest: simplification modules reject an equivalent unreduced fraction
+ok 148 - simplification modules reject an equivalent unreduced fraction
+  ---
+  duration_ms: 0.196569
+  type: 'test'
+  ...
+# Subtest: new answer forms grade exact rational values and reject unsafe/ambiguous formats
+ok 149 - new answer forms grade exact rational values and reject unsafe/ambiguous formats
+  ---
+  duration_ms: 0.244097
+  type: 'test'
+  ...
+# Subtest: scientific operation answers equal the operands and normalize across positive/negative powers
+ok 150 - scientific operation answers equal the operands and normalize across positive/negative powers
+  ---
+  duration_ms: 0.993848
+  type: 'test'
+  ...
+# Subtest: tax and tip use cent-based half-up rounding and give unambiguous amount/total prompts
+ok 151 - tax and tip use cent-based half-up rounding and give unambiguous amount/total prompts
+  ---
+  duration_ms: 1.213942
+  type: 'test'
+  ...
+# Subtest: imported unit/mixed/choice items retain assessment tags and reject missing option answers
+ok 152 - imported unit/mixed/choice items retain assessment tags and reject missing option answers
+  ---
+  duration_ms: 0.615348
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/migration-ui.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/migration-ui.test.mjs
+not ok 29 - test/migration-ui.test.mjs
+  ---
+  duration_ms: 107.138053
+  type: 'test'
+  location: '/home/claude/mathquest/test/migration-ui.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: separating all seven cartridge scenes preserves every sentence exactly once
+ok 154 - separating all seven cartridge scenes preserves every sentence exactly once
+  ---
+  duration_ms: 17.764389
+  type: 'test'
+  ...
+# Subtest: explicit instructions remain separate and Blackline classroom procedure leaves the story
+ok 155 - explicit instructions remain separate and Blackline classroom procedure leaves the story
+  ---
+  duration_ms: 0.469318
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/nightfall-runtime.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/nightfall-runtime.test.mjs
+not ok 31 - test/nightfall-runtime.test.mjs
+  ---
+  duration_ms: 92.221556
+  type: 'test'
+  location: '/home/claude/mathquest/test/nightfall-runtime.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/runtime.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/runtime.test.mjs
+not ok 32 - test/runtime.test.mjs
+  ---
+  duration_ms: 82.164221
+  type: 'test'
+  location: '/home/claude/mathquest/test/runtime.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: question pools allocate exactly and evenly across stable gates
+ok 158 - question pools allocate exactly and evenly across stable gates
+  ---
+  duration_ms: 3.924914
+  type: 'test'
+  ...
+# Subtest: launch requires a student, removes empty teams, and reports the active roster
+ok 159 - launch requires a student, removes empty teams, and reports the active roster
+  ---
+  duration_ms: 84.10943
+  type: 'test'
+  ...
+# Subtest: launch retains every occupied team and locks the roster
+ok 160 - launch retains every occupied team and locks the roster
+  ---
+  duration_ms: 11.746784
+  type: 'test'
+  ...
+# Subtest: teams receive different story-linked secrets and honor recent exclusions
+ok 161 - teams receive different story-linked secrets and honor recent exclusions
+  ---
+  duration_ms: 8.036271
+  type: 'test'
+  ...
+# Subtest: teacher difficulty changes only the next unissued preset question and stays private
+ok 162 - teacher difficulty changes only the next unissued preset question and stays private
+  ---
+  duration_ms: 11.757965
+  type: 'test'
+  ...
+# Subtest: full-class launch stores lightweight plans and generates questions on demand
+ok 163 - full-class launch stores lightweight plans and generates questions on demand
+  ---
+  duration_ms: 50.734087
+  type: 'test'
+  ...
+# Subtest: two students complete briefing, mixed gates, choices, market, cipher, and ending
+ok 164 - two students complete briefing, mixed gates, choices, market, cipher, and ending
+  ---
+  duration_ms: 39.168885
+  type: 'test'
+  ...
+# Subtest: custom questions mix with presets and undersized sessions are rejected
+ok 165 - custom questions mix with presets and undersized sessions are rejected
+  ---
+  duration_ms: 6.785413
+  type: 'test'
+  ...
+# Subtest: authored inventory and all eight distinct upgrade combinations
+ok 166 - authored inventory and all eight distinct upgrade combinations
+  ---
+  duration_ms: 179.500856
+  type: 'test'
+  ...
+# Subtest: fixed-step run speed, agility rate and platform seam crossing
+ok 167 - fixed-step run speed, agility rate and platform seam crossing
+  ---
+  duration_ms: 4.452178
+  type: 'test'
+  ...
+# Subtest: baseline full jump crosses a required 80px gap and lands
+ok 168 - baseline full jump crosses a required 80px gap and lands
+  ---
+  duration_ms: 4.84219
+  type: 'test'
+  ...
+# Subtest: early jump release reduces height; hold does not auto-repeat
+ok 169 - early jump release reduces height; hold does not auto-repeat
+  ---
+  duration_ms: 5.246698
+  type: 'test'
+  ...
+# Subtest: drop-through affects a thin deck, but never a solid floor
+ok 170 - drop-through affects a thin deck, but never a solid floor
+  ---
+  duration_ms: 10.993203
+  type: 'test'
+  ...
+# Subtest: one jump normally, two distinct presses with agility, no third jump
+ok 171 - one jump normally, two distinct presses with agility, no third jump
+  ---
+  duration_ms: 4.480186
+  type: 'test'
+  ...
+# Subtest: double Down enters stationary prone; cancellation clears gesture history
+ok 172 - double Down enters stationary prone; cancellation clears gesture history
+  ---
+  duration_ms: 1.613058
+  type: 'test'
+  ...
+# Subtest: ladder ascends, descends adjacent connector, and jump disengages
+ok 173 - ladder ascends, descends adjacent connector, and jump disengages
+  ---
+  duration_ms: 5.569711
+  type: 'test'
+  ...
+# Subtest: surface swimming has no dive, permits fire, and jumps onto bank
+ok 174 - surface swimming has no dive, permits fire, and jumps onto bank
+  ---
+  duration_ms: 18.816682
+  type: 'test'
+  ...
+# Subtest: all four repair cache positions collect at low health; full health leaves them
+ok 175 - all four repair cache positions collect at low health; full health leaves them
+  ---
+  duration_ms: 3.989471
+  type: 'test'
+  ...
+# Subtest: guard gate blocks all three heights until H01 is defeated
+ok 176 - guard gate blocks all three heights until H01 is defeated
+  ---
+  duration_ms: 8.022333
+  type: 'test'
+  ...
+# Subtest: checkpoints do not refill on first arrival; jumping cannot skip them
+ok 177 - checkpoints do not refill on first arrival; jumping cannot skip them
+  ---
+  duration_ms: 0.693186
+  type: 'test'
+  ...
+# Subtest: three deaths consume exactly three lives, protection prevents stacked hits
+ok 178 - three deaths consume exactly three lives, protection prevents stacked hits
+  ---
+  duration_ms: 8.778397
+  type: 'test'
+  ...
+# Subtest: checkpoint retry resets current/later sections and retains earlier state
+ok 179 - checkpoint retry resets current/later sections and retains earlier state
+  ---
+  duration_ms: 2.113221
+  type: 'test'
+  ...
+# Subtest: deadline wins over a downed retry and never overwrites resolved success
+ok 180 - deadline wins over a downed retry and never overwrites resolved success
+  ---
+  duration_ms: 0.845648
+  type: 'test'
+  ...
+# Subtest: fast bullet segment intersects cover before a target behind it
+ok 181 - fast bullet segment intersects cover before a target behind it
+  ---
+  duration_ms: 2.0188
+  type: 'test'
+  ...
+# Subtest: spread hits boss once per volley; single victory remains terminal
+ok 182 - spread hits boss once per volley; single victory remains terminal
+  ---
+  duration_ms: 0.836742
+  type: 'test'
+  ...
+# Subtest: boss trigger cannot be skipped with a jump; retry restores boss HP only on new attempt
+ok 183 - boss trigger cannot be skipped with a jump; retry restores boss HP only on new attempt
+  ---
+  duration_ms: 0.866946
+  type: 'test'
+  ...
+# Subtest: boss high volley is duckable; low sweep is jumpable without agility
+ok 184 - boss high volley is duckable; low sweep is jumpable without agility
+  ---
+  duration_ms: 24.442717
+  type: 'test'
+  ...
+# Subtest: offscreen enemies cannot launch unseen projectiles
+ok 185 - offscreen enemies cannot launch unseen projectiles
+  ---
+  duration_ms: 58.765449
+  type: 'test'
+  ...
+# Subtest: eight directional sectors and center dead zone
+ok 186 - eight directional sectors and center dead zone
+  ---
+  duration_ms: 0.700467
+  type: 'test'
+  ...
+# Subtest: all emitted effect names have a declared original sound
+ok 187 - all emitted effect names have a declared original sound
+  ---
+  duration_ms: 0.210465
+  type: 'test'
+  ...
+# Subtest: baseline boss encounter can reach success through ordinary controls and damage rules
+ok 188 - baseline boss encounter can reach success through ordinary controls and damage rules
+  ---
+  duration_ms: 160.75809
+  type: 'test'
+  ...
+# Subtest: standing and continuously firing no longer wins the boss fight
+ok 189 - standing and continuously firing no longer wins the boss fight
+  ---
+  duration_ms: 30.153464
+  type: 'test'
+  ...
+# Subtest: approach-triggered hazards show the full warning before damage
+ok 190 - approach-triggered hazards show the full warning before damage
+  ---
+  duration_ms: 1.293413
+  type: 'test'
+  ...
+# Subtest: three new cover beats remain jumpable without agility
+ok 191 - three new cover beats remain jumpable without agility
+  ---
+  duration_ms: 3.095404
+  type: 'test'
+  ...
+# Subtest: second-phase low sweep sends two spaced shots and overhead repeats its warning
+ok 192 - second-phase low sweep sends two spaced shots and overhead repeats its warning
+  ---
+  duration_ms: 9.324128
+  type: 'test'
+  ...
+# Subtest: v0.2.0 doubles the route and the robot count, with a guarded MID2 checkpoint
+ok 193 - v0.2.0 doubles the route and the robot count, with a guarded MID2 checkpoint
+  ---
+  duration_ms: 14.529174
+  type: 'test'
+  ...
+# Subtest: v0.2.0 boss mortar marks landing spots and its shells land on them
+ok 194 - v0.2.0 boss mortar marks landing spots and its shells land on them
+  ---
+  duration_ms: 21.511076
+  type: 'test'
+  ...
+# Subtest: v0.2.0 boss shots are faster than v0.1.0
+ok 195 - v0.2.0 boss shots are faster than v0.1.0
+  ---
+  duration_ms: 0.318497
+  type: 'test'
+  ...
+# Subtest: both maps have clear spawn/checkpoints and toolkit begins with manual charges
+ok 196 - both maps have clear spawn/checkpoints and toolkit begins with manual charges
+  ---
+  duration_ms: 3.327242
+  type: 'test'
+  ...
+# Subtest: fixed simulation has expected speed, jump height, landing and early jump release
+ok 197 - fixed simulation has expected speed, jump height, landing and early jump release
+  ---
+  duration_ms: 7.164489
+  type: 'test'
+  ...
+# Subtest: coyote window and landing buffer allow forgiving keyboard/touch jumps
+ok 198 - coyote window and landing buffer allow forgiving keyboard/touch jumps
+  ---
+  duration_ms: 1.053086
+  type: 'test'
+  ...
+# Subtest: common cover fully occludes light and forecast uses the actual future geometry
+ok 199 - common cover fully occludes light and forecast uses the actual future geometry
+  ---
+  duration_ms: 4.406968
+  type: 'test'
+  ...
+# Subtest: sensor detections consume integrity once per contact and three captures are terminal
+ok 200 - sensor detections consume integrity once per contact and three captures are terminal
+  ---
+  duration_ms: 1.396071
+  type: 'test'
+  ...
+# Subtest: base jump clears the corridor sensor from its launch crate without equipment
+ok 201 - base jump clears the corridor sensor from its launch crate without equipment
+  ---
+  duration_ms: 1.259772
+  type: 'test'
+  ...
+# Subtest: shaft route is traversable at base speed with hazards active and no powerup
+ok 202 - shaft route is traversable at base speed with hazards active and no powerup
+  ---
+  duration_ms: 21.60931
+  type: 'test'
+  ...
+# Subtest: corridor route is traversable with timed sensor crossing and a jump from the launch crate
+ok 203 - corridor route is traversable with timed sensor crossing and a jump from the launch crate
+  ---
+  duration_ms: 11.184425
+  type: 'test'
+  ...
+# Subtest: exit requires holding interact; active timer cannot run past 180 seconds
+ok 204 - exit requires holding interact; active timer cannot run past 180 seconds
+  ---
+  duration_ms: 0.747399
+  type: 'test'
+  ...
+# Subtest: refresh reconciliation is monotonic and terminal server records win
+ok 205 - refresh reconciliation is monotonic and terminal server records win
+  ---
+  duration_ms: 0.762671
+  type: 'test'
+  ...
+# Subtest: accessible scenes have unique text-grounded answers and the same equipment effects
+ok 206 - accessible scenes have unique text-grounded answers and the same equipment effects
+  ---
+  duration_ms: 0.481329
+  type: 'test'
+  ...
+# Subtest: live extension retains issued item, completed evidence and adds only selected student workload
+ok 207 - live extension retains issued item, completed evidence and adds only selected student workload
+  ---
+  duration_ms: 101.633135
+  type: 'test'
+  ...
+# Subtest: live extension preview rejects stale revision, ended sessions and missing teacher credential
+ok 208 - live extension preview rejects stale revision, ended sessions and missing teacher credential
+  ---
+  duration_ms: 16.125661
+  type: 'test'
+  ...
+# Subtest: future gate extension leaves current gate unchanged and supports private difficulty override
+ok 209 - future gate extension leaves current gate unchanged and supports private difficulty override
+  ---
+  duration_ms: 19.011672
+  type: 'test'
+  ...
+# Subtest: Last Checkpoint restores pending narrative choice without erasing votes or inventory
+ok 210 - Last Checkpoint restores pending narrative choice without erasing votes or inventory
+  ---
+  duration_ms: 18.423739
+  type: 'test'
+  ...
+# Subtest: live extension skips students whose minigame has begun
+ok 211 - live extension skips students whose minigame has begun
+  ---
+  duration_ms: 7.681676
+  type: 'test'
+  ...
+# Subtest: Nightfall world is over five times previous area and contains 34 ambient enemies and 8 storefront guards at Standard
+ok 212 - Nightfall world is over five times previous area and contains 34 ambient enemies and 8 storefront guards at Standard
+  ---
+  duration_ms: 3.472497
+  type: 'test'
+  ...
+# Subtest: bus cannot complete until fuse, power, battery, installation and keys prerequisites
+ok 213 - bus cannot complete until fuse, power, battery, installation and keys prerequisites
+  ---
+  duration_ms: 1.642288
+  type: 'test'
+  ...
+# Subtest: manual shot does not rotate toward a nearby enemy; no five-second or 90-second victory
+ok 214 - manual shot does not rotate toward a nearby enemy; no five-second or 90-second victory
+  ---
+  duration_ms: 3.474548
+  type: 'test'
+  ...
+# Subtest: optional rescue reduces local ambush without teleporting enemies
+ok 215 - optional rescue reduces local ambush without teleporting enemies
+  ---
+  duration_ms: 3.056606
+  type: 'test'
+  ...
+# Subtest: held interaction has duration and map tasks are accessible from spawn through unlocked geometry
+ok 216 - held interaction has duration and map tasks are accessible from spawn through unlocked geometry
+  ---
+  duration_ms: 10.979108
+  type: 'test'
+  ...
+# Subtest: resource effects survive recovery and carbine changes actual projectile damage
+ok 217 - resource effects survive recovery and carbine changes actual projectile damage
+  ---
+  duration_ms: 1.542028
+  type: 'test'
+  ...
+# Subtest: all essential objectives have traversable routes, with power enabling the garage
+ok 218 - all essential objectives have traversable routes, with power enabling the garage
+  ---
+  duration_ms: 224.416041
+  type: 'test'
+  ...
+# Subtest: all five threat presets enforce counts and active caps with no aim assist
+ok 219 - all five threat presets enforce counts and active caps with no aim assist
+  ---
+  duration_ms: 83.787221
+  type: 'test'
+  ...
+# Subtest: walls block sight and force sound around the building; closed doors attenuate sound
+ok 220 - walls block sight and force sound around the building; closed doors attenuate sound
+  ---
+  duration_ms: 21.44934
+  type: 'test'
+  ...
+# Subtest: running behind a solid wall does not attract an enemy across it
+ok 221 - running behind a solid wall does not attract an enemy across it
+  ---
+  duration_ms: 9.954721
+  type: 'test'
+  ...
+# Subtest: gunfire draws nearby enemies to the sound position, not hidden player position
+ok 222 - gunfire draws nearby enemies to the sound position, not hidden player position
+  ---
+  duration_ms: 10.666359
+  type: 'test'
+  ...
+# Subtest: pursuit expires after evidence is lost and returns toward the patrol anchor
+ok 223 - pursuit expires after evidence is lost and returns toward the patrol anchor
+  ---
+  duration_ms: 19.969515
+  type: 'test'
+  ...
+# Subtest: an informed pursuer can break a closed door; an uninformed wanderer cannot
+ok 224 - an informed pursuer can break a closed door; an uninformed wanderer cannot
+  ---
+  duration_ms: 122.190722
+  type: 'test'
+  ...
+# Subtest: lures are one-use, barrels spend ammunition and damage enemies locally
+ok 225 - lures are one-use, barrels spend ammunition and damage enemies locally
+  ---
+  duration_ms: 14.701921
+  type: 'test'
+  ...
+# Subtest: collision sliding stays outside real obstacle footprints and fast movement cannot tunnel
+ok 226 - collision sliding stays outside real obstacle footprints and fast movement cannot tunnel
+  ---
+  duration_ms: 1.161398
+  type: 'test'
+  ...
+# Subtest: recovery retains charges, doors, objectives and lures; no purchased medkit
+ok 227 - recovery retains charges, doors, objectives and lures; no purchased medkit
+  ---
+  duration_ms: 2.09893
+  type: 'test'
+  ...
+# Subtest: teacher threat is private and freezes for the entire crew on first start
+ok 228 - teacher threat is private and freezes for the entire crew on first start
+  ---
+  duration_ms: 108.118657
+  type: 'test'
+  ...
+# Subtest: completed supply review unlocks another slot once, independent of credits
+ok 229 - completed supply review unlocks another slot once, independent of credits
+  ---
+  duration_ms: 30.822647
+  type: 'test'
+  ...
+# Subtest: a corrected optional answer earns completion reward without first-attempt credit; imports require consent
+ok 230 - a corrected optional answer earns completion reward without first-attempt credit; imports require consent
+  ---
+  duration_ms: 11.691608
+  type: 'test'
+  ...
+# Subtest: one and five student crews advance only after all runs, then vote; lost students participate
+ok 231 - one and five student crews advance only after all runs, then vote; lost students participate
+  ---
+  duration_ms: 75.291421
+  type: 'test'
+  ...
+# Subtest: invalid regen and success without repair cannot be committed; ending a session is neutral
+ok 232 - invalid regen and success without repair cannot be committed; ending a session is neutral
+  ---
+  duration_ms: 13.652845
+  type: 'test'
+  ...
+# Subtest: Vault panel and card are required; manual toolkit charges do not replenish on recovery
+ok 233 - Vault panel and card are required; manual toolkit charges do not replenish on recovery
+  ---
+  duration_ms: 3.277814
+  type: 'test'
+  ...
+# Subtest: old room commands cannot silently migrate gameplay; export and end remain available
+ok 234 - old room commands cannot silently migrate gameplay; export and end remain available
+  ---
+  duration_ms: 5.079923
+  type: 'test'
+  ...
+# Subtest: pilot joins assign unique aliases, ignore supplied names, and never export credentials
+ok 235 - pilot joins assign unique aliases, ignore supplied names, and never export credentials
+  ---
+  duration_ms: 76.292307
+  type: 'test'
+  ...
+# Subtest: public IDs cannot impersonate, steal cached replies, or export; valid credentials resume joins
+ok 236 - public IDs cannot impersonate, steal cached replies, or export; valid credentials resume joins
+  ---
+  duration_ms: 7.718418
+  type: 'test'
+  ...
+# Subtest: 48-hour expiry is fixed at creation; alarm deletes every chunk without another visit
+ok 237 - 48-hour expiry is fixed at creation; alarm deletes every chunk without another visit
+  ---
+  duration_ms: 4.594728
+  type: 'test'
+  ...
+# Subtest: teacher deletion revokes all access and cannot be undone by queued commands or init
+ok 238 - teacher deletion revokes all access and cannot be undone by queued commands or init
+  ---
+  duration_ms: 5.304923
+  type: 'test'
+  ...
+# Subtest: expired requests fail closed before replay and public routing cannot initialize a room
+ok 239 - expired requests fail closed before replay and public routing cannot initialize a room
+  ---
+  duration_ms: 3.580288
+  type: 'test'
+  ...
+# Subtest: cloak lasts five seconds once, blocks sensors, and cannot recharge on checkpoint or recovery
+ok 240 - cloak lasts five seconds once, blocks sensors, and cannot recharge on checkpoint or recovery
+  ---
+  duration_ms: 2.024035
+  type: 'test'
+  ...
+# Subtest: Interact never spends Toolkit; dedicated Jam does, once per checkpoint
+ok 241 - Interact never spends Toolkit; dedicated Jam does, once per checkpoint
+  ---
+  duration_ms: 0.76545
+  type: 'test'
+  ...
+# Subtest: every Nightfall objective responds to held use with real duration and prerequisites
+ok 242 - every Nightfall objective responds to held use with real duration and prerequisites
+  ---
+  duration_ms: 58.357903
+  type: 'test'
+  ...
+# Subtest: two windows per room break by hold or shot; actual gaps permit walking and persist
+ok 243 - two windows per room break by hold or shot; actual gaps permit walking and persist
+  ---
+  duration_ms: 54.231228
+  type: 'test'
+  ...
+# Subtest: battery, not keys or rescue, spawns one garage rush with instant closed-door breach
+ok 244 - battery, not keys or rescue, spawns one garage rush with instant closed-door breach
+  ---
+  duration_ms: 174.267675
+  type: 'test'
+  ...
+# Subtest: three GAS barrels warn before ignition, halve player health, kill brutes, and do not recharge
+ok 245 - three GAS barrels warn before ignition, halve player health, kill brutes, and do not recharge
+  ---
+  duration_ms: 6.438886
+  type: 'test'
+  ...
+# Subtest: three alarm cars and ordinary cars coexist; distant enemies hear the alarm beyond AI cutoff
+ok 246 - three alarm cars and ordinary cars coexist; distant enemies hear the alarm beyond AI cutoff
+  ---
+  duration_ms: 13.754992
+  type: 'test'
+  ...
+# Subtest: vault-7: actual commands unlock all seven loadout combinations and persist for all clients
+ok 247 - vault-7: actual commands unlock all seven loadout combinations and persist for all clients
+  ---
+  duration_ms: 376.128128
+  type: 'test'
+  ...
+# Subtest: nightfall: actual commands unlock all seven loadout combinations and persist for all clients
+ok 248 - nightfall: actual commands unlock all seven loadout combinations and persist for all clients
+  ---
+  duration_ms: 305.24597
+  type: 'test'
+  ...
+# Subtest: fraction policy covers value, raw form, signs, integer entry and explicit denominator exceptions
+ok 249 - fraction policy covers value, raw form, signs, integer entry and explicit denominator exceptions
+  ---
+  duration_ms: 2.064891
+  type: 'test'
+  ...
+# Subtest: every preset module and difficulty uses the shared final-fraction contract
+ok 250 - every preset module and difficulty uses the shared final-fraction contract
+  ---
+  duration_ms: 20.965116
+  type: 'test'
+  ...
+# Subtest: unsimplified submission is recorded raw, cannot complete a gate, and correction is not first-attempt success
+ok 251 - unsimplified submission is recorded raw, cannot complete a gate, and correction is not first-attempt success
+  ---
+  duration_ms: 7.705084
+  type: 'test'
+  ...
+# Subtest: shared deadline closes late and never-started runs while preserving completed results and answers
+ok 252 - shared deadline closes late and never-started runs while preserving completed results and answers
+  ---
+  duration_ms: 6.836923
+  type: 'test'
+  ...
+# Subtest: alarm interrupts every attack state for its full interval, including distant and newly added mobs
+ok 253 - alarm interrupts every attack state for its full interval, including distant and newly added mobs
+  ---
+  duration_ms: 54.609406
+  type: 'test'
+  ...
+# Subtest: alarm activates on car contact and bullets from both sides but not a near miss
+ok 254 - alarm activates on car contact and bullets from both sides but not a near miss
+  ---
+  duration_ms: 3.084537
+  type: 'test'
+  ...
+# Subtest: store group survives every threat budget, door stays solid, both windows become passages
+ok 255 - store group survives every threat budget, door stays solid, both windows become passages
+  ---
+  duration_ms: 120.217108
+  type: 'test'
+  ...
+# Subtest: shotgun eight-shell reward ignores carbine and pouch; switching/recovery never refill
+ok 256 - shotgun eight-shell reward ignores carbine and pouch; switching/recovery never refill
+  ---
+  duration_ms: 3.366643
+  type: 'test'
+  ...
+# Subtest: garage ingress overrides alarm until entry; dead horde members stay dead after restoration
+ok 257 - garage ingress overrides alarm until entry; dead horde members stay dead after restoration
+  ---
+  duration_ms: 132.398153
+  type: 'test'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/v093.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/v093.test.mjs
+not ok 40 - test/v093.test.mjs
+  ---
+  duration_ms: 84.403464
+  type: 'test'
+  location: '/home/claude/mathquest/test/v093.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# node:internal/modules/package_json_reader:314
+#   throw new ERR_MODULE_NOT_FOUND(packageName, fileURLToPath(base), null);
+#         ^
+# Error [ERR_MODULE_NOT_FOUND]: Cannot find package 'happy-dom' imported from /home/claude/mathquest/test/v094-runtime.test.mjs
+#     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:314:9)
+#     at packageResolve (node:internal/modules/esm/resolve:767:81)
+#     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+#     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+#     at \#cachedDefaultResolve (node:internal/modules/esm/loader:731:20)
+#     at ModuleLoader.resolve (node:internal/modules/esm/loader:708:38)
+#     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:310:38)
+#     at ModuleJob._link (node:internal/modules/esm/module_job:182:49) {
+#   code: 'ERR_MODULE_NOT_FOUND'
+# }
+# Node.js v22.22.0
+# Subtest: test/v094-runtime.test.mjs
+not ok 41 - test/v094-runtime.test.mjs
+  ---
+  duration_ms: 101.525523
+  type: 'test'
+  location: '/home/claude/mathquest/test/v094-runtime.test.mjs:1:1'
+  failureType: 'testCodeFailure'
+  exitCode: 1
+  signal: ~
+  error: 'test failed'
+  code: 'ERR_TEST_FAILURE'
+  ...
+# Subtest: first vote inserts a shared rescue in every gate configuration and closes absent records via the alarm
+ok 260 - first vote inserts a shared rescue in every gate configuration and closes absent records via the alarm
+  ---
+  duration_ms: 234.565951
+  type: 'test'
+  ...
+# Subtest: teacher pause freezes once; local delay and late starts do not extend; closure beats stale commands
+ok 261 - teacher pause freezes once; local delay and late starts do not extend; closure beats stale commands
+  ---
+  duration_ms: 20.261575
+  type: 'test'
+  ...
+# Subtest: downed retry restores full start or coherent escort checkpoint; stale attempts cannot mutate it
+ok 262 - downed retry restores full start or coherent escort checkpoint; stale attempts cannot mutate it
+  ---
+  duration_ms: 42.578097
+  type: 'test'
+  ...
+# Subtest: personal completion stops replay; shared Gate 2 opens only after all records resolve; teacher closure and reports stay separate
+ok 263 - personal completion stops replay; shared Gate 2 opens only after all records resolve; teacher closure and reports stay separate
+  ---
+  duration_ms: 57.45657
+  type: 'test'
+  ...
+# Subtest: rescue envelope rejects fabricated supplies, population, equipment, follower wins, wrong IDs and duplicate sequences
+ok 264 - rescue envelope rejects fabricated supplies, population, equipment, follower wins, wrong IDs and duplicate sequences
+  ---
+  duration_ms: 31.240507
+  type: 'test'
+  ...
+# Subtest: existing v0.9.2 rooms preserve the direct Gate 2 transition and credentials after Worker update
+ok 265 - existing v0.9.2 rooms preserve the direct Gate 2 transition and credentials after Worker update
+  ---
+  duration_ms: 13.145263
+  type: 'test'
+  ...
+# Subtest: authored inventory and population are exact for both routes; existing final-city defaults remain independent
+ok 266 - authored inventory and population are exact for both routes; existing final-city defaults remain independent
+  ---
+  duration_ms: 20.452623
+  type: 'test'
+  ...
+# Subtest: collision-only traversal and escort work through both windows, alley turns and terminal without teleporting
+ok 267 - collision-only traversal and escort work through both windows, alley turns and terminal without teleporting
+  ---
+  duration_ms: 269.718207
+  type: 'test'
+  ...
+# Subtest: health pickup remains at full health; fuel hurts player but not the follower and cannot spawn extra enemies
+ok 268 - health pickup remains at full health; fuel hurts player but not the follower and cannot spawn extra enemies
+  ---
+  duration_ms: 1.437688
+  type: 'test'
+  ...
+1..268
+# tests 268
+# suites 0
+# pass 258
+# fail 10
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 17134.828774

@@ -43,6 +43,7 @@ function drive(s,dt,input){
  const oldZ=s.z,n=s.v/C.max,steerRate=1.65*(.3+.7*n),outward=curve(s.z)*n*n*.98,target=steer*steerRate-outward;
  s.lv+=(target-s.lv)*Math.min(1,dt*(brake?9:7));s.x+=s.lv*dt;s.z+=travel;s.t+=dt;if(boost)s.boost=Math.max(0,s.boost-dt/2);else s.boost=Math.min(1,s.boost+dt/10);
  if(Math.abs(s.x)>1){damage(s,12,'barrier');s.x=clamp(s.x,-1.16,1.16);}
+ for(const o of OBSTACLES)if(oldZ<o.z-140&&s.z>=o.z-140){s.notice=`${o.kind==='crates'?'CRATES':'BARRICADE'} AHEAD · ${o.x<-.15?'LEFT':o.x>.15?'RIGHT':'CENTRE'}`;s.noticeUntil=s.t+2;}
  for(const o of OBSTACLES)if(!s.obstaclesHit.includes(o.id)&&oldZ<o.z&&s.z>=o.z&&Math.abs(s.x-o.x)<.27){s.obstaclesHit.push(o.id);s.stats.obstacles++;damage(s,12,'obstacle');}
  REPAIRS.forEach((r,i)=>{if(!s.picked.includes(i)&&oldZ<=r.z&&s.z>=r.z&&Math.abs(s.x-r.x)<.24){s.hp=Math.min(100,s.hp+20);s.picked.push(i);s.events.push('repair');s.notice='REPAIR +20';s.noticeUntil=s.t+2.5;}});
 }

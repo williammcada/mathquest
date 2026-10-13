@@ -55,7 +55,7 @@ class Renderer{
   // v0.3.0 aerial strikes: target zone, then a shell that approaches in five steps.
   for(const k of s.strikes||[]){const zx=240+(k.aim*7.2-camX)*20.4;
    if(k.age>=S.STRIKE.zoneAt){const pulse=k.locked&&this.motion?(Math.floor(time*10)%2?.24:.15):.13;g.globalAlpha=pulse;this.poly([[zx-25,265],[zx+25,265],[240+(k.aim*7.2-camX)*4+7,146],[240+(k.aim*7.2-camX)*4-7,146]],'#ff665c');g.globalAlpha=1;const c=k.locked?'#ffd27e':'#ff986e';this.rect(zx-25,240,2,18,c);this.rect(zx+23,240,2,18,c);if(k.locked){this.rect(zx-25,240,8,2,c);this.rect(zx+17,240,8,2,c);this.rect(zx-25,256,8,2,c);this.rect(zx+17,256,8,2,c);}}
-   this.shell(k,240+(k.aim*7.2-camX)*2,zx,time);}
+}
   for(const b of s.blasts||[]){const age=s.t-b.t,x=240+(b.x*7.2-camX)*20.4,y=246,r=8+age*60,fade=1-age/.6;g.globalAlpha=Math.max(0,fade);for(let i=0;i<10;i++){const a=i*Math.PI/5+age*3,d=r*(.6+.4*((i*37)%5)/5);this.rect(x+Math.cos(a)*d-3,y+Math.sin(a)*d*.45-3,6,6,i%3?'#ff9d54':'#ffe08a');}this.rect(x-r*.5,y-4,r,8,'#ffcf7a');this.rect(x-r*.3,y-r*.5,r*.6,r*.5,'#4a3a3f');g.globalAlpha=1;}
   for(const e of s.enemies){if(e.phase==='aim'){const x=240+(e.aim*7.2-camX)*20.4;g.globalAlpha=.15;this.poly([[x-25,265],[x+25,265],[240+(e.aim*7.2-camX)*4+7,146],[240+(e.aim*7.2-camX)*4-7,146]],'#ff665c');g.globalAlpha=1;this.rect(x-25,240,2,18,'#ff986e');this.rect(x+23,240,2,18,'#ff986e');}}
   for(const b of s.projectiles){const p=world(b.z,b.x);if(p&&p.y<=p.clip+8){this.rect(p.x-1,p.y-8,2,8,'#ffec9e');}}
@@ -73,21 +73,25 @@ class Renderer{
   this.rect(-27,15,15,4,s.braking?'#fff3c9':'#ff7258');this.rect(12,15,15,4,s.braking?'#fff3c9':'#ff7258');this.rect(-8,15,16,5,'#212c37');this.rect(-29,23,58,4,'#23323c');
   if(s.hp<50){this.rect(-19,4,5,2,'#31373c');this.rect(12,10,7,2,'#31373c');}
   g.restore();
+  for(const k of s.strikes||[])this.shell(k,240+(k.aim*7.2-camX)*2,240+(k.aim*7.2-camX)*20.4,time);
   if(s.impact>.6)for(let i=0;i<6;i++)this.rect(px+(s.x<0?-30:30)+Math.sin(time*12+i)*12,py+Math.cos(time*9+i)*14,2,2,'#ffcc83');
   if(this.motion&&s.boosting){g.strokeStyle='#a0cfbf55';for(let i=0;i<6;i++){let side=i%2?1:-1,x=240+side*(100+i*14);g.beginPath();g.moveTo(x,175+i*9);g.lineTo(x+side*24,190+i*9);g.stroke();}}
   if(s.enemies.some(e=>e.phase==='ram'||e.phase==='ram-warn')){const e=s.enemies.find(e=>e.phase==='ram'||e.phase==='ram-warn');const side=e.side||1;this.poly([[px+side*50,py],[px+side*66,py-10],[px+side*66,py+10]],'#f4b05f');}
   g.restore();
  }
- obstacle(o,p,time){const w=Math.max(4,p.w*.3),h=Math.max(3,p.f*1.05),x=p.x,y=p.y;
-  if(o.kind==='barricade'){this.rect(x-w,y-h,w*2,h,'#9aa3a3');this.rect(x-w,y-h,w*2,Math.max(1,h*.18),'#c7cfc9');for(let i=0;i<4;i++)this.rect(x-w+i*w*.5+w*.06,y-h*.72,w*.22,h*.42,i%2?'#1b2125':'#f0a33c');this.rect(x-w,y-Math.max(1,h*.12),w*2,Math.max(1,h*.12),'#4a5559');if(p.f>6)this.rect(x-w*.15,y-h-Math.max(2,h*.25),w*.3,Math.max(2,h*.25),this.motion&&Math.sin(time*7+o.id)>0?'#ff7a5c':'#7a3a34');}
+ obstacle(o,p,time){const w=Math.max(3,p.w*.2),h=Math.max(6,p.f*2),x=p.x,y=p.y,lamp=this.motion&&Math.floor(time*6+o.id)%2;
+  // Beacon on a pole keeps distant obstacles readable.
+  this.rect(x-Math.max(1,p.f*.05),y-h-Math.max(4,p.f*1.2),Math.max(1,p.f*.1),Math.max(4,p.f*1.2),'#39474c');this.rect(x-Math.max(2,p.f*.2),y-h-Math.max(6,p.f*1.45),Math.max(4,p.f*.4),Math.max(3,p.f*.3),lamp?'#ffb347':'#ff5f45');
+  if(o.kind==='barricade'){this.rect(x-w,y-h,w*2,h,'#9aa3a3');this.rect(x-w,y-h,w*2,Math.max(1,h*.18),'#c7cfc9');for(let i=0;i<4;i++)this.rect(x-w+i*w*.5+w*.06,y-h*.72,w*.22,h*.42,i%2?'#1b2125':'#f0a33c');this.rect(x-w,y-Math.max(1,h*.12),w*2,Math.max(1,h*.12),'#4a5559');}
   else{const c=w*.95;this.rect(x-c,y-c*.9,c*.95,c*.9,'#7b5a3a');this.rect(x+c*.05,y-c*.9,c*.95,c*.9,'#6b4d33');this.rect(x-c*.5,y-c*1.75,c*.95,c*.85,'#8a6742');for(const [bx,by,bw,bh] of [[x-c,y-c*.9,c*.95,c*.9],[x+c*.05,y-c*.9,c*.95,c*.9],[x-c*.5,y-c*1.75,c*.95,c*.85]]){this.rect(bx,by,bw,Math.max(1,bh*.12),'#b08a5c');this.rect(bx+bw*.45,by,Math.max(1,bw*.1),bh,'#4c3524');}}
  }
- shell(k,hx,zx,time){// Five discrete approach frames: the shell visibly steps closer.
-  const f=S.strikeFrame(k),t=[0,.25,.5,.75,.94][f],size=[3,5,9,14,22][f],x=hx+(zx-hx)*t,y=104+(236-104)*t;
-  for(let i=1;i<=3;i++){const ts=Math.max(0,t-i*.06);this.rect(hx+(zx-hx)*ts-size*.18,104+(236-104)*ts-size*.18,size*.36,size*.36,i===1?'#5b5560':'#3b3a44');}
-  this.rect(x-size*.32,y-size*.5,size*.64,size,'#2e3138');this.rect(x-size*.2,y-size*.42,size*.18,size*.7,'#69707a');
-  this.rect(x-size*.5,y-size*.62,size*.28,size*.3,'#3f444d');this.rect(x+size*.22,y-size*.62,size*.28,size*.3,'#3f444d');
-  this.rect(x-size*.24,y+size*.38,size*.48,size*.22,this.motion&&Math.floor(time*16)%2?'#ffe08a':'#ff8a4c');
+ shell(k,hx,zx,time){// Five discrete approach frames: the shell visibly steps closer and larger.
+  const f=S.strikeFrame(k),t=[0,.22,.45,.68,.88][f],size=[7,11,17,25,36][f],x=hx+(zx-hx)*t,y=98+(214-98)*t,flash=this.motion&&Math.floor(time*14)%2;
+  const glow=size*.9;this.rect(x-glow/2,y-glow/2,glow,glow,'rgba(255,140,70,.18)');
+  for(let i=1;i<=3;i++){const ts=Math.max(0,t-i*.05),q=size*(.5-i*.1);this.rect(hx+(zx-hx)*ts-q/2,98+(214-98)*ts-q/2-size*.2,q,q,i===1?'#8a8590':'#5a5764');}
+  this.rect(x-size*.36,y-size*.55,size*.72,size*1.05,'#101318');this.rect(x-size*.28,y-size*.48,size*.56,size*.9,'#3a3f48');this.rect(x-size*.16,y-size*.42,size*.14,size*.7,'#8d96a2');
+  this.rect(x-size*.56,y-size*.66,size*.3,size*.3,'#2a2e36');this.rect(x+size*.26,y-size*.66,size*.3,size*.3,'#2a2e36');
+  this.rect(x-size*.28,y+size*.36,size*.56,size*.26,flash?'#ffe08a':'#ff7a3c');this.rect(x-size*.14,y+size*.5,size*.28,size*.22,'#fff2c0');
  }
  enemyCar(e,time){const r=e.type==='rammer',body=r?'#ba824d':'#8d5267';
   this.rect(-27,-22,7,21,'#060e17');this.rect(20,-22,7,21,'#060e17');
