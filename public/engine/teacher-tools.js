@@ -8,6 +8,7 @@ export const practiceTools=[
  {title:'Nightfall II · False Haven',href:'./practice-false-haven.html',story:'./false-haven-preview.html'},
  {title:'Blackline v0.3.2',href:'./reviews/BLACKLINE-v0.3.2.html?dev=action',story:'./reviews/BLACKLINE-v0.3.2.html'},
  {title:'Ironbreak v0.2.1',href:'./reviews/Ironbreak-v0.2.1.html?dev=action',story:'./reviews/Ironbreak-v0.2.1.html'},
+ {title:'Kingsgate v0.1.0',href:'./kingsgate-dev.html'},
  {title:'Coastal Escape flight v0.4.0',href:'./aerial-shooter-practice.html?v=0.4.0',story:'./coastal-escape-preview.html'}
 ];
 export function developerTools(){return `<details class="panel" id="developer-tools"><summary>Developer tools · practice only</summary><p>Play action without questions or a live classroom session. Story reviews remain separate; Ironbreak story review includes sample math.</p>${practiceTools.map(t=>`<p><b>${t.title}</b> · <a target="_blank" rel="noopener" href="${t.href}">Play action</a>${t.story?` · <a target="_blank" rel="noopener" href="${t.story}">Story review</a>`:''}</p>`).join('')}<p>DEV links 2026-10-13 · Practice runs do not record classroom results.</p></details>`;}

@@ -1,4 +1,4 @@
-import {answerInput,readAnswer} from './math-input.js?v=0.10.0';
+import {answerInput,readAnswer} from './math-input.js?v=0.11.0';
 import {HEROES,UPGRADES,JOURNEY_BUILD,PROTOCOL,LIMITS} from './config.js';
 import {JourneyRenderer} from './renderer.js?v=art1';
 import {bindJourneyInput} from './input.js';

@@ -2,6 +2,7 @@ import {JOURNEY_BUILD} from '../public/games/journey/config.js';
 import {isJourney,journeyCommand,journeyTeacher,syncJourney,syncJourneyTeacher,journeyProjection,acceptJourneyResult,deleteJourneyRuns} from './cartridges/journey/server.js';
 export {BrawlRun} from './cartridges/journey/durable-object.js';
 import {BLACKLINE_PERSONAL} from '../public/cartridges/blackline.js';
+import {KINGSGATE_PERSONAL} from '../public/cartridges/kingsgate.js';
 import {IRONBREAK} from '../public/cartridges/ironbreak.js';
 import {COASTAL_PERSONAL} from '../public/cartridges/coastal-escape.js';
 import {HAVEN_PERSONAL} from '../public/cartridges/false-haven.js';
@@ -22,7 +23,7 @@ import {configureSupply,awardSupply} from './engine/supply.js';
 
 const ACTIVE_MS = 20_000;
 export const RETENTION_MS=48*60*60*1000;
-const VERSION = "0.10.0";
+const VERSION = "0.11.0";
 // Supported room versions: v0.9.2 and v0.9.4 onward, including every 0.10.x build (rooms survive candidate updates).
 const supportedEngine=version=>["0.9.2","0.9.4","0.9.5","0.9.6","0.9.7","0.9.8",VERSION].includes(version)||/^0\.10\.\d+(?:-rc\.\d+)?$/.test(String(version));
 const DIFFICULTY_POLICIES = ["session", "foundation", "standard", "challenge"];
@@ -643,7 +644,7 @@ export class QuestSession {
 
   fateFor(student) {
     if(isJourney(this)){const outcome=this.teamFor(student)?.journeyResult?.outcome;return {id:outcome||"pending",label:outcome?"Journey: "+outcome:"Journey not completed"};}
-    const personal=this.state.config.cartridgeId==='blackline'?BLACKLINE_PERSONAL:this.state.config.cartridgeId==='coastal-escape'?COASTAL_PERSONAL:this.state.config.cartridgeId==='nightfall-false-haven'?HAVEN_PERSONAL:null;
+    const personal=this.state.config.cartridgeId==='blackline'?BLACKLINE_PERSONAL:this.state.config.cartridgeId==='kingsgate'?KINGSGATE_PERSONAL:this.state.config.cartridgeId==='coastal-escape'?COASTAL_PERSONAL:this.state.config.cartridgeId==='nightfall-false-haven'?HAVEN_PERSONAL:null;
     if(personal){const outcome=this.teamFor(student)?.runs?.[student.id]?.outcome;return {id:outcome||'pending',label:personal[outcome]||'Operation pending'};}
     if(this.state.config.cartridgeId==='ironbreak'){const o=this.teamFor(student)?.runs?.[student.id]?.outcome;return {id:o||'pending',label:IRONBREAK.personal[o]||'Suit operation pending'};}
     if(expansionFor(this)){

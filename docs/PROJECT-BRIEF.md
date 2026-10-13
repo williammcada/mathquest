@@ -310,3 +310,7 @@ The Worker must be deployed together with the frontend because it validates shar
 ## Action difficulty revision — 13 October 2026
 
 Owner found Coastal Escape, Ironbreak and Blackline too easy and short. Change specification `change-specs/action-difficulty-2026-10-13.md`; verification `releases/action-difficulty-2026-10-13.md`. Coastal flight v0.3.0 (128 enemies, faster shells, 3× battleships, persistent supplies, sprite boss finale), Ironbreak v0.2.0 (second loop with MID2, 86 robots, faster boss, mortar), Blackline v0.3.0 (road obstacles, frequent aerial strikes). DEV review files are now built from source by `scripts/build-review-bundles.mjs`. Branch `implement/action-difficulty-2026-10-13`; not deployed. Frontend and Worker must ship together; platform version bump to happen at release. Ironbreak keeps its 300-second window (owner to confirm after playtest).
+
+## Kingsgate cartridge v0.1 — 13 October 2026
+
+New tower defense cartridge, approved specification in `williammcada/kingsgate`. MathQuest notes: [kingsgate-v0.1](change-specs/kingsgate-v0.1.md). Implemented on `implement/kingsgate-v0.1` from `main` `a4405f8`. Gates use MathQuest's Math Engine questions; there are no questions inside the defense. Owner playtest accepted 13 October 2026. Released as MathQuest v0.11.0 (see `releases/v0.11.0.md`). The Math Arcade entry follows separately.

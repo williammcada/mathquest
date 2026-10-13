@@ -7,6 +7,7 @@ const registry=new Map([
  ['journey-west',journeyServer],
  ['vault-7',vault7Server],
  ['blackline',{advance(team){return advanceExpansion(this,team);}}],
+ ['kingsgate',{advance(team){return advanceExpansion(this,team);}}],
  ['nightfall-false-haven',{advance(team){return advanceExpansion(this,team);}}],
 
  ['coastal-escape',{advance(team){return advanceExpansion(this,team);}}],
