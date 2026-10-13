@@ -1,3 +1,3 @@
 8764dafeedfaad97c7642ceae3190cda4b845f44f31d054880125d37883a6ebf  public/reviews/BLACKLINE-v0.3.2.html
 386ec077fc829984f0cdfc67901dfe518a7308cbe24d5fcda49d8a8c2022c437  public/reviews/Ironbreak-v0.2.1.html
-34f5c3185da3fdd2d52baf0fa464227909e770b8d321e0b451964eba69e8e2f1  standalone/MathQuest_Aerial_Shooter_v0.3.1.html
+d24a328aed1ae6f9543fa99937f0b7ab702bbc9ba96725c6595a0cda906dfdb2  standalone/MathQuest_Aerial_Shooter_v0.4.0.html

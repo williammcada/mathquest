@@ -57,3 +57,11 @@ Owner instruction: "boost should be required to jump the gaps & allow you dodge 
 - **Owner-approved exception:** the BLACKLINE brief's must-retain line "no … required boost for a mandatory jump" is superseded by this instruction. "No invisible damage" still holds: the ramp colour and notice show the required speed.
 - Fixed a latent bug: holding boost onto a ramp lip could count the ramp twice (jumpIndex skip), which the validator rejected.
 - Data contract `blackline-racer-0.3.2`; DEV/story file `reviews/BLACKLINE-v0.3.2.html`.
+
+## Addendum — Coastal Escape flight v0.4.0 (13 Oct 2026)
+
+Owner playtest: beat the boss with 50 s left; students need about twice the boss time. The approach should move faster with more varied, harder patterns on screen at once.
+- Approach compressed from 225 s to 150 s: scroll and every enemy's speed × 1.5, so the same distance passes in two-thirds of the time. Midpoint checkpoint 100 s, boss 150 s, so the boss section is 150 s (was 75 s). Five-minute total unchanged (S-03-A).
+- 21 mixed patterns: each sends 2–4 enemy types together (e.g. bomber fan + weaving interceptors + fighter line; two ships' aimed bursts + fighters), followed 2 s later by its mirror image. 248 regular enemies before the boss (128 in v0.3.x over a longer time); up to ~21 aircraft and ~50 enemy shells on screen.
+- Boss escorts: four waves across the longer boss section (two before). Supplies unchanged (six), retimed.
+- Population caps raised (air 28, ground 10, enemy shells 96). Contract `coast/4`, `standard/4`; practice saves from v0.3 are kept separately and not resumed.

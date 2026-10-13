@@ -42,7 +42,7 @@ export function restore(config,saved) {
   check(Array.isArray(s.collected)&&new Set(s.collected).size===s.collected.length&&s.collected.every(id=>OPPORTUNITIES.includes(id)),'supplies');
   check(Array.isArray(s.volleyHits)&&s.volleyHits.length<=300&&s.volleyHits.every(h=>typeof h.key==='string'&&h.key.length<150&&bounded(h.tick,0,s.tick)),'volley history');
   check(s.bonus===null||(Object.hasOwn(BONUS_SECONDS,s.bonus?.kind)&&bounded(s.bonus.ticks,0,BONUS_SECONDS[s.bonus.kind]*60)),'temporary bonus');
-  for(const [key,cap] of Object.entries({enemies:24,friendly:96,hostile:64,pickups:6,pending:120,effects:40}))check(Array.isArray(s[key])&&s[key].length<=cap,key);
+  for(const [key,cap] of Object.entries({enemies:40,friendly:96,hostile:96,pickups:6,pending:120,effects:40}))check(Array.isArray(s[key])&&s[key].length<=cap,key);
   const allIds=new Set();
   for(const e of [...s.enemies,...s.friendly,...s.hostile,...s.pickups]){check(typeof e.id==='string'&&e.id.length<120&&!allIds.has(e.id),'entity IDs');allIds.add(e.id);check(bounded(e.x,-700,1300)&&bounded(e.y,-300,700),'entity positions');}
   for(const e of s.enemies)check(T.enemies[e.kind]&&bounded(e.hp,0,T.enemies[e.kind].hp)&&bounded(e.age,0,T.limit)&&bounded(e.nextAttack,0,T.limit)&&bounded(e.baseX,0,640)&&bounded(e.w,1,100)&&bounded(e.h,1,100)&&bounded(e.phase,-10,10),'enemy data');

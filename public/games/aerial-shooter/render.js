@@ -14,8 +14,8 @@ function smoke(ctx,art,x,y,t,w=28){sprite(ctx,art,'explosion',x,y,w,w,4+Math.flo
 function scenery(ctx,s,art){
  const scroll=s.levelTick/60*T.scroll,offset=scroll%640;
  for(let y=offset-640;y<360;y+=640)ctx.drawImage(art.images.ocean,0,y,640,640);
- if(s.levelTick>=3500&&s.levelTick<9500){const local=(scroll-1260)%620;ctx.globalAlpha=.85;ctx.drawImage(art.images.island,-35,local-620,210,620);ctx.drawImage(art.images.island,500,local-400,165,490);ctx.globalAlpha=1;}
- if(s.levelTick>=8500&&s.levelTick<13500){const local=(scroll-3060)%768;ctx.globalAlpha=.84;for(let y=local-768;y<360;y+=768)ctx.drawImage(art.images.harbor,190,y,512,768);ctx.globalAlpha=1;}
+ if(s.levelTick>=2333&&s.levelTick<6333){const local=(scroll-1260)%620;ctx.globalAlpha=.85;ctx.drawImage(art.images.island,-35,local-620,210,620);ctx.drawImage(art.images.island,500,local-400,165,490);ctx.globalAlpha=1;}
+ if(s.levelTick>=5667&&s.levelTick<9000){const local=(scroll-3060)%768;ctx.globalAlpha=.84;for(let y=local-768;y<360;y+=768)ctx.drawImage(art.images.harbor,190,y,512,768);ctx.globalAlpha=1;}
  ctx.fillStyle='rgba(1,16,30,.35)';ctx.fillRect(0,0,640,360);
 }
 export function render(ctx,s,art,{colliders=false,reducedMotion=false}={}){

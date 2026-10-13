@@ -43,3 +43,13 @@ Owner playtest: staying in floor water for more than about a second paused the r
 | Binary driver (boosts on ramps, steers from zones/obstacles) completes with server validation | Passed | 263 s, all three jumps, 0 obstacle hits. |
 | Zone readability | Passed (visual) | Beam and road zone visible before impact (local screenshot review). |
 | Suite | 263 / 273 | Same ten `happy-dom` files Not run. |
+
+## Coastal Escape flight v0.4.0 (13 Oct 2026)
+
+| Check | Result | Evidence |
+| --- | --- | --- |
+| Timeline: 150 s approach, 150 s boss, every pattern mixes ≥2 enemy types, six supplies, no cap deferrals over 300 s | Passed | Unit tests. |
+| Boss still beatable inside its section (baseline and full loadout, all lives) | Passed | Scripted boss test. |
+| Relative difficulty | Measured | Same dodge heuristic with armor: 10 hull damage over v0.3.1's 225 s approach vs 100 over v0.4.0's 150 s approach; no lives lost. Not a student-playability claim. |
+| Mixed patterns on screen | Passed (visual) | `coastal-v0.4.0-patterns.png`. |
+| Suite | 263 / 273 | Same ten `happy-dom` files Not run. |
