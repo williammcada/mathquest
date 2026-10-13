@@ -38,7 +38,9 @@ function fix(g){for(const i of g.board.order){const t=g.board.tiles[i];if(t.lock
 function clearDistrict(s){const g=s.game,d=g.district;let guard=0;while(g.district===d&&g.status==='playing'&&guard++<10){if(g.lockoutMs>0)stepBlackout(s,{},g.lockoutMs/1000+.01);fix(g);g.energize();stepBlackout(s,{},1/60);}if(g.phase==='lit')stepBlackout(s,{},(C.RULES.litMs+1)/1000);}
 function blowFuse(s){const g=s.game;fix(g);const i=g.board.order.find(x=>!g.board.tiles[x].locked&&g.board.tiles[x].base!==15);g.rotate(i);g.energize();stepBlackout(s,{},(C.RULES.lockoutMs+5)/1000);}
 const base=(t,id)=>({deviceId:id,runId:t.runs[id].runId,configRevision:t.runs[id].configRevision});
-async function start(r,t,id,mode='action'){assert.equal((await cmd(r,'minigame.start',{...base(t,id),mode})).status,200);}
+// Tests simulate minutes of play instantly; the server (correctly) refuses play time more than 2 s ahead of the
+// wall clock since the run started, so backdate the start rather than depend on how fast the machine runs.
+async function start(r,t,id,mode='action'){assert.equal((await cmd(r,'minigame.start',{...base(t,id),mode})).status,200);t.runs[id].startedAt=Date.now()-C.RULES.runMs;}
 async function send(r,t,id,s,type='minigame.progress'){const run=t.runs[id];return cmd(r,type,{...base(t,id),seq:run.seq+1,activeElapsedMs:Math.round(s.time*1000),snapshot:structuredClone(s),...(type==='minigame.complete'?{outcome:s.outcome}:{})});}
 async function playSuccess(r,t,id){await start(r,t,id);const s=createBlackout(t.runs[id]);for(let d=0;d<5;d++){clearDistrict(s);const v=await send(r,t,id,s,s.outcome?'minigame.complete':'minigame.progress');assert.equal(v.status,200,v.error);}assert.equal(s.outcome,'success');return s;}
 async function playLost(r,t,id){await start(r,t,id);const s=createBlackout(t.runs[id]);while(!s.outcome)blowFuse(s);assert.equal(s.outcome,'lost');t.runs[id].startedAt=Date.now()-Math.ceil(s.time*1000)-10;const v=await send(r,t,id,s,'minigame.complete');assert.equal(v.status,200,v.error);return s;}

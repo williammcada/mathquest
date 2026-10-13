@@ -18,9 +18,9 @@ test('third cartridge metadata renders without a title-specific branch; unknowns
  assert.match(cartridgeCard('fixture',fixture),/Orbital &lt;Lab&gt;/);
  setBrandContext(doc,'fixture',fixture);assert.equal(doc.title,'MathQuest 0.10.1 — Orbital <Lab>');assert.equal(doc.documentElement.dataset.theme,'orbital');
  setBrandContext(doc,'unknown',fixture);assert.equal(doc.title,`${BRAND.name} ${BRAND.version}`);assert.equal(doc.documentElement.dataset.theme,'mathquest');
- setBrandContext(doc,'vault-7');assert.equal(doc.title,'MathQuest 0.10.0 — Vault 7');
- setBrandContext(doc,'nightfall');assert.equal(doc.title,'MathQuest 0.10.0 — Nightfall: Last Bus Out');
- setBrandContext(doc,null);assert.equal(doc.title,'MathQuest 0.10.0');assert.equal(doc.documentElement.dataset.cartridge,'');
+ setBrandContext(doc,'vault-7');assert.equal(doc.title,'MathQuest 0.10.1 — Vault 7');
+ setBrandContext(doc,'nightfall');assert.equal(doc.title,'MathQuest 0.10.1 — Nightfall: Last Bus Out');
+ setBrandContext(doc,null);assert.equal(doc.title,'MathQuest 0.10.1');assert.equal(doc.documentElement.dataset.cartridge,'');
 });
 
 test('alarm light rendering is read-only, localized and uses persisted ready/active/spent state',()=>{
