@@ -37,5 +37,9 @@ async function bundle({page,out,version,assets}){
   console.log(`${out}: ${Buffer.byteLength(html)} bytes, sha256 ${hash.slice(0,16)}…, embedded ${[...embedded].join(', ')||'none'}`);
 }
 
-await bundle({page:'blackline-preview.html',out:'reviews/BLACKLINE-v0.3.2.html',version:'BLACKLINE v0.3.2',assets:'assets/blackline/'});
-await bundle({page:'ironbreak-review.html',out:'reviews/Ironbreak-v0.2.1.html',version:'Ironbreak v0.2.1',assets:'assets/ironbreak/'});
+// Optional filter: node scripts/build-review-bundles.mjs BlackoutProtocol  (rebuild only bundles whose output name matches),
+// so adding one cartridge does not silently change other cartridges' versioned review files (handbook U-01).
+const only=process.argv.slice(2);const want=out=>!only.length||only.some(o=>out.includes(o));
+if(want('reviews/BLACKLINE-v0.3.2.html'))await bundle({page:'blackline-preview.html',out:'reviews/BLACKLINE-v0.3.2.html',version:'BLACKLINE v0.3.2',assets:'assets/blackline/'});
+if(want('reviews/Ironbreak-v0.2.1.html'))await bundle({page:'ironbreak-review.html',out:'reviews/Ironbreak-v0.2.1.html',version:'Ironbreak v0.2.1',assets:'assets/ironbreak/'});
+if(want('reviews/BlackoutProtocol-v0.2.1.html'))await bundle({page:'blackout-preview.html',out:'reviews/BlackoutProtocol-v0.2.1.html',version:'Blackout Protocol v0.2.1',assets:'assets/blackout/'});

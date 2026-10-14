@@ -320,3 +320,18 @@ New tower defense cartridge, approved specification in `williammcada/kingsgate`.
 ## Render frontend — 14 October 2026
 
 Owner approved serving the student and teacher frontend from Render (`https://mcada-mathquest.onrender.com`, static site from `render.yaml`, publishing `public/`), with `/api/*` rewritten to the existing `mathquest-prototype` Worker. This supersedes §1's "preserve existing GitHub Pages frontend" and §24's "no frontend migration" for frontend hosting only, and supersedes the unimplemented Netlify migration specification of 13 October. Worker code, storage, rooms and the session protocol are unchanged; the Render origin is added to the Worker allowlist (source and live dashboard variable). The owner tested Render on student iPads on the school Wi-Fi. Expected load: about 140 students, about twice a month. U-12 amendment approved and saved (handbook `75baa80`, v0.1.9): Render is an approved student host. See [change specification](change-specs/render-frontend-migration-2026-10-14.md) and [deployment record](releases/render-frontend-2026-10-14.md). Hosted checks passed; owner reports it working on a student iPad on the school Wi-Fi. GitHub Pages forwarding pending.
+## Blackout Protocol cartridge v0.2.1 — 13 October 2026
+
+Owner-approved Stage B of williammcada/blackout-protocol (spec: `change-specs/blackout-protocol-v0.2.0.md`; canonical copy in that repository). Baseline `main` `a4405f8` (MathQuest 0.10.0, Math Engine). Platform advances to **0.10.1**; the cartridge revision `blackout-protocol-0.2.1` is shown separately. (v0.2.0 was the implementation checkpoint; contents changed during verification, so U-01 advanced it.)
+
+- **What it is.** A circuit-puzzle cartridge on the generic expansion path, following the BLACKLINE pattern:
+  - Math Engine gates (3, 4 or 5) and an early route vote (Harbor Pumps or Northside Hospital first);
+  - slot-based equipment: Spare Fuse, Grid Scanner, Surge Stabilizer;
+  - one five-minute puzzle run per student;
+  - a final LANTERN vote and an epilogue.
+- **Puzzle core.** Core 0.1.5, vendored from williammcada/blackout-protocol by `scripts/sync-blackout.mjs`. Commit and SHA-256 are recorded in `public/games/blackout/core.provenance.json`.
+- **Server checks.** `src/cartridges/blackout/validation.js` rebuilds each restored district from the run seed and checks it is really connected. Timing and tap order remain client-reported.
+- **Shared-host change.** GameHost has an optional adapter `tap` hook (decision D2); adapters without it are unaffected.
+- **Art exception (handbook U-15).** Story art is polygon SVG drawn in code by Claude (`scripts/build-blackout-art.mjs`). This is the owner's decision for this cartridge, an exception to the 8 Oct painted direction, which was written for Ironbreak and BLACKLINE.
+- **Music.** Original synthesized score; room music is rendered to WAV by `scripts/build-blackout-audio.mjs`.
+- **Hosting limit (U-12).** Not for classroom use until the Netlify frontend migration is approved and verified. No deployment in this change.

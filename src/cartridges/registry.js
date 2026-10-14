@@ -8,6 +8,7 @@ const registry=new Map([
  ['vault-7',vault7Server],
  ['blackline',{advance(team){return advanceExpansion(this,team);}}],
  ['kingsgate',{advance(team){return advanceExpansion(this,team);}}],
+ ['blackout-protocol',{advance(team){return advanceExpansion(this,team);}}],
  ['nightfall-false-haven',{advance(team){return advanceExpansion(this,team);}}],
 
  ['coastal-escape',{advance(team){return advanceExpansion(this,team);}}],
