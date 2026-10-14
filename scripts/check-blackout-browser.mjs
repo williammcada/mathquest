@@ -1,4 +1,4 @@
-// Browser check for Blackout Protocol v0.2.1 (MathQuest 0.10.1): a real classroom session served locally
+// Browser check for Blackout Protocol v0.2.1 (MathQuest 0.12.0): a real classroom session served locally
 // (public/ + an in-memory QuestSession behind /api/sessions/BLACK/*), the shared-host change against
 // other cartridges' practice pages, the DEV/preview page and the offline review bundle.
 // Usage: PLAYWRIGHT_DIR=<dir with node_modules/playwright> [CHROME_PATH=<chromium>] node scripts/check-blackout-browser.mjs [outDir]
@@ -19,7 +19,7 @@ const ctx=()=>{const data=new Map();return {storage:{get:async k=>structuredClon
 async function call(r,path,body){const res=await r.fetch(new Request('https://test'+path,body?{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify(body)}:{}));return {...await res.json(),status:res.status};}
 const cmd=(r,type,extra={})=>call(r,'/command',{type,commandId:crypto.randomUUID(),...extra});
 const r=new QuestSession(ctx());
-await call(r,'/init',{code:'BLACK',teacherKey:'teacher',config:{engineVersion:'0.10.1',cartridgeId:c.id,gateCount:3,teamNames:['Night Shift'],modules:[{id:'number.gcf',itemCount:3,band:'beginner'}]}});
+await call(r,'/init',{code:'BLACK',teacherKey:'teacher',config:{engineVersion:'0.12.0',cartridgeId:c.id,gateCount:3,teamNames:['Night Shift'],modules:[{id:'number.gcf',itemCount:3,band:'beginner'}]}});
 const t=r.state.teams['team-1'];for(const id of ['a','b'])await cmd(r,'student.join',{deviceId:id,alias:id==='a'?'Ada':'Ben',teamPin:t.pin});
 await cmd(r,'teacher.start',{teacherKey:'teacher'});for(const id of ['a','b'])await cmd(r,'briefing.ready',{deviceId:id});
 const lead=()=>r.members(t.id)[t.leadIndex%2].id;

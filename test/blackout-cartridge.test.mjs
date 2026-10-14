@@ -1,4 +1,4 @@
-// Blackout Protocol cartridge v0.2.1 (MathQuest 0.10.1): classroom flow, validation, reports, adapter.
+// Blackout Protocol cartridge v0.2.1 (MathQuest 0.12.0): classroom flow, validation, reports, adapter.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {QuestSession} from './authenticated-session.mjs';
@@ -18,7 +18,7 @@ const lead=(r,t)=>r.members(t.id)[t.leadIndex%r.members(t.id).length].id;
 async function vote(r,t,choice){for(const s of r.members(t.id))await cmd(r,'choice.vote',{deviceId:s.id,choice});assert.equal((await cmd(r,'choice.resolve',{deviceId:lead(r,t)})).status,200);}
 async function setup({gates=3,route='harbor',prepare=0,items}={}){
  const context=ctx(),r=new QuestSession(context);
- await call(r,'/init',{code:'BLACK',teacherKey:'teacher',config:{engineVersion:'0.10.1',cartridgeId:c.id,gateCount:gates,teamNames:['Crew'],modules:[{id:'number.gcf',itemCount:gates,band:'beginner'}]}});
+ await call(r,'/init',{code:'BLACK',teacherKey:'teacher',config:{engineVersion:'0.12.0',cartridgeId:c.id,gateCount:gates,teamNames:['Crew'],modules:[{id:'number.gcf',itemCount:gates,band:'beginner'}]}});
  const t=r.state.teams['team-1'];
  for(const id of ['a','b'])await cmd(r,'student.join',{deviceId:id,alias:id.toUpperCase(),teamPin:t.pin});
  await cmd(r,'teacher.start',{teacherKey:'teacher'});for(const id of ['a','b'])await cmd(r,'briefing.ready',{deviceId:id});

@@ -335,3 +335,7 @@ Owner-approved Stage B of williammcada/blackout-protocol (spec: `change-specs/bl
 - **Art exception (handbook U-15).** Story art is polygon SVG drawn in code by Claude (`scripts/build-blackout-art.mjs`). This is the owner's decision for this cartridge, an exception to the 8 Oct painted direction, which was written for Ironbreak and BLACKLINE.
 - **Music.** Original synthesized score; room music is rendered to WAV by `scripts/build-blackout-audio.mjs`.
 - **Hosting limit (U-12).** Not for classroom use until the Netlify frontend migration is approved and verified. No deployment in this change.
+
+## MathQuest v0.12.0 — Blackout Protocol and Nightfall art integrated — 14 October 2026
+
+Owner reported that Blackout and recent game changes had not reached MathQuest. Branch audit: the difficulty revision, Math Engine and Kingsgate were on `main`; Nightfall Art Direction v1.0.0 (`implement/nightfall-art-v1.0.0`) and Blackout Protocol v0.2.1 (PR #11) had never been merged. Both are merged on top of 0.11.0 as platform 0.12.0, keeping Kingsgate and the Render hosting changes. See [v0.12.0 release notes](releases/v0.12.0.md). Frontend and Worker deploy together. Local suite 309/319 (10 `happy-dom` files Not run locally; GitHub CI runs them); build passed. Hosted, classroom and iPad checks: Not run.
