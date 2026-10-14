@@ -1,5 +1,5 @@
-import {SceneAssets} from '../vault7-assets.js?v=0.9.7';
-import {NIGHTFALL} from '../cartridges.js?v=0.9.7';
+import {SceneAssets} from '../vault7-assets.js?v=0.12.0';
+import {NIGHTFALL} from '../cartridges.js?v=0.12.0';
 // Practice-only viewer: no room credentials, commands or evidence.
 const scenes=location.pathname.includes('nightfall')?Object.entries(NIGHTFALL.assets).filter(([,src])=>/\.(png|webp|svg)$/.test(src)).map(([id,src])=>({id,src})):Object.entries(SceneAssets).map(([id,a])=>({id,src:a.src}));
 const section=document.createElement('details');section.className='panel';

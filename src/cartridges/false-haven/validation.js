@@ -8,7 +8,7 @@ export function validateHaven(r,input){
  if(!s.tasks||Object.entries(s.tasks).some(([id,v])=>v!==true||!HAVEN_TASKS.some(t=>t.id===id))||HAVEN_TASKS.some(t=>s.tasks[t.id]&&!(t.requires||[]).every(id=>s.tasks[id]))||Object.keys(old?.tasks||{}).some(id=>!s.tasks[id]))return 'Invalid machinery sequence.';
  const h=s.haven;
  if(!h||h.powerCircuit!==(s.tasks.power_depot?'depot':s.tasks.power_pump?'pump':'off')||!Number.isFinite(h.trolleyProgress)||h.trolleyProgress<0||h.trolleyProgress>1||s.tasks.trolley_parked&&h.trolleyProgress!==1||old?.haven?.finaleSpawned&&!h.finaleSpawned||h.finaleSpawned&&!s.tasks.gate_unlocked)return 'Invalid compound state.';
- for(const k of ['trapClosed','barricadeA','barricadeB','trolleyMoving','finaleSpawned'])if(typeof h[k]!=='boolean')return 'Invalid compound switch.';
+ for(const k of ['trapClosed','trolleyMoving','finaleSpawned'])if(typeof h[k]!=='boolean')return 'Invalid compound switch.';
  const enemies=[...havenEnemies(),...(h.finaleSpawned?havenFinale():[])];
  if(!Array.isArray(s.enemies)||s.enemies.length!==enemies.length||new Set(s.enemies.map(e=>e.id)).size!==enemies.length||s.enemies.some(e=>{const a=enemies.find(a=>a.id===e.id),p=old?.enemies?.find(a=>a.id===e.id);return !a||e.kind!==a.kind||!Number.isFinite(e.hp)||e.hp<0||e.hp>(p?.hp??a.hp)||!Number.isFinite(e.x)||!Number.isFinite(e.y)||e.x<0||e.x>3840||e.y<0||e.y>1920;}))return 'Invalid enemy state.';
  if(!Array.isArray(s.picked)||new Set(s.picked).size!==s.picked.length||s.picked.some(id=>!w.PICKUPS.some(p=>p.id===id))||old?.picked?.some(id=>!s.picked.includes(id)))return 'Invalid pickup history.';

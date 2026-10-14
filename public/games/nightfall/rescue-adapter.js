@@ -1,8 +1,8 @@
-import {nightfallAdapter} from './adapter.js?v=0.9.7';
-import {restoreRescue,stepRescue,assistedRescue} from './rescue.js?v=0.9.7';
-import {RESCUE_REVISION,rescueCaller} from './rescue-world.js?v=0.9.7';
+import {nightfallAdapter} from './adapter.js?v=0.12.0';
+import {restoreRescue,stepRescue,assistedRescue} from './rescue.js?v=0.12.0';
+import {RESCUE_REVISION,rescueCaller} from './rescue-world.js?v=0.12.0';
 export const rescueAdapter={
- ...nightfallAdapter,id:'nightfall-rescue',title:'Nightfall · First Response',revision:RESCUE_REVISION,commandPrefix:'rescue',
+ ...nightfallAdapter,id:'nightfall-rescue',title:'Nightfall · First Response · v1.1.0',revision:RESCUE_REVISION,commandPrefix:'rescue',
  canvasLabel:'Rescue the selected caller and escort them to the terminal',kitText:'Pistol · 15 rounds · 3 health · no equipment',
  instructions:'Reach the survivor and bring them back to the station. You can retry while the rescue timer is running. A retry does not restart the timer. Follow the south road, alley, then north road. The front door is locked; break either side window. Use the gas tank or alarm to divert the infected. Your survivor follows safely; you can still be hurt on the way back.',
  resultLabels:{success:'Escort completed',lost:'Try again — timer still running',time_window_closed:'Rescue window closed',teacher_closed:'Rescue closed by your teacher',not_started:'Rescue window closed'},

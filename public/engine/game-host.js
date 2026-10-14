@@ -1,11 +1,11 @@
-import {bindGameInput,controlMarkup,crispCanvas} from './controls.js?v=0.9.7';
-import {registerRecord} from '../privacy.js?v=0.9.7';
-import {GameAudio} from './game-audio.js?v=0.9.7';
+import {bindGameInput,controlMarkup,crispCanvas} from './controls.js?v=0.12.0';
+import {registerRecord} from '../privacy.js?v=0.12.0';
+import {GameAudio} from './game-audio.js?v=0.12.0';
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export class GameHost {
   constructor(root,{adapter,items=[],run,route,deadline,send,practice=false,paused=false,serverNow,pausedAt}){
-    this.adapter=adapter;this.items=items;this.art=null;this.gameAudio=this.adapter.createAudio?.()||new GameAudio(this.adapter.media);this.root=root;this.run=run;this.send=send;this.practice=practice;this.deadline=deadline;this.clockOffset=Number.isFinite(serverNow)?serverNow-Date.now():0;this.pauseClock=pausedAt;this.paused=paused;this.input={tank:true};this.localPaused=false;this.mode=run.mode||'action';this.started=run.status==='active';this.seq=run.seq||0;this.pending=null;this.sending=false;this.lastSent=0;this.dead=false;this.ac=new AbortController();
+    this.adapter=adapter;this.items=items;this.art=null;this.gameAudio=this.adapter.createAudio?.()||new GameAudio(this.adapter.media);this.root=root;this.run=run;this.send=send;this.practice=practice;this.deadline=deadline;this.clockOffset=Number.isFinite(serverNow)?serverNow-Date.now():0;this.pauseClock=pausedAt;this.paused=paused;this.input={tank:true};this.latched={};this.localPaused=false;this.mode=run.mode||'action';this.started=run.status==='active';this.seq=run.seq||0;this.pending=null;this.sending=false;this.lastSent=0;this.dead=false;this.ac=new AbortController();
     if(!this.practice)registerRecord(new URLSearchParams(globalThis.location?.search||'').get('session'),`mq-v09-finale-${run.runId}`);
     let saved;try{if(!this.practice)saved=JSON.parse(localStorage.getItem(`mq-v09-finale-${run.runId}`));}catch{}
     if(this.adapter.commandPrefix==='rescue'&&saved?.attemptId!==run.attemptId)saved=null;
@@ -15,13 +15,17 @@ export class GameHost {
   }
   render(){
     this.root.innerHTML=`<section class="nf-game"><div class="mq-rotate" role="status">Rotate your phone to landscape to play. Your run is paused.</div><div class="nf-toolbar"><b>${esc(this.adapter.title)}</b><button data-view>Expand game</button><button data-pause>Pause</button><button data-help>Controls</button><button data-map>Map</button><button data-sound>Sound off</button><button data-assist>Assisted route</button><button data-reset>Reset controls</button>${this.practice?'<button data-restart>Restart practice</button>':''}</div><p class="nf-equipment">${this.run.loadout.length?this.run.loadout.map(id=>esc(this.items.find(i=>i.id===id)?.title||id)).join(' + '):esc(this.adapter.kitText||'Standard kit: 12 rounds, 3 health')}</p><div class="nf-screen"><canvas width="640" height="360" aria-label="${esc(this.adapter.canvasLabel)}"></canvas><div class="nf-overlay"></div></div><div class="nf-hud" aria-live="off"></div><p class="mq-objective"></p>${controlMarkup(this.adapter.controlProfile)}<p class="nf-status" role="status"></p></section>`;
-    if(this.adapter.id==='blackline-racer'||this.adapter.noMap)this.root.querySelector('[data-map]').hidden=true;
+    if(this.adapter.id==='blackline-racer'||this.adapter.noMap||this.adapter.hideMap)this.root.querySelector('[data-map]').hidden=true;
     if(!this.adapter.controlProfile.left.length&&!this.adapter.controlProfile.right.length){const thumbs=this.root.querySelector('.mq-thumb-controls');if(thumbs)thumbs.style.display='none';this.root.querySelector('[data-reset]').hidden=true;}
     this.canvas=this.root.querySelector('canvas');this.ctx=this.canvas.getContext('2d');if(!this.ctx)this.mode='assisted';this.overlay=this.root.querySelector('.nf-overlay');this.hud=this.root.querySelector('.nf-hud');this.status=this.root.querySelector('.nf-status');
     const on=(el,event,fn)=>el.addEventListener(event,fn,{signal:this.ac.signal});
-    this.inputBinding=bindGameInput(this.root,this.adapter.controlProfile,{signal:this.ac.signal,onChange:value=>this.input=value,blocked:()=>!this.started||this.localPaused||this.paused||!!this.s.outcome||!!this.s.dialogue,onPause:()=>{this.localPaused=true;this.gameAudio.pause(true);this.persist();this.showOverlay();},onMap:()=>this.s.map=!this.s.map});
+    this.inputBinding=bindGameInput(this.root,this.adapter.controlProfile,{signal:this.ac.signal,onChange:value=>{if(this.adapter.latchPresses)for(const k in value)if(value[k])this.latched[k]=true;this.input=value;},blocked:()=>!this.started||this.localPaused||this.paused||!!this.s.outcome||!!this.s.dialogue,onPause:()=>{this.localPaused=true;this.gameAudio.pause(true);this.persist();this.showOverlay();},onMap:()=>this.s.map=!this.s.map});
     // Tap-to-act games (Kingsgate) receive taps in 640×360 field coordinates.
     if(this.adapter.pointer)on(this.canvas,'pointerdown',e=>{if(!this.started||this.localPaused||this.paused||this.s.outcome||this.mode!=='action')return;e.preventDefault();const r=this.canvas.getBoundingClientRect();if(!r.width||!r.height)return;this.adapter.pointer(this.s,(e.clientX-r.left)/r.width*640,(e.clientY-r.top)/r.height*360);for(const event of this.s.events)this.beep(event);this.s.events=[];this.persist();});
+    // Optional adapter.tap(s,x,y): canvas taps in 640×360 game coordinates (Blackout Protocol, Stage B decision D2).
+    // The canvas is drawn with object-fit: contain, so taps are mapped through the letterboxed content box.
+    // Adapters without tap are unaffected.
+    if(this.adapter.tap){this.canvas.style.touchAction='none';on(this.canvas,'pointerdown',e=>{e.preventDefault();if(!this.started||this.paused||this.localPaused||this.mode!=='action'||!this.art||this.s.outcome||document.hidden||globalThis.matchMedia?.('(orientation: portrait) and (max-width: 700px)').matches)return;const r=this.canvas.getBoundingClientRect();if(!r.width||!r.height)return;const k=Math.min(r.width/640,r.height/360),ox=(r.width-640*k)/2,oy=(r.height-360*k)/2;this.adapter.tap(this.s,(e.clientX-r.left-ox)/k,(e.clientY-r.top-oy)/k);});on(this.canvas,'contextmenu',e=>e.preventDefault());}
     on(this.root.querySelector('[data-help]'),'click',()=>{this.help=true;this.localPaused=true;this.clear();this.gameAudio.pause(true);this.showOverlay();});
     on(this.root.querySelector('[data-view]'),'click',e=>{this.root.classList.toggle('mq-focus');e.target.textContent=this.root.classList.contains('mq-focus')?'Window view':'Expand game';this.clear();});
     on(this.root.querySelector('[data-map]'),'click',()=>this.s.map=!this.s.map);
@@ -32,7 +36,7 @@ export class GameHost {
     this.root.querySelector('[data-restart]')?.addEventListener('click',()=>document.querySelector('#restart')?.click(),{signal:this.ac.signal});
     this.showOverlay();
   }
-  clear(){this.inputBinding?.clear();this.input={};}
+  clear(){this.inputBinding?.clear();this.input={};this.latched={};}
   async transmit(type,extra={}){
     if(this.practice)return true;
     try{await this.send(type,{runId:this.run.runId,configRevision:this.run.configRevision,...extra});return true;}catch(e){if(!this.dead)this.status.textContent=`Connection interrupted: ${e.message}. Your run is retained on this device.`;return false;}
@@ -73,7 +77,7 @@ export class GameHost {
   tick(now){
     if(this.dead)return;this.inputBinding.poll();const dt=Math.min(.1,(now-this.last)/1000);this.last=now;
     if(this.started&&!this.paused&&!this.localPaused&&!document.hidden&&!globalThis.matchMedia?.('(orientation: portrait) and (max-width: 700px)').matches&&!this.s.outcome){
-      if(this.mode==='action'&&this.art){this.accumulator+=dt;while(this.accumulator>=1/60){this.adapter.step(this.s,{...this.input,tank:true},1/60);for(const event of this.s.events){if(['death','detected','respawn','retry','life_lost'].includes(event.type))this.clear();this.beep(event);}this.accumulator-=1/60;}}
+      if(this.mode==='action'&&this.art){this.accumulator+=dt;while(this.accumulator>=1/60){this.adapter.step(this.s,{...this.input,...this.latched,tank:true},1/60);this.latched={};for(const event of this.s.events){if(['death','detected','respawn','retry','life_lost'].includes(event.type))this.clear();this.beep(event);}this.accumulator-=1/60;}}
       else if(this.mode==='assisted')this.s.time+=dt;
       this.gameAudio.music(this.adapter.music?.(this.s)||'ambient');
       if(this.mode==='action')this.gameAudio.update?.(this.s);

@@ -1,7 +1,7 @@
-import {collisionGeometry,solidInGeometry} from './world.js?v=0.9.7';
-import {HAVEN_REVISION,havenEnvironment,havenEnemies,havenComplete,havenTick,havenSwitch,HAVEN_SWITCHES} from './false-haven-world.js?v=0.9.7';
-import {REVISION,TASKS,PICKUPS,PROPS,DISTRACTIONS,WINDOWS,propBounds,doorRects,solid,lineClear,nextObjective,seededEnemies,worldFor} from './world.js?v=0.9.7';
-import {threatFor} from './config.js?v=0.9.7';
+import {collisionGeometry,solidInGeometry} from './world.js?v=0.12.0';
+import {HAVEN_REVISION,havenEnvironment,havenEnemies,havenComplete,havenTick,havenSwitch,HAVEN_SWITCHES} from './false-haven-world.js?v=0.12.0';
+import {REVISION,TASKS,PICKUPS,PROPS,DISTRACTIONS,WINDOWS,propBounds,doorRects,solid,lineClear,nextObjective,seededEnemies,worldFor} from './world.js?v=0.12.0';
+import {threatFor} from './config.js?v=0.12.0';
 export const dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y);
 const emit=(s,type,text)=>{s.events.push({type,text});if(text){s.message=text;s.messageAt=s.time;}};
 export function createState(loadout=[],route='clinic',threat=1,scenario='city'){

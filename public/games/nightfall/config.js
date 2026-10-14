@@ -7,5 +7,5 @@ export const THREATS = [
   {id:4,name:'Nightmare',placed:72,active:22,memory:7,search:5,doorSeconds:6,ambush:6,pickupBonus:0}
 ];
 export const threatFor=value=>THREATS[Number.isInteger(value)&&value>=0&&value<=4?value:1];
-export const CONFIG_REVISION='nightfall-city-5';
+export const CONFIG_REVISION='nightfall-city-6';
 export const RESULT_LABELS={success:'You reached the bus',setback:'Your radio fell silent',lost:'Your radio fell silent',timed_out:'Run awaiting mission control review',skipped:'Crossing closed',teacher_advanced:'Mission control closed this crossing'};

@@ -3,9 +3,10 @@ import {FALSE_HAVEN,havenScene} from './cartridges/false-haven.js?v=0.2.0';
 import {IRONBREAK,ironbreakScene} from './cartridges/ironbreak.js';
 import {COASTAL_ESCAPE,coastalScene} from './cartridges/coastal-escape.js';
 import {KINGSGATE,kingsgateScene} from './cartridges/kingsgate.js?v=0.1.0';
+import {BLACKOUT,blackoutScene} from './cartridges/blackout.js?v=0.2.1';
 // Trusted content registry. Academic selection belongs to question-provider.js.
 export const NIGHTFALL = {
-  id: 'nightfall', title: 'Nightfall: Last Bus Out', revision: 'nightfall-city-5',
+  id: 'nightfall', title: 'Nightfall: Last Bus Out', revision: 'nightfall-city-6',
   presentation:{emblem:'NF',theme:'nightfall',cover:'./assets/nightfall/cover.png',coverAlt:'The last evacuation bus waits at the terminal',summary:'Answer the calls. Equip the crew. Reach the bus.',stageLabels:{rescue:'First Response',finale:'The Last Call',minigame:'Last Bus Out'},practice:{title:'Nightfall city mission',href:'./practice-nightfall.html'}},
   contract: 'mq.cartridge/1.0', gameId: 'topdown-combat', activeLimitMs: 7200000,
   teamWindowMs: null, budget: 40, resolution:{type:'final_decision',minigamePlacement:'pre_final_decision'},
@@ -33,7 +34,7 @@ export const NIGHTFALL = {
   assets: { cover:'./assets/nightfall/cover.png', radio:'./assets/nightfall/radio.png', market:'./assets/nightfall/market.png', ending:'./assets/nightfall/ending.png', ambient:'./assets/nightfall/ambient.mp3', finale:'./assets/nightfall/finale.mp3' }
 };
 export const JOURNEY = {id:'journey-west',title:'Journey to the West',revision:'jttw-0.1.0-stage9-feedback',contract:'mq.journey/1',gameId:'journey-brawl',activeLimitMs:180000,resolution:{type:'team-result',minigamePlacement:'post_gates'},gates:['Mountain Path','Cave Approach','Shrine Courtyard'],inserts:['Cliff Road','Old Bridge'],presentation:{emblem:'西',theme:'journey',cover:'./assets/journey/cast-concept.png',coverAlt:'Five travelers and Nezha in arcade pixel art',summary:'Cooperative arcade adventure · 1–5 players · 3 minutes',practice:{title:'Journey solo practice',href:'./journey-practice.html'},stageLabels:{brawl:'Journey encounter',victory:'Journey field record'}}};
-export const CARTRIDGES = [{id:'vault-7',title:'Vault 7',revision:'vault7-0.9',gameId:'stealth',resolution:{type:'cipher',minigamePlacement:'post_final_decision'},presentation:{emblem:'VII',theme:'vault',cover:'./assets/vault7/scenes/cover.webp',coverAlt:'Vault 7 under a storm-lit mountain',summary:'Science-fiction infiltration · 3–5 gates · cipher finale',stageLabels:{rescue:'First Response',finale:"Asterion's Fate",extraction:'Solo Extraction'},practice:{title:'Vault 7 extraction',href:'./dev-extraction.html'}}}, NIGHTFALL, FALSE_HAVEN, IRONBREAK, COASTAL_ESCAPE, BLACKLINE, KINGSGATE, JOURNEY];
+export const CARTRIDGES = [{id:'vault-7',title:'Vault 7',revision:'vault7-0.9',gameId:'stealth',resolution:{type:'cipher',minigamePlacement:'post_final_decision'},presentation:{emblem:'VII',theme:'vault',cover:'./assets/vault7/scenes/cover.webp',coverAlt:'Vault 7 under a storm-lit mountain',summary:'Science-fiction infiltration · 3–5 gates · cipher finale',stageLabels:{rescue:'First Response',finale:"Asterion's Fate",extraction:'Solo Extraction'},practice:{title:'Vault 7 extraction',href:'./dev-extraction.html'}}}, NIGHTFALL, FALSE_HAVEN, IRONBREAK, COASTAL_ESCAPE, BLACKLINE, KINGSGATE, BLACKOUT, JOURNEY];
 export const cartridgeFor = id => CARTRIDGES.find(c=>c.id===id);
 export function gateNames(c, count) { return [...c.gates.slice(0,2),...c.inserts.slice(0,count-3),c.gates[2]]; }
 export function sceneFor(c, team, names, crew) {
@@ -42,6 +43,7 @@ export function sceneFor(c, team, names, crew) {
   if(c.id===FALSE_HAVEN.id)return havenScene(c,team,names,crew);
   if(c.id==='ironbreak')return ironbreakScene(team,names,crew);
   if(c.id==='coastal-escape')return coastalScene(c,team,names,crew);
+  if(c.id===BLACKOUT.id)return blackoutScene(c,team,names,crew);
   if(team.extraGate)return {title:'Last Checkpoint',eyebrow:c.title,paragraphs:['Mission control has added a final review check. Complete your newly assigned questions; your crew’s pending decision, equipment and progress are preserved.'],image:c.assets.radio};
   const rescued=team.route==='clinic'?'Imani, the medic':'Tomas, the mechanic';
   const roster=crew.map(s=>s.alias).join(', ');

@@ -1,0 +1,109 @@
+[
+  {
+    "check": "False Haven page shows v0.4.0",
+    "status": "Passed",
+    "detail": "Nightfall II: False Haven · v0.4.0"
+  },
+  {
+    "check": "All five new sprite sheets decode in the browser",
+    "status": "Passed",
+    "detail": "{\"props\":512,\"tiles\":256,\"actors\":736,\"interactables\":512,\"decals\":512,\"furniture\":512,\"machinery\":512,\"roofs\":512}"
+  },
+  {
+    "check": "Player walks through the Shelter 04 door",
+    "status": "Passed",
+    "detail": "y 840→678"
+  },
+  {
+    "check": "No barricade switch at the former shelter barricade",
+    "status": "Passed",
+    "detail": "Hold Search / Use: break window · 0%"
+  },
+  {
+    "check": "Every machinery objective completes in order in real time",
+    "status": "Passed",
+    "detail": "generator_online → power_pump → service_shortcut → power_depot → trolley_parked → depot_shutter → gate_unlocked → barrier_released"
+  },
+  {
+    "check": "Inspection gate closes and reopens from its console",
+    "status": "Passed",
+    "detail": ""
+  },
+  {
+    "check": "Reload resumes the saved run with all progress",
+    "status": "Passed",
+    "detail": "time 36.4→36.4"
+  },
+  {
+    "check": "Escape completes at the bus",
+    "status": "Passed",
+    "detail": ""
+  },
+  {
+    "check": "False Haven console and page errors",
+    "status": "Passed",
+    "detail": "none"
+  },
+  {
+    "check": "Render cost (candidate) across six busy views",
+    "status": "Measured",
+    "detail": "mean 1.24 ms/frame; per view 1.91, 2.01, 0.2, 1.6, 1.52, 0.18",
+    "cost": {
+      "perFrameMs": [
+        1.91,
+        2.01,
+        0.2,
+        1.6,
+        1.52,
+        0.18
+      ],
+      "meanMs": 1.24
+    }
+  },
+  {
+    "check": "Frame time (candidate), utility yard/shelter, live enemies",
+    "status": "Measured",
+    "detail": "median 16.7 ms, p95 16.7 ms over 242 frames",
+    "profile": {
+      "frames": 242,
+      "median": 16.699999999999818,
+      "p95": 16.700000000000728
+    }
+  },
+  {
+    "check": "Render cost (baseline v0.3.0) across six busy views",
+    "status": "Measured",
+    "detail": "mean 1.26 ms/frame; per view 0.18, 0.3, 2.2, 2.08, 2.67, 0.14",
+    "cost": {
+      "perFrameMs": [
+        0.18,
+        0.3,
+        2.2,
+        2.08,
+        2.67,
+        0.14
+      ],
+      "meanMs": 1.26
+    }
+  },
+  {
+    "check": "Frame time (baseline v0.3.0), utility yard/shelter, live enemies",
+    "status": "Measured",
+    "detail": "median 16.7 ms, p95 16.7 ms over 242 frames",
+    "profile": {
+      "frames": 242,
+      "median": 16.699999999999818,
+      "p95": 16.700000000000728
+    }
+  },
+  {
+    "check": "First Response starts and plays in real time without errors",
+    "status": "Passed",
+    "detail": "none"
+  },
+  {
+    "check": "Last Bus Out starts and plays in real time without errors",
+    "status": "Passed",
+    "detail": "none"
+  }
+]

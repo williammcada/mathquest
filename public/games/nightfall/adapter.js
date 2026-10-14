@@ -1,10 +1,10 @@
-import {createState,restoreState,step,completeTask,nextObjective,breakWindow,triggerDistraction,collectShotgun,activeAlarm} from './simulation.js?v=0.9.7';
-import {render,loadArt,MEDIA} from './renderer.js?v=0.9.7';
-import {CONTROL_PROFILES} from '../../engine/controls.js?v=0.9.7';
-import {CONFIG_REVISION,RESULT_LABELS} from './config.js?v=0.9.7';
-import {TASKS} from './world.js?v=0.9.7';
+import {createState,restoreState,step,completeTask,nextObjective,breakWindow,triggerDistraction,collectShotgun,activeAlarm} from './simulation.js?v=0.12.0';
+import {render,loadArt,MEDIA} from './renderer.js?v=0.12.0';
+import {CONTROL_PROFILES} from '../../engine/controls.js?v=0.12.0';
+import {CONFIG_REVISION,RESULT_LABELS} from './config.js?v=0.12.0';
+import {TASKS} from './world.js?v=0.12.0';
 export const nightfallAdapter={
- id:'nightfall-city',title:'Nightfall · Last Bus Out',revision:CONFIG_REVISION,media:MEDIA,controlProfile:CONTROL_PROFILES.nightfall,resultLabels:RESULT_LABELS,canvasLabel:'Search the city, repair the bus, then make the final crew decision',
+ id:'nightfall-city',title:'Nightfall · Last Bus Out · v1.1.0',revision:CONFIG_REVISION,media:MEDIA,controlProfile:CONTROL_PROFILES.nightfall,resultLabels:RESULT_LABELS,canvasLabel:'Search the city, repair the bus, then make the final crew decision',
  resultText:'One field run is complete. Wait for the other crew members, then everyone participates in the final story decision.',
  alarm:s=>!!activeAlarm(s)&&!s.outcome,
  music:s=>s.outcome?'ending':s.enemies.some(e=>e.hp>0&&e.phase==='chase')?'danger':'ambient',

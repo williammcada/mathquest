@@ -16,15 +16,16 @@ test('geometry cache preserves collisions and invalidates restored door/window v
  s.windows['dorm-west']=true;assert.equal(solid(s,264,392),false);
  assert.equal(JSON.stringify(s).includes('openSolids'),false);
 });
-test('water, trolley and barricades invalidate both geometry and navigation fields',()=>{
+test('water, trolley and the inspection gate invalidate both geometry and navigation fields',()=>{
  const s=createHaven({runId:'topology'}),target={x:2800,y:1152};
  const first=navigationField(s,target);assert.equal(navigationField(s,target),first);
  assert.equal(solid(s,2568,1152),true);s.tasks.passage_drained=true;
  assert.equal(solid(s,2568,1152),false);assert.notEqual(navigationField(s,target),first);
  assert.equal(solid(s,3210,820),true);s.haven.trolleyProgress=1;
  assert.equal(solid(s,3210,820),false);assert.equal(solid(s,3470,820),true);
- assert.equal(solid(s,1560,940),true);s.haven.barricadeA=true;
- assert.equal(solid(s,1560,940),false);assert.equal(solid(s,1560,812),true);
+ // v0.4.0 removed the movable barricades: both former positions are open yard.
+ assert.equal(solid(s,1560,940),false);assert.equal(solid(s,1560,812),false);assert.equal(solid(s,2900,1260),false);
+ assert.ok(!('barricadeA' in s.haven)&&!('barricadeB' in s.haven));
  const before=collisionGeometry(s);s.haven.trapClosed=true;assert.notEqual(collisionGeometry(s),before);
  assert.equal(solid(s,2160,984),true);
  assert.ok(navigationField(s,{x:-32,y:500}).every(x=>x===Infinity));
@@ -46,5 +47,5 @@ test('mandatory introduction explains the known breach and authority abandonment
  const images=['briefing','gate','market','victory'].map(stage=>havenScene(c,{stage,gateIndex:0},c.gates,[]).image);
  assert.equal(new Set(images).size,4);assert.ok(images.every(path=>path.includes('/false-haven/')));
  assert.equal(c.revision,'false-haven-cartridge-0.2.0'); // unchanged session envelope
- assert.equal(c.presentationRevision,'false-haven-0.3.0');
+ assert.equal(c.presentationRevision,'false-haven-0.4.0');assert.equal(c.mapRevision,'false-haven-0.4.0');
 });

@@ -1,25 +1,25 @@
 import {splitScene,instructionPanel} from './review-presentation.js?v=u11';
-import {JourneyHost} from './games/journey/host.js?v=0.11.0';
+import {JourneyHost} from './games/journey/host.js?v=0.12.0';
 let journeyHost=null;
-import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.9.7';
+import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.12.0';
 import {IronbreakHost} from './games/shooter/host.js?v=ironbreak-0.2.0';
-import {RescueHost} from './games/nightfall/rescue-host.js?v=0.9.7';
-import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.9.7';
-import { hostingFor, fetchApi } from './hosting.js?v=0.9.7';
-import { CATALOG } from './catalog.js?v=0.9.7'; // retired MathQuest module titles only
-import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.11.0';
-import { StealthRuntime } from './stealth.js?v=0.9.7';
-import { SceneAssets } from './vault7-assets.js?v=0.9.7';
-import { TeacherAudio } from './teacher-audio.js?v=0.9.7';
-import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.9.7-jttw9';
-import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.9.7';
-import { FinaleHost } from './finale-host.js?v=0.9.7';
-import { CartridgeAudio } from './cartridge-audio.js?v=0.9.7';
-import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.9.7';
-import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.11.0';
-import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.9.7';
+import {RescueHost} from './games/nightfall/rescue-host.js?v=0.12.0';
+import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.12.0';
+import { hostingFor, fetchApi } from './hosting.js?v=0.12.0';
+import { CATALOG } from './catalog.js?v=0.12.0'; // retired MathQuest module titles only
+import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.12.0';
+import { StealthRuntime } from './stealth.js?v=0.12.0';
+import { SceneAssets } from './vault7-assets.js?v=0.12.0';
+import { TeacherAudio } from './teacher-audio.js?v=0.12.0';
+import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.12.0';
+import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.12.0';
+import { FinaleHost } from './finale-host.js?v=0.12.0';
+import { CartridgeAudio } from './cartridge-audio.js?v=0.12.0';
+import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.12.0';
+import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.12.0';
+import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.12.0';
 forgetExpiredRooms();
-import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.11.0';
+import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.12.0';
 let setupCartridge='';
 let finaleHost=null;
 const app = document.querySelector("#app");
@@ -429,7 +429,7 @@ function renderTeacher() {
   bindTeamTools(state,command);
   teacherAudio.bind();
   cartridgeAudio.bind();
-  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate'].includes(state.cartridge.id)){
+  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate','blackout-protocol'].includes(state.cartridge.id)){
     document.querySelector('.hero h1').textContent='MathQuest Dashboard';
     document.querySelectorAll('.team-card').forEach((card,i)=>{const t=state.teams[i];if(t.stage==='rescue'){const close=document.createElement('button');close.textContent='Close rescue and open Gate 2';close.onclick=()=>command('teacher.closeRescue',{teamId:t.id});card.append(close);const note=document.createElement('p');note.textContent='First Response · '+(t.rescue?.results||[]).map(r=>`${r.alias}: ${r.outcome||r.status} · ${r.retries} retries`).join(' | ');card.append(note);}if(t.stage==='minigame'){const button=document.createElement('button');button.textContent='Finish remaining crossings';button.onclick=()=>command('teacher.advanceFinale',{teamId:t.id});card.append(button);const p=document.createElement('p');p.textContent=(t.finale?.results||[]).map(r=>`${r.alias}: ${r.outcome||r.status}`).join(' | ');card.append(p);}});
   }
@@ -577,7 +577,7 @@ function renderStudent() {
   if (extractionRuntime) { extractionRuntime.destroy(); extractionRuntime=null; }
   if (state.paused) return renderPaused(item);
   let body = "";
-  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate'].includes(state.cartridge.id)&&item.stage!=='gate')body=expansionBody(state,item,sceneBlock(item))||'';
+  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate','blackout-protocol'].includes(state.cartridge.id)&&item.stage!=='gate')body=expansionBody(state,item,sceneBlock(item))||'';
   else if (item.stage === "briefing") body = renderBriefing(item, student);
   else if (item.stage === "gate") body = renderMath(item, student);
   else if (item.stage === "decision") body = renderDecision(item, student);
@@ -587,7 +587,7 @@ function renderStudent() {
   else body = renderVictory(item, student);
   app.innerHTML = shell(`${narrativeHeader(item)}${leadBanner(item, student)}${noticeHtml()}${body}${memberProgress(item)}${statusBar(item, student)}`, true);
   bindStudentActions(item, student);
-  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate'].includes(state.cartridge.id))bindExpansion(item,command);
+  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate','blackout-protocol'].includes(state.cartridge.id))bindExpansion(item,command);
 }
 
 function renderWaiting(item, student) {
@@ -599,7 +599,7 @@ function renderWaiting(item, student) {
 
 function renderPaused(item) {
   app.innerHTML = shell(`${narrativeHeader(item)}<section class="panel centered"><div class="pause-icon">Ⅱ</div><h2>Mission paused</h2><p>Your teacher has paused the mission. Keep your work and wait for the signal.</p></section>`, true);
-  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate'].includes(state.cartridge.id))document.querySelector('.centered p').textContent='Your teacher has paused the mission. Keep your work and wait for the signal.';
+  if(['nightfall','nightfall-false-haven','ironbreak','coastal-escape','blackline','kingsgate','blackout-protocol'].includes(state.cartridge.id))document.querySelector('.centered p').textContent='Your teacher has paused the mission. Keep your work and wait for the signal.';
 }
 
 function renderEnded(item) {

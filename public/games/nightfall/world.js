@@ -1,6 +1,7 @@
-import {havenWorld} from './false-haven-world.js?v=0.9.7';
-import {rescueWorld} from './rescue-world.js?v=0.9.7';
-import {CONFIG_REVISION,threatFor} from './config.js?v=0.9.7';
+import {havenWorld} from './false-haven-world.js?v=0.12.0';
+import {rescueWorld} from './rescue-world.js?v=0.12.0';
+import {CONFIG_REVISION,threatFor} from './config.js?v=0.12.0';
+import {furnitureSolids} from './interiors.js?v=0.12.0';
 export const REVISION=CONFIG_REVISION;
 export const WORLD={width:2560,height:1280,tile:32,bus:{x:1168,y:1120}};
 export const BUILDINGS=[
@@ -66,7 +67,7 @@ function buildWalls(s,{ignoreDoors=false}={}){
      if(!s.windows?.[pane.id])list.push({...pane,window:true});
    }
    list.push({x:b.x,y:b.y+b.h-16,w:b.door-b.x,h:16},{x:b.door+80,y:b.y+b.h-16,w:b.x+b.w-b.door-80,h:16});
-   if(b.id==='store'||b.id==='garage'&&!s.tasks.power&&!s.garageHordeTriggered)list.push({x:b.door,y:b.y+b.h-16,w:80,h:16,gate:true});
+   if(b.id==='store'||b.id==='garage'&&!s.tasks.power&&!s.garageHordeTriggered)list.push({x:b.door,y:b.y+b.h-16,w:80,h:16,gate:true,kind:'gate'});
  }
  if(!ignoreDoors)for(const d of doorRects(s))if(s.doors?.[d.id]?.closed&&s.doors[d.id].hp>0)list.push(d);
  return list;
@@ -79,13 +80,13 @@ export function collisionGeometry(s){
  const h=s.haven||{},t=s.tasks||{};
  const key=[s.scenario,s.route,s.doorRevision,!!t.power,!!s.garageHordeTriggered,
   !!t.passage_drained,!!t.service_shortcut,!!t.barrier_released,!!t.depot_shutter,
-  !!h.trapClosed,!!h.barricadeA,!!h.barricadeB,h.trolleyProgress||0,
+  !!h.trapClosed,h.trolleyProgress||0,
   ...Object.entries(s.windows||{}).map(([id,open])=>id+':'+!!open),
   ...Object.entries(s.doors||{}).map(([id,d])=>id+':'+(!!d.closed&&d.hp>0))].join('|');
  let g=geometryCache.get(s);if(g?.key===key)return g;
  const {WORLD,PROPS}=worldFor(s),openWalls=buildWalls(s,{ignoreDoors:true});
  const closed=doorRects(s).filter(d=>s.doors?.[d.id]?.closed&&s.doors[d.id].hp>0);
- const props=PROPS.filter(b=>!b.wire||!t.power).map(propBounds);
+ const props=[...PROPS.filter(b=>!b.wire||!t.power).map(propBounds),...furnitureSolids(s)];
  g={key,world:WORLD,openWalls,walls:[...openWalls,...closed],doors:closed,
   openSolids:[...openWalls,...props],solids:[...openWalls,...closed,...props]};
  geometryCache.set(s,g);return g;
@@ -100,13 +101,18 @@ export function lineClear(s,a,b){const g=collisionGeometry(s),count=Math.ceil(Ma
 export function nextObjective(s){return worldFor(s).TASKS.find(t=>!t.optional&&!s.tasks[t.id]&&(t.requires||[]).every(id=>s.tasks[id]));}
 export function seededEnemies(threat=1){
  const enemies=[];let seed=1733;const rand=()=>{seed=(seed*1664525+1013904223)>>>0;return seed/4294967296;};
- const state={tasks:{}};
+ // Seed against the pre-furniture layout so the authored RNG sequence and every
+ // placement stay identical; only spawns that now sit inside furniture are nudged.
+ const state={tasks:{},seedWithoutFurniture:true},real={tasks:{}};
  for(let i=0;i<threatFor(threat).placed;i++){
    let x,y,tries=0;do{x=48+rand()*2464;y=48+rand()*1184;tries++;}while(tries<200&&(solid(state,x,y,16)||Math.hypot(x-1168,y-1120)<260));
    const kind=i%11===0?'brute':i%5===0?'crawler':i%3===0?'runner':'shambler';
    enemies.push({id:`e${i}`,x,y,homeX:x,homeY:y,kind,hp:kind==='brute'?6:kind==='shambler'?2:1,phase:'wander',timer:0,angle:rand()*Math.PI*2,deathTime:0});
  }
+ for(const e of enemies)if(solid(real,e.x,e.y,16)){const free=clearSpawn(real,e.x,e.y);e.x=e.homeX=free.x;e.y=e.homeY=free.y;}
  return [...enemies,...storeGuards()];
 }
 
+// Nearest free point on an expanding square ring, deterministic for a given layout.
+export function clearSpawn(s,x,y,r=16){for(let d=8;d<=256;d+=8)for(let a=0;a<16;a++){const nx=x+Math.cos(a*Math.PI/8)*d,ny=y+Math.sin(a*Math.PI/8)*d;if(!solid(s,nx,ny,r))return {x:Math.round(nx),y:Math.round(ny)};}return {x,y};}
 export function storeGuards(){return Array.from({length:8},(_,i)=>({id:`store-guard-${i}`,x:1516+(i%4)*56,y:552+Math.floor(i/4)*38,homeX:1516+(i%4)*56,homeY:552+Math.floor(i/4)*38,kind:'shambler',hp:2,phase:'wander',timer:0,angle:-Math.PI/2,storeGuard:true,deathTime:0}));}

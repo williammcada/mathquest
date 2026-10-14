@@ -1,0 +1,4 @@
+9466fcd2bcb77ca73353a8c89cda03ebee3ce7dec1a77753f43b56644b972f90  public/reviews/BlackoutProtocol-v0.2.1.html
+7888c64e3d7377a93ae935b1e0fbe48caac1430ac620e67af2aa6d9ddf39c3ce  public/games/blackout/core.js
+ab08b2bee9c3218e16e29af18a14b5340a326d04ab151b9603b3bf1fda6533e3  public/games/blackout/adapter.js
+c6a1581266695624aaa2a011c0879a69c4b02d00942f59439f0e0edf6097c45d  src/cartridges/blackout/validation.js

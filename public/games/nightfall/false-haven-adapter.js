@@ -1,8 +1,8 @@
-import {createState,step,completeTask,nextObjective,dist} from './simulation.js?v=0.9.7';
-import {render,loadArt,MEDIA} from './renderer.js?v=0.9.7';
-import {CONTROL_PROFILES} from '../../engine/controls.js?v=0.9.7';
-import {HAVEN_REVISION,HAVEN_TASKS,havenEnvironment,havenFinale,havenTick} from './false-haven-world.js?v=0.9.7';
-import {solid,worldFor} from './world.js?v=0.9.7';
+import {createState,step,completeTask,nextObjective,dist} from './simulation.js?v=0.12.0';
+import {render,loadArt,MEDIA} from './renderer.js?v=0.12.0';
+import {CONTROL_PROFILES} from '../../engine/controls.js?v=0.12.0';
+import {HAVEN_REVISION,HAVEN_TASKS,havenEnvironment,havenFinale,havenTick} from './false-haven-world.js?v=0.12.0';
+import {solid,worldFor} from './world.js?v=0.12.0';
 export function createHaven(run={}){
  const s=createState(run.loadout||[], 'clinic',run.threat??1,'false-haven'),raw=run.snapshot;
  s.runId=run.runId;s.route=run.route||'shelter';s.mode=run.mode||'action';
@@ -15,7 +15,7 @@ export function createHaven(run={}){
  // Reject out-of-order progress rather than accidentally granting inaccessible objectives.
  for(const t of HAVEN_TASKS)if(s.tasks[t.id]&&!(t.requires||[]).every(id=>s.tasks[id]))delete s.tasks[t.id];
  const h=raw.haven||{};s.haven=havenEnvironment();
- for(const k of ['trapClosed','barricadeA','barricadeB'])s.haven[k]=h[k]===true;
+ s.haven.trapClosed=h.trapClosed===true;
  Object.assign(s.haven,{powerCircuit:s.tasks.power_depot?'depot':s.tasks.power_pump?'pump':'off',drainStarted:s.tasks.power_pump?finite(h.drainStarted,0,s.time,s.time):null,trolleyProgress:s.tasks.trolley_parked?1:finite(h.trolleyProgress,0,.999,0),trolleyMoving:!!h.trolleyMoving&&!!s.tasks.power_depot&&!s.tasks.trolley_parked,speakerUntil:finite(h.speakerUntil,0,s.time+12,0),speakerReady:finite(h.speakerReady,0,s.time+27,0),finaleAt:s.tasks.gate_unlocked?finite(h.finaleAt,0,s.time+3,s.time):null,finaleSpawned:!!s.tasks.gate_unlocked&&h.finaleSpawned===true});
  if(s.haven.finaleSpawned)s.enemies.push(...havenFinale());
  const old=new Map((Array.isArray(raw.enemies)?raw.enemies:[]).map(e=>[e.id,e]));
@@ -31,7 +31,7 @@ export function createHaven(run={}){
 }
 const profile={...CONTROL_PROFILES.nightfall,help:CONTROL_PROFILES.nightfall.help.replace('One live run; no restart after defeat.','Five active minutes. In a classroom, the shared five-minute window continues during local pauses.')};
 export const falseHavenAdapter={
- id:'false-haven',title:'Nightfall II · False Haven · v0.3.0',activeLimitSeconds:300,revision:HAVEN_REVISION,media:MEDIA,controlProfile:profile,canvasLabel:'Explore the evacuation compound, restore machinery and escape in the bus',
+ id:'false-haven',title:'Nightfall II · False Haven · v0.4.0',activeLimitSeconds:300,revision:HAVEN_REVISION,media:MEDIA,controlProfile:profile,canvasLabel:'Explore the evacuation compound, restore machinery and escape in the bus',
  resultLabels:{success:'You escaped False Haven',lost:'Your radio fell silent',timed_out:'Escape incomplete — time expired',assisted_completed:'Guided escape completed'},
  resultText:'Your individual field result is recorded separately from mathematics. Every crew member still participates in the final decision.',
  create:createHaven,step,render,loadArt:()=>loadArt({...MEDIA,tiles:'./assets/false-haven/tiles-v3.webp'}),

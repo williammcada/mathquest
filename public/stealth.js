@@ -1,8 +1,8 @@
-import {CONTROL_PROFILES,controlMarkup,bindGameInput,crispCanvas} from './engine/controls.js?v=0.9.7';
-import {drawHardware} from './vault-art.js?v=0.9.7';
-import {registerRecord} from './privacy.js?v=0.9.7';
-import { fetchApi } from './hosting.js?v=0.9.7';
-import { StealthSimulation, RULES, REVISION, EQUIPMENT, angleAt, sensorActive, conePolygon, CHECKPOINTS } from './stealth-core.js?v=0.9.7';
+import {CONTROL_PROFILES,controlMarkup,bindGameInput,crispCanvas} from './engine/controls.js?v=0.12.0';
+import {drawHardware} from './vault-art.js?v=0.12.0';
+import {registerRecord} from './privacy.js?v=0.12.0';
+import { fetchApi } from './hosting.js?v=0.12.0';
+import { StealthSimulation, RULES, REVISION, EQUIPMENT, angleAt, sensorActive, conePolygon, CHECKPOINTS } from './stealth-core.js?v=0.12.0';
 const safe=value=>String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const id=()=>crypto.randomUUID();
 const ranks=[null,'A','B','C'];

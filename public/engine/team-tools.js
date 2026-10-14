@@ -1,4 +1,4 @@
-import {THREATS} from '../games/nightfall/config.js?v=0.9.7';
+import {THREATS} from '../games/nightfall/config.js?v=0.12.0';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export function teamToolsMarkup(state,t){
  if(state.status==='ended')return '';

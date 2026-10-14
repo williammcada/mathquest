@@ -1,0 +1,30 @@
+{
+ "rescue-clinic": {
+  "start": 944512,
+  "windows broken": 1041024
+ },
+ "rescue-depot": {
+  "start": 944512,
+  "windows broken": 1041024
+ },
+ "city": {
+  "start": 2615616,
+  "windows broken": 2923840,
+  "power restored": 2810176,
+  "power + windows": 2932800
+ },
+ "false-haven": {
+  "start": 4597760,
+  "generator_online": 4597760,
+  "power_pump": 4597760,
+  "passage_drained": 6738816,
+  "service_shortcut": 6742400,
+  "power_depot": 6742400,
+  "trolley_parked": 6742720,
+  "depot_shutter": 6904768,
+  "gate_unlocked": 6904768,
+  "barrier_released": 6911424,
+  "trap closed": 6811840,
+  "all + windows broken": 6927808
+ }
+}

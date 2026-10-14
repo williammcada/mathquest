@@ -1,7 +1,7 @@
 import {reviewParagraphs} from './review-presentation.js?v=u11';
 import {BLACKLINE as c,blacklineScene,BLACKLINE_PERSONAL} from './cartridges/blackline.js?v=0.3.0';
 const gateNames=(c,n)=>[...c.gates.slice(0,2),...c.inserts.slice(0,n-3),c.gates[2]];
-import {GameHost} from './engine/game-host.js?v=0.9.7';
+import {GameHost} from './engine/game-host.js?v=0.12.0';
 import {blacklineAdapter} from './games/blackline/adapter.js?v=0.3.2';
 import Sim from './games/blackline/sim.js';
 import {showDevPanel} from './engine/dev-playtest.js';
