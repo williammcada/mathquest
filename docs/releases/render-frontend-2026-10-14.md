@@ -13,4 +13,6 @@ Checked 14 October 2026 (Asia/Shanghai) by Claude in the owner's built-in deskto
 | Teacher creates a room; student joins from a second device; QR points to Render | Not run (owner) |
 | Journey combat starts from the Render origin | Not run (owner) |
 | github.io forwards to Render (`pages-forwarding`) | Not run — Pages switch pending |
-| Student iPad on school Wi-Fi plays a session | Not run (owner) — required before classroom use |
+| Student iPad on school Wi-Fi | Passed (owner report, 14 October 2026: working on a student iPad via the school Wi-Fi) |
+
+U-12 amendment approved and saved (handbook `75baa80`, v0.1.9): Render is an approved student host.
