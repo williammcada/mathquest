@@ -1,5 +1,5 @@
 // First Response tuning is independent of the later city's threat presets.
-export const RESCUE_REVISION='nightfall-rescue-1';
+export const RESCUE_REVISION='nightfall-rescue-2';
 export const RESCUE_WINDOW_MS=300000;
 export const TERMINAL={x:1168,y:1168,r:72};
 export const RESCUE_START={x:1168,y:1200};
@@ -13,7 +13,7 @@ export function rescueWorld(route='clinic'){
   PROPS:[{id:'rescue-car',x:1184,y:544,w:112,h:56,art:1}],
   DISTRACTIONS:[{id:'rescue-alarm',kind:'alarm',propId:'rescue-car',label:'Car alarm',x:1240,y:572,duration:12,radius:3000},{id:'rescue-gas',kind:'barrel',label:'Gas tank · shoot from a distance',x:1008,y:1088,duration:8,radius:500}],
   WINDOWS:[{id:'store-west',room:'store',x:1632,y:224,w:16,h:80},{id:'store-east',room:'store',x:1968,y:224,w:16,h:80}],
-  BARRIERS:[{x:0,y:640,w:736,h:320},{x:896,y:640,w:1664,h:320},{x:0,y:0,w:1440,h:480},{x:2080,y:0,w:480,h:480},{x:0,y:0,w:576,h:1280},{x:2240,y:0,w:320,h:1280}],
+  BARRIERS:[{x:0,y:640,w:736,h:320},{x:896,y:640,w:1664,h:320},{x:0,y:0,w:1440,h:480},{x:2080,y:0,w:480,h:480},{x:0,y:0,w:576,h:1280},{x:2240,y:0,w:320,h:1280}].map(b=>({...b,kind:'block'})),
  };
 }
 export function rescueEnemies(){

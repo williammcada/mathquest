@@ -1,5 +1,5 @@
-import {GameHost} from './engine/game-host.js?v=0.9.7';
-import {falseHavenAdapter} from './games/nightfall/false-haven-adapter.js?v=0.9.7';
+import {GameHost} from './engine/game-host.js?v=0.9.8';
+import {falseHavenAdapter} from './games/nightfall/false-haven-adapter.js?v=0.9.8';
 const KEY='mq-false-haven-practice-v1';let host;
 const q=s=>document.querySelector(s),status=text=>q('#storage-status').textContent=text;
 function read(){try{return JSON.parse(localStorage.getItem(KEY));}catch{status('Saved run could not be read. Start a new practice run.');return null;}}

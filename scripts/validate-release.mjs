@@ -38,3 +38,6 @@ const effects=await readFile(resolve(root,'public/assets/nightfall/city/effects.
 console.log(`Release validated: Math Engine ${ENGINE_VERSION} (${ENGINE_ROWS.length} skills, 25 retired-module sets);`+' preserved Vault 7 assets; Nightfall story and city atlases, three music tracks and effects bank; recursive JavaScript syntax.');
 
 for(const name of ['shot','shotgun','breach','step','glass','alarm','moan','enemy-death']){const bytes=await readFile(resolve(root,'public/assets/nightfall/city/v092',name+'.wav'));assert.ok(bytes.length>1000);assert.equal(bytes.toString('ascii',0,4),'RIFF');assert.equal(bytes.toString('ascii',8,12),'WAVE');}
+// Nightfall Art Direction v1.0.0 (NF-ART-01): every shared sprite sheet ships as a 1024 px PNG.
+for(const sheet of ['nightfall/shared/interactables-v1.png','nightfall/shared/furniture-v1.png','nightfall/shared/decals-v1.png','nightfall/shared/roofs-v1.png','false-haven/machinery-v1.png']){const bytes=await readFile(resolve(root,'public/assets',sheet));assert.equal(bytes.toString('ascii',1,4),'PNG',sheet);assert.equal(bytes.readUInt32BE(16),1024,sheet);assert.equal(bytes.readUInt32BE(20),1024,sheet);}
+console.log('Nightfall sprite sheets validated: interactables, furniture, decals, roofs, machinery.');

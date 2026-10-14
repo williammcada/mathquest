@@ -5,7 +5,7 @@ import {COASTAL_ESCAPE,coastalScene} from './cartridges/coastal-escape.js';
 import {KINGSGATE,kingsgateScene} from './cartridges/kingsgate.js?v=0.1.0';
 // Trusted content registry. Academic selection belongs to question-provider.js.
 export const NIGHTFALL = {
-  id: 'nightfall', title: 'Nightfall: Last Bus Out', revision: 'nightfall-city-5',
+  id: 'nightfall', title: 'Nightfall: Last Bus Out', revision: 'nightfall-city-6',
   presentation:{emblem:'NF',theme:'nightfall',cover:'./assets/nightfall/cover.png',coverAlt:'The last evacuation bus waits at the terminal',summary:'Answer the calls. Equip the crew. Reach the bus.',stageLabels:{rescue:'First Response',finale:'The Last Call',minigame:'Last Bus Out'},practice:{title:'Nightfall city mission',href:'./practice-nightfall.html'}},
   contract: 'mq.cartridge/1.0', gameId: 'topdown-combat', activeLimitMs: 7200000,
   teamWindowMs: null, budget: 40, resolution:{type:'final_decision',minigamePlacement:'pre_final_decision'},

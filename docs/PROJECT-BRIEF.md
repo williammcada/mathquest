@@ -307,6 +307,8 @@ Owner decisions:
 
 The Worker must be deployed together with the frontend because it validates shared Nightfall geometry.
 
+**Implementation — 12 October 2026:** branch `implement/nightfall-art-v1.0.0`, implementation checkpoint `7d4b9a7`. Platform v0.9.8, False Haven v0.4.0, Chapter 1 v1.1.0. Status: release candidate. All checks that could run passed: suite, build, reachability and keep-out, review frames, Chromium play of all three games, performance. Ten DOM runtime suites could not run (dependency install blocked), and physical-device, hosted Pages and Worker checks are pending. See [release record](releases/nightfall-art-v1.0.0.md). Do not merge to `main` until the Worker deploys alongside Pages, because v0.9.8 needs the matching Worker for every cartridge.
+
 ## Action difficulty revision — 13 October 2026
 
 Owner found Coastal Escape, Ironbreak and Blackline too easy and short. Change specification `change-specs/action-difficulty-2026-10-13.md`; verification `releases/action-difficulty-2026-10-13.md`. Coastal flight v0.3.0 (128 enemies, faster shells, 3× battleships, persistent supplies, sprite boss finale), Ironbreak v0.2.0 (second loop with MID2, 86 robots, faster boss, mortar), Blackline v0.3.0 (road obstacles, frequent aerial strikes). DEV review files are now built from source by `scripts/build-review-bundles.mjs`. Branch `implement/action-difficulty-2026-10-13`; not deployed. Frontend and Worker must ship together; platform version bump to happen at release. Ironbreak keeps its 300-second window (owner to confirm after playtest).

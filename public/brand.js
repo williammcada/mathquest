@@ -1,4 +1,4 @@
-import { CARTRIDGES } from './cartridges.js?v=0.9.7';
+import { CARTRIDGES } from './cartridges.js?v=0.9.8';
 
 export const BRAND = Object.freeze({name:'MathQuest',mark:'MQ',credit:'A WILLIAM MCADA PRODUCT',version:'0.11.0',engineVersion:'0.11.0'});
 export const escapeBrand = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
