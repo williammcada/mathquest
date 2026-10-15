@@ -9,7 +9,7 @@ import { HOSTING } from '../public/hosting-config.js';
 const page = 'https://williammcada.github.io/mathquest/';
 const origin = new URL(page).origin;
 const rooms = new Map();
-const env = { SESSIONS: { idFromName: x => x, get(code) {
+const env = { TEACHER_PASSCODE: 'test-teacher-passcode', SESSIONS: { idFromName: x => x, get(code) {
   if (!rooms.has(code)) {
     const data = new Map();
     rooms.set(code, new QuestSession({ blockConcurrencyWhile: fn => fn(), storage: {
@@ -22,12 +22,13 @@ async function drain(until) {
   for (let i = 0; i < 80; i++) { if (until()) return; await new Promise(r => setTimeout(r, 2)); }
   assert.ok(until(), 'UI did not settle');
 }
-async function mount(href, entry = 'app.js', fail = false, identity = null) {
+async function mount(href, entry = 'app.js', fail = false, identity = null, {passcode = true} = {}) {
   const win = new Window({ url: href, settings: { disableCSSFileLoading: true, disableJavaScriptFileLoading: true } });
   const timers = [], alerts = [], requests = [], rectangles = [];
   const code=new URL(href).searchParams.get('session');
   if(identity){win.localStorage.setItem(`mq-device-${code}`,identity);win.localStorage.setItem(`mq-student-${code}`,rooms.get(code).state.students[identity].credential);}
   if(code&&!new URL(href).searchParams.has('student'))win.localStorage.setItem(`mq-teacher-${code}`,rooms.get(code)?.state.teacherKey||'');
+  if(!code&&passcode)win.localStorage.setItem('mq-teacher-passcode','test-teacher-passcode');
   const saved = new Map();
   function set(name, value) { saved.set(name, Object.getOwnPropertyDescriptor(globalThis, name)); Object.defineProperty(globalThis, name, { value, writable: true, configurable: true }); }
   for (const name of ['window', 'document', 'location', 'history', 'localStorage', 'Image', 'Audio']) set(name, name === 'window' ? win : win[name]);
@@ -52,6 +53,7 @@ async function mount(href, entry = 'app.js', fail = false, identity = null) {
     win.document.body.innerHTML = html.slice(html.indexOf('<main>'), html.indexOf('</main>') + 7);
   }
   await import(`../public/${entry}?test=${crypto.randomUUID()}`);
+  if(entry==='app.js'&&!code&&passcode)await drain(()=>win.document.querySelector('#create'));
   return { win, timers, alerts, requests, rectangles, async close() {
     await win.happyDOM.abort();
     for (const [name, descriptor] of saved) if (descriptor) Object.defineProperty(globalThis, name, descriptor); else delete globalThis[name];
@@ -61,10 +63,10 @@ async function mount(href, entry = 'app.js', fail = false, identity = null) {
 test('neutral builder requires an explicit cartridge and switches metadata without changing the platform brand',async()=>{
  const ui=await mount(page),doc=ui.win.document;
  try{
-  assert.equal(doc.title,'MathQuest 0.13.0');assert.equal(doc.querySelector('#create').disabled,true);assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('.game-card'),null);
+  assert.equal(doc.title,'MathQuest 0.14.0');assert.equal(doc.querySelector('#create').disabled,true);assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('.game-card'),null);
   for(const [id,title] of [['vault-7','Vault 7'],['nightfall','Nightfall: Last Bus Out'],['','']]){
    const select=doc.querySelector('#cartridge-select');select.value=id;select.dispatchEvent(new ui.win.Event('change'));
-   assert.equal(doc.title,'MathQuest 0.13.0');assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('#create').disabled,!id);
+   assert.equal(doc.title,'MathQuest 0.14.0');assert.equal(doc.querySelector('.hero .mq-mark').textContent,'MQ');assert.equal(doc.querySelector('#create').disabled,!id);
    if(id)assert.equal(doc.querySelector('.game-card b').textContent,title);else assert.equal(doc.querySelector('.game-card'),null);
   }
  }finally{await ui.close();}
@@ -97,7 +99,7 @@ test('teacher creation opens the GitHub project dashboard; its QR contains the s
 });
 
 test('join fields retain focus and text across a GitHub-hosted polling refresh', async () => {
-  const response = await worker.fetch(new Request('https://relay/api/sessions', { method: 'POST', body: JSON.stringify({ teamNames: ['One'] }) }), env);
+  const response = await worker.fetch(new Request('https://relay/api/sessions',{method:'POST',headers:{'x-mathquest-teacher':'test-teacher-passcode'}, body: JSON.stringify({ teamNames: ['One'] }) }), env);
   const created = await response.json();
   const ui = await mount(`${page}?session=${created.code}&student=1`);
   try {
@@ -115,22 +117,22 @@ test('join fields retain focus and text across a GitHub-hosted polling refresh',
 });
 
 test('Nightfall join starts neutral, resolves while typing, and clears cartridge identity on expiry',async()=>{
- const created=await (await worker.fetch(new Request('https://relay/api/sessions',{method:'POST',body:JSON.stringify({cartridgeId:'nightfall',teamNames:['Crew']})}),env)).json();
+ const created=await (await worker.fetch(new Request('https://relay/api/sessions',{method:'POST',headers:{'x-mathquest-teacher':'test-teacher-passcode'},body:JSON.stringify({cartridgeId:'nightfall',teamNames:['Crew']})}),env)).json();
  const ui=await mount(`${page}?session=${created.code}&student=1`),doc=ui.win.document;
  try{
   assert.doesNotMatch(doc.body.textContent,/VII|Vault 7/);
   const pin=doc.querySelector('#pin');pin.focus();pin.value='ABCD';
   await ui.timers[0]();
   assert.equal(doc.querySelector('#pin'),pin);assert.equal(pin.value,'ABCD');assert.equal(doc.querySelector('#join').disabled,false);
-  assert.equal(doc.querySelector('[data-join-title]').textContent,'Nightfall: Last Bus Out');assert.equal(doc.title,'MathQuest 0.13.0 — Nightfall: Last Bus Out');assert.equal(doc.querySelector('.mq-mark').textContent,'NF');
+  assert.equal(doc.querySelector('[data-join-title]').textContent,'Nightfall: Last Bus Out');assert.equal(doc.title,'MathQuest 0.14.0 — Nightfall: Last Bus Out');assert.equal(doc.querySelector('.mq-mark').textContent,'NF');
   ui.win.dispatchEvent(new ui.win.CustomEvent('mq-session-gone',{detail:{code:created.code}}));
-  assert.equal(doc.title,'MathQuest 0.13.0');assert.equal(doc.documentElement.dataset.theme,'mathquest');assert.doesNotMatch(doc.body.textContent,/Nightfall|VII|Vault 7/);assert.match(doc.body.textContent,/Session closed/);
+  assert.equal(doc.title,'MathQuest 0.14.0');assert.equal(doc.documentElement.dataset.theme,'mathquest');assert.doesNotMatch(doc.body.textContent,/Nightfall|VII|Vault 7/);assert.match(doc.body.textContent,/Session closed/);
  }finally{await ui.close();}
 });
 
 test('failed session lookup displays the connection error without a cartridge fallback',async()=>{
  const ui=await mount(`${page}?session=BAD123&student=1`,'app.js',true);
- try{await ui.timers[0]();assert.match(ui.win.document.body.textContent,/HTTP 404/);assert.doesNotMatch(ui.win.document.body.textContent,/Vault 7|VII|Nightfall/);assert.equal(ui.win.document.title,'MathQuest 0.13.0');}finally{await ui.close();}
+ try{await ui.timers[0]();assert.match(ui.win.document.body.textContent,/HTTP 404/);assert.doesNotMatch(ui.win.document.body.textContent,/Vault 7|VII|Nightfall/);assert.equal(ui.win.document.title,'MathQuest 0.14.0');}finally{await ui.close();}
 });
 
 test('connection page completes both checks and exposes the game link only on success', async () => {
@@ -159,7 +161,7 @@ test('a missing relay produces an actionable failure and allows another test', a
 });
 
 test('Nightfall rendered student flow reaches a personalized ending with no legacy market renderer',async()=>{
- const created=await (await worker.fetch(new Request('https://relay/api/sessions',{method:'POST',body:JSON.stringify({cartridgeId:'nightfall',teamNames:['Crew'],gateCount:3,modules:[{source:'custom',title:'Checks',items:[1,2,3].map(i=>({prompt:`Enter one ${i}`,answer_type:'integer',answer:'1'}))}]})}),env)).json();
+ const created=await (await worker.fetch(new Request('https://relay/api/sessions',{method:'POST',headers:{'x-mathquest-teacher':'test-teacher-passcode'},body:JSON.stringify({cartridgeId:'nightfall',teamNames:['Crew'],gateCount:3,modules:[{source:'custom',title:'Checks',items:[1,2,3].map(i=>({prompt:`Enter one ${i}`,answer_type:'integer',answer:'1'}))}]})}),env)).json();
  const room=rooms.get(created.code),deviceId='nf-ui',studentCredential=crypto.randomUUID();
  const cmd=async(type,extra={})=>room.fetch(new Request('https://room/command',{method:'POST',headers:{authorization:'Bearer '+(extra.teacherKey||studentCredential)},body:JSON.stringify({type,deviceId,commandId:crypto.randomUUID(),...extra})}));
  await cmd('student.join',{alias:'Falcon',teamPin:room.state.teams['team-1'].pin});await cmd('teacher.start',{teacherKey:created.teacherKey});
@@ -177,5 +179,17 @@ test('Nightfall rendered student flow reaches a personalized ending with no lega
   await click('[data-equipment=vest]',()=>Object.hasOwn(room.state.teams['team-1'].marketSelections,deviceId));await drain(()=>!ui.win.document.querySelector('[data-action="market.ready"]').disabled);await click('[data-action="market.ready"]',()=>room.state.teams['team-1'].marketReady[deviceId]);await drain(()=>!ui.win.document.querySelector('[data-action="market.commit"]').disabled);await click('[data-action="market.commit"]',()=>room.state.teams['team-1'].inventory.length===1);await click('[data-action="market.continue"]',has('[data-assist]'));
 
   ui.win.document.querySelector('[data-assist]').click();await click('[data-start]',has('[data-safe]'));for(let i=0;i<6;i++)ui.win.document.querySelector('[data-safe]').click();await drain(has('[data-exp-vote="depart"]'));await click('[data-exp-vote="depart"]',()=>room.state.teams['team-1'].finalVotes[deviceId]==='depart');await drain(()=>!ui.win.document.querySelector('[data-action="choice.resolve"]').disabled);await click('[data-action="choice.resolve"]',()=>ui.win.document.body.textContent.includes('personal record'));assert.match(ui.win.document.body.textContent,/The Lights Behind Us/);assert.equal(ui.alerts.length,0);
+ }finally{await ui.close();}
+});
+
+test('v0.14.0: the setup page asks for the teacher passcode and hides Developer tools until it is accepted',async()=>{
+ const ui=await mount(page,'app.js',false,null,{passcode:false}),doc=ui.win.document;
+ try{
+  assert.ok(doc.querySelector('[data-gate]'));assert.equal(doc.querySelector('#create'),null);assert.equal(doc.querySelector('#developer-tools'),null);
+  const form=doc.querySelector('[data-gate]'),input=form.querySelector('input');
+  input.value='wrong-passcode';form.dispatchEvent(new ui.win.Event('submit',{cancelable:true}));await drain(()=>/not recognized/i.test(form.querySelector('.mq-gate-error').textContent));
+  assert.match(form.querySelector('.mq-gate-error').textContent,/not recognized/i);assert.equal(doc.querySelector('#create'),null);
+  input.value='test-teacher-passcode';form.dispatchEvent(new ui.win.Event('submit',{cancelable:true}));await drain(()=>doc.querySelector('#create'));
+  assert.ok(doc.querySelector('#create'));assert.equal(ui.win.localStorage.getItem('mq-teacher-passcode'),'test-teacher-passcode');
  }finally{await ui.close();}
 });

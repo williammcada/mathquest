@@ -1,5 +1,5 @@
-import { HOSTING } from './hosting-config.js?v=0.13.0';
-import {credentialFor,forgetRoom} from './privacy.js?v=0.13.0';
+import { HOSTING } from './hosting-config.js?v=0.14.0';
+import {credentialFor,forgetRoom} from './privacy.js?v=0.14.0';
 
 // Keep the repository directory in every navigation and QR link. The API is
 // deliberately separate: student browsers never connect to workers.dev.

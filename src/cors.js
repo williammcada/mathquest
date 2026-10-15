@@ -4,7 +4,7 @@ const DEFAULT_ORIGINS = [
   'https://mcada-mathquest.onrender.com'
 ];
 const METHODS = ['GET', 'POST'];
-const HEADERS = ['content-type', 'accept','authorization'];
+const HEADERS = ['content-type', 'accept','authorization','x-mathquest-teacher'];
 
 function addVary(headers, names) {
   const existing = (headers.get('vary') || '').split(',').map(s => s.trim()).filter(Boolean);

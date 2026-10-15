@@ -344,3 +344,7 @@ Owner reported that Blackout and recent game changes had not reached MathQuest. 
 
 Approved [change specification](change-specs/v0.13.0-controls-sound.md). MathQuest becomes the single owner of the U-17 pads (`public/engine/pad.js`) and the iPad sound unlock (`public/engine/audio-unlock.js`); Math Arcade receives them by its sync and then removes its own copies. Cross for Nightfall 1 and False Haven; 8-direction pad for Journey, Coastal Escape and Ironbreak. Frontend only. Implementation checkpoint — [record](releases/v0.13.0-controls-sound.md). The math-escape audit found two open loopholes needing an owner decision (no teacher sign-in: public Developer tools links; open room creation).
 
+## MathQuest v0.14.0 — teacher passcode — 15 October 2026
+
+Owner-approved after the v0.13.0 audit: room creation, answer previews, the setup page's Developer tools and every practice/DEV/review page are now behind one teacher passcode held only as the Worker secret `TEACHER_PASSCODE`. Worker and frontend 0.14.0 deploy together. Implementation checkpoint — [record and go-live steps](releases/v0.14.0-teacher-passcode.md).
+

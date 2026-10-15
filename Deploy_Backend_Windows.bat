@@ -1,5 +1,5 @@
 @echo off
-title MathQuest v0.10.1 - frontend and session engine
+title MathQuest v0.14.0 - session engine (teacher passcode)
 cd /d "%~dp0"
 where node >nul 2>nul
 if errorlevel 1 (
@@ -24,8 +24,8 @@ echo Frontend source belongs in public in the GitHub repository. Do not copy it 
 echo Publish the matching GitHub candidate when you are ready for hosted review.
 echo Keep GitHub Pages set to main and / (root).
 echo The Netlify relay needs to remain active. No Netlify upload is normally required.
-echo Read docs/releases/v0.10.0.md for deployment and test instructions.
-echo Then confirm https://vault7mathquest.netlify.app/api/health reports version 0.10.1.
+echo Read docs/releases/v0.14.0-teacher-passcode.md for deployment and test instructions.
+echo Then confirm https://mcada-mathquest.onrender.com/api/health reports version 0.14.0.
 pause
 exit /b 0
 :failed
