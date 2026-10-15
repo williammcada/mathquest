@@ -2,10 +2,10 @@
 // 48-second stage theme / 36-second boss theme, eight bars each at 80/106.67 bpm.
 export class JourneyAudio {
   constructor(){this.music=true;this.effects=true;this.lastEvent=0;this.voices=new Set();this.step=0;this.next=0;this.lastFx=new Map();}
-  async unlock(){const AC=globalThis.AudioContext||globalThis.webkitAudioContext;if(!AC)return;this.ctx??=new AC();if(this.ctx.state==='suspended')await this.ctx.resume();this.timer??=setInterval(()=>this.tick(),50);}
+  async unlock(){const AC=globalThis.AudioContext||globalThis.webkitAudioContext;if(!AC)return;this.ctx??=new AC();if(!this.out){/* v0.13.0: Journey's synth is quiet on iPad speakers: 3× master volume through a limiter. A host that already boosts (destination is a GainNode) is left alone. */const d=this.ctx.destination;if(typeof GainNode!=='undefined'&&d instanceof GainNode)this.out=d;else{const g=this.ctx.createGain(),l=this.ctx.createDynamicsCompressor();g.gain.value=3;l.threshold.value=-6;l.knee.value=6;l.ratio.value=12;l.attack.value=.003;l.release.value=.15;g.connect(l);l.connect(d);this.out=g;}}if(this.ctx.state==='suspended')await this.ctx.resume();this.timer??=setInterval(()=>this.tick(),50);}
   tone(hz,time,duration,gain=.035,type='triangle'){
     if(!this.ctx||this.voices.size>=32)return;
-    const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.setValueAtTime(hz,time);g.gain.setValueAtTime(.0001,time);g.gain.exponentialRampToValueAtTime(gain,time+.008);g.gain.exponentialRampToValueAtTime(.0001,time+duration);o.connect(g);g.connect(this.ctx.destination);this.voices.add(o);o.onended=()=>{this.voices.delete(o);o.disconnect();g.disconnect();};o.start(time);o.stop(time+duration+.01);
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.setValueAtTime(hz,time);g.gain.setValueAtTime(.0001,time);g.gain.exponentialRampToValueAtTime(gain,time+.008);g.gain.exponentialRampToValueAtTime(.0001,time+duration);o.connect(g);g.connect(this.out);this.voices.add(o);o.onended=()=>{this.voices.delete(o);o.disconnect();g.disconnect();};o.start(time);o.stop(time+duration+.01);
   }
   // Short original Foley layers. Noise buffers are reused, while each voice
   // owns its own filter/envelope and disconnects when finished.
@@ -15,14 +15,14 @@ export class JourneyAudio {
     const src=this.ctx.createBufferSource(),filter=this.ctx.createBiquadFilter(),g=this.ctx.createGain();
     src.buffer=this.noiseBuffer;filter.type='bandpass';filter.frequency.setValueAtTime(frequency,time);filter.Q.value=q;
     g.gain.setValueAtTime(.0001,time);g.gain.exponentialRampToValueAtTime(gain,time+.006);g.gain.exponentialRampToValueAtTime(.0001,time+duration);
-    src.connect(filter);filter.connect(g);g.connect(this.ctx.destination);this.voices.add(src);
+    src.connect(filter);filter.connect(g);g.connect(this.out);this.voices.add(src);
     src.onended=()=>{this.voices.delete(src);src.disconnect();filter.disconnect();g.disconnect();};src.start(time,(this.variant||0)*.043%Math.max(.1,1-duration));src.stop(time+duration+.01);
   }
   sweep(from,to,time,duration,gain,type='sine'){
     if(!this.ctx||this.voices.size>=32)return;
     const o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.setValueAtTime(from,time);o.frequency.exponentialRampToValueAtTime(to,time+duration);
     g.gain.setValueAtTime(.0001,time);g.gain.exponentialRampToValueAtTime(gain,time+.008);g.gain.exponentialRampToValueAtTime(.0001,time+duration);
-    o.connect(g);g.connect(this.ctx.destination);this.voices.add(o);o.onended=()=>{this.voices.delete(o);o.disconnect();g.disconnect();};o.start(time);o.stop(time+duration+.01);
+    o.connect(g);g.connect(this.out);this.voices.add(o);o.onended=()=>{this.voices.delete(o);o.disconnect();g.disconnect();};o.start(time);o.stop(time+duration+.01);
   }
   silence(){for(const v of this.voices)try{v.stop();}catch{}this.voices.clear();this.next=0;}
   sync(s){const stopped=s.paused||!['running','launch'].includes(s.phase)||document.hidden;

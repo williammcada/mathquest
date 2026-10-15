@@ -339,3 +339,8 @@ Owner-approved Stage B of williammcada/blackout-protocol (spec: `change-specs/bl
 ## MathQuest v0.12.0 — Blackout Protocol and Nightfall art integrated — 14 October 2026
 
 Owner reported that Blackout and recent game changes had not reached MathQuest. Branch audit: the difficulty revision, Math Engine and Kingsgate were on `main`; Nightfall Art Direction v1.0.0 (`implement/nightfall-art-v1.0.0`) and Blackout Protocol v0.2.1 (PR #11) had never been merged. Both are merged on top of 0.11.0 as platform 0.12.0, keeping Kingsgate and the Render hosting changes. See [v0.12.0 release notes](releases/v0.12.0.md). Frontend and Worker deploy together. Local suite 309/319 (10 `happy-dom` files Not run locally; GitHub CI runs them); build passed. Hosted, classroom and iPad checks: Not run.
+
+## MathQuest v0.13.0 — shared D-pads and iPad sound — 15 October 2026
+
+Approved [change specification](change-specs/v0.13.0-controls-sound.md). MathQuest becomes the single owner of the U-17 pads (`public/engine/pad.js`) and the iPad sound unlock (`public/engine/audio-unlock.js`); Math Arcade receives them by its sync and then removes its own copies. Cross for Nightfall 1 and False Haven; 8-direction pad for Journey, Coastal Escape and Ironbreak. Frontend only. Implementation checkpoint — [record](releases/v0.13.0-controls-sound.md). The math-escape audit found two open loopholes needing an owner decision (no teacher sign-in: public Developer tools links; open room creation).
+

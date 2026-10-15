@@ -1,5 +1,6 @@
 import {ironbreakAdapter as adapter} from './adapter.js';
 import {bindInput} from './input.js';
+import {padHtml} from '../../engine/pad.js?v=1';
 import {clearInput} from './simulation.js';
 import {ShooterAudio} from './audio.js';
 import {IRONBREAK,GUIDED} from '../../cartridges/ironbreak.js';
@@ -13,7 +14,7 @@ export class IronbreakHost{
   this.render();this.fit();this.frame=requestAnimationFrame(t=>this.tick(t));
  }
  render(){
-  this.root.innerHTML=`<section class="ib-host"><div class="ib-toolbar"><strong>IRONBREAK <small>v0.2.1 · cartridge candidate</small></strong><button data-pause>Resume</button><button data-help>Controls</button><button data-sound>Sound on</button><button data-fire>Fire ON</button><button data-assist>Guided play</button><button data-reset>Reset controls</button></div><div class="nf-hud"><span data-health></span><span data-lives></span><b data-clock></b><span data-gear></span></div><div class="ib-stage"><div class="ib-pad" role="group" aria-label="Eight-direction movement and aiming"><span>↖ ↑ ↗\n← · →\n↙ ↓ ↘</span><i class="pad-dot"></i></div><canvas width="640" height="360" aria-label="Ironbreak robot foundry"></canvas><button class="ib-jump">JUMP</button><div class="ib-overlay" role="dialog" aria-modal="true" aria-label="Ironbreak operation"></div></div><div class="ib-status mq-objective" role="status"></div><footer>A WILLIAM MCADA PRODUCT · Individual suit, shared crew clock</footer></section>`;
+  this.root.innerHTML=`<section class="ib-host"><div class="ib-toolbar"><strong>IRONBREAK <small>v0.2.1 · cartridge candidate</small></strong><button data-pause>Resume</button><button data-help>Controls</button><button data-sound>Sound on</button><button data-fire>Fire ON</button><button data-assist>Guided play</button><button data-reset>Reset controls</button></div><div class="nf-hud"><span data-health></span><span data-lives></span><b data-clock></b><span data-gear></span></div><div class="ib-stage">${padHtml('eight',{label:'8-direction movement and aiming',cls:'ib-pad'})}<canvas width="640" height="360" aria-label="Ironbreak robot foundry"></canvas><button class="ib-jump">JUMP</button><div class="ib-overlay" role="dialog" aria-modal="true" aria-label="Ironbreak operation"></div></div><div class="ib-status mq-objective" role="status"></div><footer>A WILLIAM MCADA PRODUCT · Individual suit, shared crew clock</footer></section>`;
   const q=s=>this.root.querySelector(s);this.shell=q('.ib-host');this.panel=q('.ib-overlay');this.canvas=q('canvas');this.ctx=this.canvas.getContext('2d');this.status=q('.ib-status');
   this.binding=bindInput({root:this.shell,pad:q('.ib-pad'),jump:q('.ib-jump'),signal:this.ac.signal,blocked:()=>this.blocked(),onPause:()=>this.pause(),onFire:()=>this.toggleFire()});
   const on=(el,event,fn)=>el.addEventListener(event,fn,{signal:this.ac.signal});
