@@ -7,7 +7,7 @@ const assert=require('node:assert/strict');
  const teacher=await browser.newPage({viewport:{width:1280,height:900}});
  teacher.on('pageerror',e=>errors.push(e.message));
  await teacher.goto(base);await teacher.selectOption('#cartridge-select','nightfall');assert.match(await teacher.locator('#create').innerText(),/Nightfall/);
- const created=await teacher.evaluate(async()=>{const r=await fetch('/api/sessions',{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cartridgeId:'nightfall',teamNames:['Night Crew','Empty'],gateCount:3,modules:[{source:'custom',title:'Smoke',items:[1,2,3].map(i=>({prompt:`Enter 1 (${i})`,answer_type:'integer',answer:'1'}))}]})});return r.json();});
+ const created=await teacher.evaluate(async passcode=>{const r=await fetch('/api/sessions',{method:'POST',headers:{'content-type':'application/json','x-mathquest-teacher':passcode},body:JSON.stringify({cartridgeId:'nightfall',teamNames:['Night Crew','Empty'],gateCount:3,modules:[{source:'custom',title:'Smoke',items:[1,2,3].map(i=>({prompt:`Enter 1 (${i})`,answer_type:'integer',answer:'1'}))}]})},process.env.MQ_TEACHER_PASSCODE||'');return r.json();});
  assert.ok(created.code,JSON.stringify(created));
  await teacher.goto(`${base}/?session=${created.code}&teacher=${created.teacherKey}`);await teacher.waitForSelector('.pin');
  const pin=await teacher.locator('.pin').first().innerText();

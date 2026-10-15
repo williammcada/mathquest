@@ -24,9 +24,20 @@ import {configureSupply,awardSupply} from './engine/supply.js';
 
 const ACTIVE_MS = 20_000;
 export const RETENTION_MS=48*60*60*1000;
-const VERSION = "0.12.0";
+const VERSION = "0.14.0";
+// Constant-time check of the teacher passcode against the TEACHER_PASSCODE secret (never stored in the repo).
+async function teacherGate(request, env) {
+  const secret = typeof env.TEACHER_PASSCODE === "string" ? env.TEACHER_PASSCODE : "";
+  if (secret.length < 8) return json({ error: "The teacher passcode is not set up on the server yet." }, { status: 503 });
+  const given = request.headers.get("x-mathquest-teacher") || "";
+  const enc = new TextEncoder();
+  const [a, b] = await Promise.all([given, secret].map(v => crypto.subtle.digest("SHA-256", enc.encode(v))));
+  const x = new Uint8Array(a), y = new Uint8Array(b);
+  let diff = 0; for (let i = 0; i < x.length; i++) diff |= x[i] ^ y[i];
+  return diff === 0 && given.length > 0 ? null : json({ error: "Teacher passcode not recognized." }, { status: 403 });
+}
 // Supported room versions: v0.9.2 and v0.9.4 onward, including every 0.10.x build (rooms survive candidate updates).
-const supportedEngine=version=>["0.9.2","0.9.4","0.9.5","0.9.6","0.9.7","0.9.8","0.11.0",VERSION].includes(version)||/^0\.10\.\d+(?:-rc\.\d+)?$/.test(String(version));
+const supportedEngine=version=>["0.9.2","0.9.4","0.9.5","0.9.6","0.9.7","0.9.8","0.11.0","0.12.0",VERSION].includes(version)||/^0\.10\.\d+(?:-rc\.\d+)?$/.test(String(version));
 const DIFFICULTY_POLICIES = ["session", "foundation", "standard", "challenge"];
 const GATE_PATHS = {
   3: ["Perimeter Power", "Containment Laboratory", "Isolation Core"],
@@ -165,13 +176,22 @@ async function routeRequest(request, env) {
       modules: engineCatalogSummary(),
       legacyModules: LEGACY_MODULE_MAP
     });
+    // v0.14.0 teacher passcode (Worker secret TEACHER_PASSCODE). Room creation and answer previews are teacher-only.
+    if (url.pathname === "/api/teacher-check" && request.method === "POST") {
+      const gate = await teacherGate(request, env);
+      return gate || json({ ok: true });
+    }
     if (url.pathname === "/api/engine-preview" && request.method === "POST") {
+      const gate = await teacherGate(request, env);
+      if (gate) return gate;
       let input = {};
       try { input = await request.json(); } catch { /* empty */ }
       const ids = Array.isArray(input.ids) ? input.ids.map(String).slice(0, 20) : [];
       return json({ engine: ENGINE, items: enginePreview(ids) });
     }
     if (url.pathname === "/api/sessions" && request.method === "POST") {
+      const gate = await teacherGate(request, env);
+      if (gate) return gate;
       let input = {};
       try { input = await request.json(); } catch { /* defaults */ }
       const code = randomCode();

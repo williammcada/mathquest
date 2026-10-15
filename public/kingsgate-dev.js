@@ -1,5 +1,5 @@
 // Kingsgate owner DEV playtest (handbook U-13). Same game code as the classroom run; no questions, no records.
-import {GameHost} from './engine/game-host.js?v=0.13.0';
+import {GameHost} from './engine/game-host.js?v=0.14.0';
 import {showDevPanel,devBanner} from './engine/dev-playtest.js';
 import {kingsgateAdapter,VERSION} from './games/kingsgate/adapter.js?v=0.1.0';
 import {EQUIPMENT,WAVE_COUNT} from './games/kingsgate/config.js?v=0.1.0';

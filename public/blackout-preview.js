@@ -2,7 +2,7 @@
 // Runs the same adapter and puzzle core as the classroom cartridge, in practice mode: no server, no records.
 import {reviewParagraphs} from './review-presentation.js?v=u11';
 import {BLACKOUT as c,blackoutScene,BLACKOUT_PERSONAL} from './cartridges/blackout.js?v=0.2.1';
-import {GameHost} from './engine/game-host.js?v=0.13.0';
+import {GameHost} from './engine/game-host.js?v=0.14.0';
 import {blackoutAdapter} from './games/blackout/adapter.js?v=0.2.1';
 import C from './games/blackout/core.js';
 import {showDevPanel,devBanner,DEV_STYLE} from './engine/dev-playtest.js';

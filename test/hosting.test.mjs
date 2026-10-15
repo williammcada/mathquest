@@ -12,7 +12,7 @@ const page = `${origin}/mathquest/`;
 const relay = new URL(HOSTING.relayApiBase).origin;
 function environment() {
   const rooms = new Map();
-  return { rooms, SESSIONS: {
+  return { rooms, TEACHER_PASSCODE: 'test-teacher-passcode', SESSIONS: {
     idFromName: name => name,
     get(name) {
       if (!rooms.has(name)) {
@@ -29,7 +29,7 @@ function environment() {
 function request(path, method = 'GET', body, requestOrigin = origin) {
   const query=new URL(path,'https://test/').searchParams,teacher=body?.teacherKey||query.get('teacherKey'),id=body?.deviceId||query.get('deviceId');if(id&&!studentCredentials.has(id))studentCredentials.set(id,crypto.randomUUID());const credential=teacher||(id&&studentCredentials.get(id));
   return new Request(`${relay}/api/${path}`, {
-    method, headers: { ...(credential?{authorization:'Bearer '+credential}:{}), ...(requestOrigin ? { origin: requestOrigin } : {}), ...(body ? { 'content-type': 'application/json' } : {}) },
+    method, headers: { 'x-mathquest-teacher': 'test-teacher-passcode', ...(credential?{authorization:'Bearer '+credential}:{}), ...(requestOrigin ? { origin: requestOrigin } : {}), ...(body ? { 'content-type': 'application/json' } : {}) },
     ...(body ? { body: JSON.stringify(body) } : {})
   });
 }
@@ -42,7 +42,7 @@ function cors(response) {
   assert.equal(response.headers.get('access-control-allow-origin'), origin);
   assert.match(response.headers.get('vary'), /Origin/);
   assert.equal(response.headers.get('cache-control'), 'no-store');
-  assert.equal(response.headers.get('x-mathquest-version'), '0.12.0');
+  assert.equal(response.headers.get('x-mathquest-version'), '0.14.0');
   assert.equal(response.headers.get('access-control-allow-credentials'), null);
 }
 

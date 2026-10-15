@@ -115,11 +115,11 @@ test("default session content comes from the engine when no modules are chosen",
 
 test("catalog and preview endpoints expose the engine without answers leaking into student state", async () => {
   const { default: worker } = await import("../src/worker.js");
-  const env = { SESSIONS: { idFromName: () => ({}), get: () => ({}) } };
+  const env = { TEACHER_PASSCODE: 'test-teacher-passcode', SESSIONS: { idFromName: () => ({}), get: () => ({}) } };
   const catalog = await (await worker.fetch(new Request("https://api.example/api/catalog"), env)).json();
   assert.equal(catalog.engine.version, ENGINE.version);
   assert.equal(catalog.modules.length, 1763);
-  const preview = await (await worker.fetch(new Request("https://api.example/api/engine-preview", { method: "POST", body: JSON.stringify({ ids: ["k-next", "bank:algebra-2-en:node:142", "nope"] }) }), env)).json();
+  const preview = await (await worker.fetch(new Request("https://api.example/api/engine-preview", { method: "POST", headers: { "x-mathquest-teacher": "test-teacher-passcode" }, body: JSON.stringify({ ids: ["k-next", "bank:algebra-2-en:node:142", "nope"] }) }), env)).json();
   assert.equal(preview.items.length, 2);
   assert.ok(preview.items.every(i => i.prompt && i.answer));
 });

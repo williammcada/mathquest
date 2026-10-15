@@ -1,25 +1,26 @@
 import {splitScene,instructionPanel} from './review-presentation.js?v=u11';
-import {JourneyHost} from './games/journey/host.js?v=0.13.0';
+import {JourneyHost} from './games/journey/host.js?v=0.14.0';
 let journeyHost=null;
-import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.13.0';
+import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.14.0';
 import {IronbreakHost} from './games/shooter/host.js?v=ironbreak-0.2.0';
-import {RescueHost} from './games/nightfall/rescue-host.js?v=0.13.0';
-import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.13.0';
-import { hostingFor, fetchApi } from './hosting.js?v=0.13.0';
-import { CATALOG } from './catalog.js?v=0.13.0'; // retired MathQuest module titles only
-import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.13.0';
-import { StealthRuntime } from './stealth.js?v=0.13.0';
-import { SceneAssets } from './vault7-assets.js?v=0.13.0';
-import { TeacherAudio } from './teacher-audio.js?v=0.13.0';
-import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.13.0';
-import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.13.0';
-import { FinaleHost } from './finale-host.js?v=0.13.0';
-import { CartridgeAudio } from './cartridge-audio.js?v=0.13.0';
-import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.13.0';
-import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.13.0';
-import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.13.0';
+import {RescueHost} from './games/nightfall/rescue-host.js?v=0.14.0';
+import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.14.0';
+import { hostingFor, fetchApi } from './hosting.js?v=0.14.0';
+import { CATALOG } from './catalog.js?v=0.14.0'; // retired MathQuest module titles only
+import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.14.0';
+import { StealthRuntime } from './stealth.js?v=0.14.0';
+import { SceneAssets } from './vault7-assets.js?v=0.14.0';
+import { TeacherAudio } from './teacher-audio.js?v=0.14.0';
+import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.14.0';
+import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.14.0';
+import { FinaleHost } from './finale-host.js?v=0.14.0';
+import { CartridgeAudio } from './cartridge-audio.js?v=0.14.0';
+import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.14.0';
+import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.14.0';
+import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.14.0';
+import {storedPasscode,forgetPasscode,teacherHeaders,checkPasscode,gateHtml,bindGate,ensureGateStyle} from './engine/teacher-gate.js?v=0.14.0';
 forgetExpiredRooms();
-import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.13.0';
+import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.14.0';
 let setupCartridge='';
 let finaleHost=null;
 const app = document.querySelector("#app");
@@ -154,7 +155,18 @@ function syncSetup() {
   });
 }
 
+// v0.14.0: the setup page (room creation, Developer tools) is teacher-only behind the Worker's passcode.
+let teacherAccess=storedPasscode()?'checking':'locked';
+if(teacherAccess==='checking')checkPasscode(storedPasscode()).then(r=>{teacherAccess=r.ok?'open':'locked';if(!session)render();});
+function renderTeacherGate(){
+  ensureGateStyle(document);
+  app.innerHTML=shell(teacherAccess==='checking'?'<p class="mq-gate" style="text-align:center">Checking teacher access…</p>':gateHtml({title:`${BRAND.name} · teacher setup`,note:'Creating a classroom session is for the teacher. Enter the teacher passcode.'}));
+  bindGate(app,()=>{teacherAccess='open';render();});
+}
+function teacherLocked(){forgetPasscode();teacherAccess='locked';render();}
+app.addEventListener('click',e=>{if(e.target?.id==='forget-passcode'&&confirm('Forget the teacher passcode on this computer? You will need it again to create a session.'))teacherLocked();});
 function renderLanding() {
+  if(teacherAccess!=='open')return renderTeacherGate();
   const gateCount = setupGates;
   const questionTotal = totalQuestions();
   const distribution = gateLoads(questionTotal, gateCount);
@@ -171,7 +183,7 @@ function renderLanding() {
   const previewMarkup = mathPreview ? `<section class="engine-preview" aria-live="polite"><div class="section-title"><h3>Preview · ${escapeHtml(mathPreview.title)}</h3><button class="quiet" id="close-math-preview">Close preview</button></div>${mathPreview.error?`<p class="notice bad">${escapeHtml(mathPreview.error)}</p>`:mathPreview.items?mathPreview.items.map(q=>`<article class="preview-question"><small>${escapeHtml(q.title)}</small><div class="problem">${q.promptMarkup||escapeHtml(q.prompt)}</div><p class="fine">Answer: <b>${escapeHtml(q.answer)}</b></p></article>`).join(''):'<p class="fine">Loading sample questions…</p>'}<p class="fine">Preview only. Nothing is saved and no student data changes.</p></section>` : '';
   const customCards = customModules.map((module, index) => `<article class="module-card selected custom"><div><b>${escapeHtml(module.title)}</b><small>Teacher module · ${module.items.length} questions</small></div><button class="remove-module" data-remove-custom="${index}" aria-label="Remove ${escapeHtml(module.title)}">Remove</button></article>`).join("");
   app.innerHTML = shell(`
-    <section class="hero platform-hero"><div><p class="eyebrow">TEACHER SESSION BUILDER</p><h1>${BRAND.name}</h1><p>Choose the story. Control every question.</p></div>${markMarkup()}</section>
+    <section class="hero platform-hero"><div><p class="eyebrow">TEACHER SESSION BUILDER</p><h1>${BRAND.name}</h1><p>Choose the story. Control every question.</p><button class="quiet" id="forget-passcode" type="button">Forget teacher passcode on this computer</button></div>${markMarkup()}</section>
     <section class="panel setup-builder">
       <h2>1 · Game Select</h2>
       <label>Cartridge<select id="cartridge-select"><option value="" ${!setupCartridge?'selected':''}>Choose a cartridge…</option>${CARTRIDGES.map(c=>`<option value="${c.id}" ${setupCartridge===c.id?'selected':''}>${escapeHtml(c.title)}</option>`).join('')}</select></label>
@@ -240,7 +252,7 @@ async function previewMath(id) {
   mathPreview = { title: mathTitle(id), items: null };
   renderLanding();
   try {
-    const result = await parseResponse(await fetchApi(hosting.api('engine-preview'), { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ ids }) }));
+    const result = await parseResponse(await fetchApi(hosting.api('engine-preview'), { method: 'POST', headers: teacherHeaders({ 'content-type': 'application/json' }), body: JSON.stringify({ ids }) }));
     if (mathPreview?.title === mathTitle(id)) mathPreview.items = result.items || [];
   } catch (error) {
     if (mathPreview) mathPreview.error = `Preview unavailable: ${error.message}`;
@@ -353,7 +365,7 @@ async function createSession() {
     ];
     const response = await fetchApi(hosting.api("sessions"), {
       method: "POST",
-      headers: { "content-type": "application/json" },
+      headers: teacherHeaders({ "content-type": "application/json" }),
       body: JSON.stringify({
         teamNames,
         cartridgeId: setupCartridge,
@@ -364,6 +376,7 @@ async function createSession() {
         excludedSecretIds: recentSecretIds()
       })
     });
+    if (response.status === 403) { teacherLocked(); return; }
     const result = await parseResponse(response);
     localStorage.setItem(`mq-teacher-${result.code}`, result.teacherKey);
     location.href = hosting.sessionLink(result.code);
