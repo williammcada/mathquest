@@ -1,4 +1,4 @@
-// Blackout Protocol cartridge v0.2.1 (MathQuest 0.12.0): classroom flow, validation, reports, adapter.
+// Blackout Protocol cartridge v0.2.1 (MathQuest 0.13.0): classroom flow, validation, reports, adapter.
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {QuestSession} from './authenticated-session.mjs';
