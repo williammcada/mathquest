@@ -1,8 +1,8 @@
-import {createState,step,completeTask,nextObjective,dist} from './simulation.js?v=0.12.0';
-import {render,loadArt,MEDIA} from './renderer.js?v=0.12.0';
-import {CONTROL_PROFILES} from '../../engine/controls.js?v=0.12.0';
-import {HAVEN_REVISION,HAVEN_TASKS,havenEnvironment,havenFinale,havenTick} from './false-haven-world.js?v=0.12.0';
-import {solid,worldFor} from './world.js?v=0.12.0';
+import {createState,step,completeTask,nextObjective,dist} from './simulation.js?v=0.14.0';
+import {render,loadArt,MEDIA} from './renderer.js?v=0.14.0';
+import {CONTROL_PROFILES} from '../../engine/controls.js?v=0.14.0';
+import {HAVEN_REVISION,HAVEN_TASKS,havenEnvironment,havenFinale,havenTick} from './false-haven-world.js?v=0.14.0';
+import {solid,worldFor} from './world.js?v=0.14.0';
 export function createHaven(run={}){
  const s=createState(run.loadout||[], 'clinic',run.threat??1,'false-haven'),raw=run.snapshot;
  s.runId=run.runId;s.route=run.route||'shelter';s.mode=run.mode||'action';

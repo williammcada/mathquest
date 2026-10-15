@@ -1,4 +1,4 @@
-import {droneEmitter,conePolygon} from './stealth-core.js?v=0.12.0';
+import {droneEmitter,conePolygon} from './stealth-core.js?v=0.14.0';
 // Vector hardware, drawn at device resolution. Geometry is tied to the
 // simulation's actual gate edges, not floating door symbols.
 export function drawHardware(c,s,t){

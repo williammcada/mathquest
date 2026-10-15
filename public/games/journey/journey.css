@@ -20,7 +20,7 @@
 @media(orientation:landscape) and (max-height:500px){
  .j-match .j-heading>div{display:flex;align-items:baseline;gap:10px}.j-match .j-heading small{display:none}
  .j-match .j-player span{display:none}.j-match .j-player{font-size:11px}.j-match .j-player small{font-size:10px}
- .j-match .j-tools span{display:none}.j-match .j-controls{height:76px}.j-match .j-dpad{height:76px;line-height:24px}
+ .j-match .j-tools span{display:none}.j-match .j-controls{height:auto}.j-match .j-dpad{height:76px;line-height:24px}
 }
 
 @media(orientation:landscape) and (max-height:500px) and (min-width:568px){
@@ -28,3 +28,6 @@
  .j-match .j-tools button{padding:4px 8px;font-size:11px}
  .j-match:has(.j-message:not(:empty)) .j-tools{position:static}
 }
+
+/* v0.13.0 U-17: 8-direction pad from engine/pad.js; compact sizes in match layouts. */
+.j-controls .ap-pad{--c:46px}.j-match .j-controls .ap-pad{--c:40px}.j-match .j-controls .ap-cell{font-size:18px}

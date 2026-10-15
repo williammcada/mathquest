@@ -1,15 +1,15 @@
 <!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#091725"><title>MathQuest · Ironbreak Practice v0.2.0</title><link rel="stylesheet" href="practice-shooter.css"></head>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#091725"><title>MathQuest · Ironbreak Practice v0.2.0</title><link rel="stylesheet" href="practice-shooter.css"><script type="module" src="./engine/teacher-guard.js?v=0.14.0"></script></head>
 <body><main id="app">
   <header><span class="brand">MATHQUEST <small>IRONBREAK</small></span><nav aria-label="Game controls"><button id="pause">Pause</button><button id="help">Controls</button><button id="sound">Sound on</button><button id="restart">Restart</button></nav></header>
   <div id="hud" aria-live="off"><span id="health">Health ● ● ●</span><span id="lives">Lives 3</span><span id="clock">5:00</span><span id="checkpoint">START</span><span id="gear">Standard suit</span></div>
   <section id="stage" aria-label="Industrial shooter play area">
     <div id="screen"><canvas id="game" width="640" height="360" aria-label="Side-scrolling robot shooter. Use the direction pad and Jump, or arrows and Space."></canvas></div>
-    <div id="left-rail"><div id="pad" role="group" aria-label="Eight-direction movement and aim pad"><span class="up">↑</span><span class="down">↓</span><span class="left">←</span><span class="right">→</span><span class="nw">↖</span><span class="ne">↗</span><span class="sw">↙</span><span class="se">↘</span><i class="pad-dot"></i></div><span class="rail-label">MOVE / AIM</span></div>
+    <div id="left-rail"><div id="pad" class="ap-pad ap-eight" data-ap-pad data-pad-mode="eight" role="group" aria-label="8-direction movement and aim pad"><span class="ap-cell ap-up-left" data-pad-cell="up-left" aria-hidden="true">◤</span><span class="ap-cell ap-up" data-pad-cell="up" aria-hidden="true">▲</span><span class="ap-cell ap-up-right" data-pad-cell="up-right" aria-hidden="true">◥</span><span class="ap-cell ap-left" data-pad-cell="left" aria-hidden="true">◀</span><span class="ap-cell ap-right" data-pad-cell="right" aria-hidden="true">▶</span><span class="ap-cell ap-down-left" data-pad-cell="down-left" aria-hidden="true">◣</span><span class="ap-cell ap-down" data-pad-cell="down" aria-hidden="true">▼</span><span class="ap-cell ap-down-right" data-pad-cell="down-right" aria-hidden="true">◢</span></div><span class="rail-label">MOVE / AIM</span></div>
     <div id="right-rail"><button id="jump" aria-label="Jump; hold for a full jump">JUMP</button><button id="fire" aria-pressed="true">Fire ON</button></div>
     <div id="overlay" role="dialog" aria-modal="true" aria-labelledby="overlay-title"></div>
     <div id="rotate" hidden><strong>Rotate to landscape</strong><p>Then tap Resume. The five-minute clock continues.</p></div>
   </section>
   <footer><span id="identity"></span><span>PRACTICE · A WILLIAM MCADA PRODUCT</span></footer>
   <div id="status" role="status"></div>
-</main><script type="module" src="practice-shooter.js?v=0.2.0"></script></body></html>
+</main><script src="./engine/audio-unlock.js?v=0.14.0"></script><script type="module" src="practice-shooter.js?v=0.2.0"></script></body></html>

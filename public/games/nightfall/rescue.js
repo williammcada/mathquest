@@ -1,6 +1,6 @@
-import {createState,step,move,dist,breakWindow,triggerDistraction} from './simulation.js?v=0.12.0';
-import {solid} from './world.js?v=0.12.0';
-import {RESCUE_REVISION,RESCUE_START,TERMINAL,rescueEnemies,rescueCaller} from './rescue-world.js?v=0.12.0';
+import {createState,step,move,dist,breakWindow,triggerDistraction} from './simulation.js?v=0.14.0';
+import {solid} from './world.js?v=0.14.0';
+import {RESCUE_REVISION,RESCUE_START,TERMINAL,rescueEnemies,rescueCaller} from './rescue-world.js?v=0.14.0';
 
 export function createRescue(route='clinic'){
  const s=createState([],route,1);

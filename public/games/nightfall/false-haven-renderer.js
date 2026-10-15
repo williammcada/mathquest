@@ -1,5 +1,5 @@
-import {HAVEN_SWITCHES,trolleyRect,TROLLEY_START,TROLLEY_END} from './false-haven-world.js?v=0.12.0';
-import {sprite,strip,CELL} from './sprites.js?v=0.12.0';
+import {HAVEN_SWITCHES,trolleyRect,TROLLEY_START,TROLLEY_END} from './false-haven-world.js?v=0.14.0';
+import {sprite,strip,CELL} from './sprites.js?v=0.14.0';
 // False Haven environment drawing. Every object comes from a sprite sheet
 // (NF-ART-01); text appears only on sprite sign boards and short prompts.
 

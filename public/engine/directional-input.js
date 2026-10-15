@@ -1,4 +1,5 @@
 import {bindHeldInput} from './held-input.js?v=1';
+import {padDirection,highlightPad} from './pad.js?v=1';
 // Opt-in free-movement profile. Existing tank/platform input is unchanged.
 export const DIRECTIONAL_KEYS={arrowup:'up',w:'up',arrowdown:'down',s:'down',arrowleft:'left',a:'left',arrowright:'right',d:'right'};
 export function directionAt(x,y,width,height){
@@ -11,7 +12,7 @@ export function directionAt(x,y,width,height){
 }
 export function bindDirectionalInput(root,options){
  const pad=root.querySelector('[data-dpad]');
- return bindHeldInput(root,{...options,keys:DIRECTIONAL_KEYS,zones:[{element:pad,read:point=>{const r=pad.getBoundingClientRect();return directionAt(point.clientX-r.left,point.clientY-r.top,r.width,r.height);}}],
-  onChange:value=>{root.querySelectorAll('[data-direction]').forEach(b=>b.classList.toggle('held',!!value[b.dataset.direction]));options.onChange(value);}
+ return bindHeldInput(root,{...options,keys:DIRECTIONAL_KEYS,zones:[{element:pad,read:point=>{const r=pad.getBoundingClientRect();return padDirection('eight',point.clientX-r.left,point.clientY-r.top,r.width,r.height);}}],
+  onChange:value=>{root.querySelectorAll('[data-direction]').forEach(b=>b.classList.toggle('held',!!value[b.dataset.direction]));highlightPad(pad,value);options.onChange(value);}
  });
 }

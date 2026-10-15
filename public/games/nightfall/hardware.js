@@ -1,5 +1,5 @@
-import {propBounds,worldFor} from './world.js?v=0.12.0';
-import {sprite,CELL} from './sprites.js?v=0.12.0';
+import {propBounds,worldFor} from './world.js?v=0.14.0';
+import {sprite,CELL} from './sprites.js?v=0.14.0';
 // Authored vehicles from the same prop atlas as the bus; collision stays unchanged.
 export function alarmLight(p,s,reducedMotion=false){
  const {DISTRACTIONS}=worldFor(s);

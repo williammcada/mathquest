@@ -1,7 +1,7 @@
-import {havenWorld} from './false-haven-world.js?v=0.12.0';
-import {rescueWorld} from './rescue-world.js?v=0.12.0';
-import {CONFIG_REVISION,threatFor} from './config.js?v=0.12.0';
-import {furnitureSolids} from './interiors.js?v=0.12.0';
+import {havenWorld} from './false-haven-world.js?v=0.14.0';
+import {rescueWorld} from './rescue-world.js?v=0.14.0';
+import {CONFIG_REVISION,threatFor} from './config.js?v=0.14.0';
+import {furnitureSolids} from './interiors.js?v=0.14.0';
 export const REVISION=CONFIG_REVISION;
 export const WORLD={width:2560,height:1280,tile:32,bus:{x:1168,y:1120}};
 export const BUILDINGS=[

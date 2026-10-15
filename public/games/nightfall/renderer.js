@@ -1,8 +1,8 @@
-import {havenGroundTile,drawHavenTask,drawHavenWall,drawHavenUnder,drawHavenOver,signBoard} from './false-haven-renderer.js?v=0.12.0';
-import {WORLD,BUILDINGS,TASKS,PICKUPS,PROPS,DISTRACTIONS,doorRects,propBounds,walls,nextObjective,worldFor} from './world.js?v=0.12.0';
-import {drawCar,drawFixtures} from './hardware.js?v=0.12.0';
-import {SHEETS,sprite,strip,tiled,CELL} from './sprites.js?v=0.12.0';
-import {interiorItems,roofFor,SIGN_SIDE} from './interiors.js?v=0.12.0';
+import {havenGroundTile,drawHavenTask,drawHavenWall,drawHavenUnder,drawHavenOver,signBoard} from './false-haven-renderer.js?v=0.14.0';
+import {WORLD,BUILDINGS,TASKS,PICKUPS,PROPS,DISTRACTIONS,doorRects,propBounds,walls,nextObjective,worldFor} from './world.js?v=0.14.0';
+import {drawCar,drawFixtures} from './hardware.js?v=0.14.0';
+import {SHEETS,sprite,strip,tiled,CELL} from './sprites.js?v=0.14.0';
+import {interiorItems,roofFor,SIGN_SIDE} from './interiors.js?v=0.14.0';
 const motionPreference=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
 export const MEDIA={actors:'./assets/nightfall/city/actors.png',tiles:'./assets/nightfall/city/tiles.png',props:'./assets/nightfall/city/props.png',...SHEETS,ambient:'./assets/nightfall/city/ambient.mp3',danger:'./assets/nightfall/city/danger.mp3',ending:'./assets/nightfall/city/ending.mp3',effects:'./assets/nightfall/city/effects.wav',sfx:Object.fromEntries(['step','shot','shotgun','glass','alarm','moan','enemy-death','breach'].map(k=>[k,'./assets/nightfall/city/v092/'+k+'.wav']))};
 // Decoded sizes: shared 1024 px sheets decode at 512 px, ample for on-screen sizes.
