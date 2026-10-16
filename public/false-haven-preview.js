@@ -1,8 +1,8 @@
 import {reviewParagraphs} from './review-presentation.js?v=u11';
-import {FALSE_HAVEN as c,havenScene,HAVEN_PERSONAL} from './cartridges/false-haven.js?v=0.14.1';
+import {FALSE_HAVEN as c,havenScene,HAVEN_PERSONAL} from './cartridges/false-haven.js?v=0.14.2';
 const gateNames=(c,n)=>[...c.gates.slice(0,2),...c.inserts.slice(0,n-3),c.gates[2]];
-import {GameHost} from './engine/game-host.js?v=0.14.1';
-import {falseHavenAdapter} from './games/nightfall/false-haven-adapter.js?v=0.14.1';
+import {GameHost} from './engine/game-host.js?v=0.14.2';
+import {falseHavenAdapter} from './games/nightfall/false-haven-adapter.js?v=0.14.2';
 const root=document.querySelector('#story'),crew=[{alias:'Alex'},{alias:'Rowan'}];let gates=3,names=gateNames(c,gates),team={stage:'briefing',gateIndex:0,inventory:[],runs:{}},host,css,returnButton;
 const audio=new Audio(c.assets.ambient);audio.loop=true;audio.volume=.2;let musicOn=false;
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
