@@ -44,10 +44,10 @@ function answerTypeFor(item) {
 }
 
 /** Build a MathQuest item record from an engine item. */
-export function engineQuestion(engineId, seed, { moduleId, moduleTitle, policy = 'session', requestedId = engineId, linked = true } = {}) {
+export function engineQuestion(engineId, seed, { moduleId, moduleTitle, policy = 'session', requestedId = engineId, linked = true, index = 0 } = {}) {
   const entry = Engine.find(engineId);
   if (!entry) return null;
-  const item = Engine.generate(engineId, { seed: typeof seed === 'number' ? seed : String(seed), index: 0 });
+  const item = Engine.generate(engineId, { seed: typeof seed === 'number' ? seed : String(seed), index });
   const answerType = answerTypeFor(item);
   return {
     id: `${engineId}-${hashSeed(`${seed}:${engineId}`)}`,
@@ -93,9 +93,12 @@ export function engineCatalogSummary() {
   return Engine.catalog.map(e => ({ id: e.id, title: e.name, layer: e.layer, grade: e.gradeLabel, bankId: e.bankId, lesson: e.lessonLabel || null }));
 }
 
-export function enginePreview(ids) {
+export const PREVIEW_VARIANT_MAX = 9999;
+/** Teacher preview. Variant 0 is the original sample; each later variant is the Engine's next index for the same seed (0.14.1). */
+export function enginePreview(ids, variant = 0) {
+  const v = Number.isSafeInteger(variant) && variant >= 0 ? Math.min(variant, PREVIEW_VARIANT_MAX) : 0;
   return ids.slice(0, 20).filter(id => Engine.find(id)).map(id => {
-    const q = engineQuestion(id, `preview:${id}`, {});
-    return { id, title: engineTitle(id), prompt: q.prompt, promptMarkup: q.promptMarkup, answer: q.answer, answerType: q.answerType };
+    const q = engineQuestion(id, `preview:${id}`, { index: v });
+    return { id, title: engineTitle(id), variant: v, prompt: q.prompt, promptMarkup: q.promptMarkup, answer: q.answer, answerType: q.answerType };
   });
 }

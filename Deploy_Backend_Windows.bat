@@ -1,5 +1,5 @@
 @echo off
-title MathQuest v0.14.0 - session engine (teacher passcode)
+title MathQuest v0.14.1 - session engine (preview variants)
 cd /d "%~dp0"
 where node >nul 2>nul
 if errorlevel 1 (
@@ -25,7 +25,7 @@ echo Publish the matching GitHub candidate when you are ready for hosted review.
 echo Keep GitHub Pages set to main and / (root).
 echo The Netlify relay needs to remain active. No Netlify upload is normally required.
 echo Read docs/releases/v0.14.0-teacher-passcode.md for deployment and test instructions.
-echo Then confirm https://mcada-mathquest.onrender.com/api/health reports version 0.14.0.
+echo Then confirm https://mcada-mathquest.onrender.com/api/health reports version 0.14.1.
 pause
 exit /b 0
 :failed

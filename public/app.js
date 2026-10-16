@@ -1,26 +1,26 @@
 import {splitScene,instructionPanel} from './review-presentation.js?v=u11';
-import {JourneyHost} from './games/journey/host.js?v=0.14.0';
+import {JourneyHost} from './games/journey/host.js?v=0.14.1';
 let journeyHost=null;
-import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.14.0';
+import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.14.1';
 import {IronbreakHost} from './games/shooter/host.js?v=ironbreak-0.2.0';
-import {RescueHost} from './games/nightfall/rescue-host.js?v=0.14.0';
-import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.14.0';
-import { hostingFor, fetchApi } from './hosting.js?v=0.14.0';
-import { CATALOG } from './catalog.js?v=0.14.0'; // retired MathQuest module titles only
-import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.14.0';
-import { StealthRuntime } from './stealth.js?v=0.14.0';
-import { SceneAssets } from './vault7-assets.js?v=0.14.0';
-import { TeacherAudio } from './teacher-audio.js?v=0.14.0';
-import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.14.0';
-import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.14.0';
-import { FinaleHost } from './finale-host.js?v=0.14.0';
-import { CartridgeAudio } from './cartridge-audio.js?v=0.14.0';
-import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.14.0';
-import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.14.0';
-import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.14.0';
-import {storedPasscode,forgetPasscode,teacherHeaders,checkPasscode,gateHtml,bindGate,ensureGateStyle} from './engine/teacher-gate.js?v=0.14.0';
+import {RescueHost} from './games/nightfall/rescue-host.js?v=0.14.1';
+import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.14.1';
+import { hostingFor, fetchApi } from './hosting.js?v=0.14.1';
+import { CATALOG } from './catalog.js?v=0.14.1'; // retired MathQuest module titles only
+import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.14.1';
+import { StealthRuntime } from './stealth.js?v=0.14.1';
+import { SceneAssets } from './vault7-assets.js?v=0.14.1';
+import { TeacherAudio } from './teacher-audio.js?v=0.14.1';
+import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.14.1';
+import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.14.1';
+import { FinaleHost } from './finale-host.js?v=0.14.1';
+import { CartridgeAudio } from './cartridge-audio.js?v=0.14.1';
+import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.14.1';
+import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.14.1';
+import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.14.1';
+import {storedPasscode,forgetPasscode,teacherHeaders,checkPasscode,gateHtml,bindGate,ensureGateStyle} from './engine/teacher-gate.js?v=0.14.1';
 forgetExpiredRooms();
-import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.14.0';
+import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.14.1';
 let setupCartridge='';
 let finaleHost=null;
 const app = document.querySelector("#app");
@@ -180,7 +180,7 @@ function renderLanding() {
     <div><b>${escapeHtml(mathTitle(record.id))}</b><small>${escapeHtml(mathWhere(record.id))}</small></div>
     <div class="module-settings"><label>Questions<input type="number" data-count min="1" max="50" value="${record.itemCount}"></label><button class="quiet" data-preview-math="${escapeHtml(record.id)}">Preview</button><button class="remove-module" data-remove-math="${escapeHtml(record.id)}" aria-label="Remove ${escapeHtml(mathTitle(record.id))}">Remove</button></div>
   </article>`).join("");
-  const previewMarkup = mathPreview ? `<section class="engine-preview" aria-live="polite"><div class="section-title"><h3>Preview · ${escapeHtml(mathPreview.title)}</h3><button class="quiet" id="close-math-preview">Close preview</button></div>${mathPreview.error?`<p class="notice bad">${escapeHtml(mathPreview.error)}</p>`:mathPreview.items?mathPreview.items.map(q=>`<article class="preview-question"><small>${escapeHtml(q.title)}</small><div class="problem">${q.promptMarkup||escapeHtml(q.prompt)}</div><p class="fine">Answer: <b>${escapeHtml(q.answer)}</b></p></article>`).join(''):'<p class="fine">Loading sample questions…</p>'}<p class="fine">Preview only. Nothing is saved and no student data changes.</p></section>` : '';
+  const previewMarkup = mathPreview ? `<section class="engine-preview" aria-live="polite"><div class="section-title"><h3>Preview · ${escapeHtml(mathPreview.title)} <small class="fine">Variant ${(mathPreview.variant||0)+1}</small></h3><div class="preview-actions"><button id="next-math-variant"${mathPreview.items||mathPreview.error?'':' disabled'}>Next variant</button><button class="quiet" id="close-math-preview">Close preview</button></div></div>${mathPreview.error?`<p class="notice bad">${escapeHtml(mathPreview.error)}</p>`:mathPreview.items?mathPreview.items.map(q=>`<article class="preview-question"><small>${escapeHtml(q.title)}</small><div class="problem">${q.promptMarkup||escapeHtml(q.prompt)}</div><p class="fine">Answer: <b>${escapeHtml(q.answer)}</b></p></article>`).join(''):'<p class="fine">Loading sample questions…</p>'}<p class="fine">Preview only. Nothing is saved and no student data changes.</p></section>` : '';
   const customCards = customModules.map((module, index) => `<article class="module-card selected custom"><div><b>${escapeHtml(module.title)}</b><small>Teacher module · ${module.items.length} questions</small></div><button class="remove-module" data-remove-custom="${index}" aria-label="Remove ${escapeHtml(module.title)}">Remove</button></article>`).join("");
   app.innerHTML = shell(`
     <section class="hero platform-hero"><div><p class="eyebrow">TEACHER SESSION BUILDER</p><h1>${BRAND.name}</h1><p>Choose the story. Control every question.</p><button class="quiet" id="forget-passcode" type="button">Forget teacher passcode on this computer</button></div>${markMarkup()}</section>
@@ -228,6 +228,7 @@ function bindSetup() {
   document.querySelectorAll("[data-remove-math]").forEach(button => button.onclick = () => { captureSetup(); selectedMath = selectedMath.filter(r => r.id !== button.dataset.removeMath); renderLanding(); });
   document.querySelectorAll("[data-preview-math]").forEach(button => button.onclick = () => previewMath(button.dataset.previewMath));
   document.querySelector("#close-math-preview")?.addEventListener("click", () => { mathPreview = null; renderLanding(); });
+  document.querySelector("#next-math-variant")?.addEventListener("click", () => { if (mathPreview) previewMath(mathPreview.id, (mathPreview.variant || 0) + 1); });
   document.querySelector("#math-level")?.addEventListener("change", event => { captureSetup(); pickerLevel = event.target.value; pickerLimit = 40; renderLanding(); });
   document.querySelector("#math-more")?.addEventListener("click", () => { captureSetup(); pickerLimit += 40; renderLanding(); });
   let searchTimer = null;
@@ -246,16 +247,19 @@ function bindSetup() {
   document.querySelector("#reset-bulk-count")?.addEventListener("click", resetBulkQuestionCounts);
 }
 
-async function previewMath(id) {
+async function previewMath(id, variant = 0) {
   captureSetup();
   const ids = LEGACY_MODULE_MAP[id] || [id];
-  mathPreview = { title: mathTitle(id), items: null };
+  const request = { id, variant };
+  mathPreview = { id, title: mathTitle(id), variant, items: null, request };
   renderLanding();
   try {
-    const result = await parseResponse(await fetchApi(hosting.api('engine-preview'), { method: 'POST', headers: teacherHeaders({ 'content-type': 'application/json' }), body: JSON.stringify({ ids }) }));
-    if (mathPreview?.title === mathTitle(id)) mathPreview.items = result.items || [];
+    const result = await parseResponse(await fetchApi(hosting.api('engine-preview'), { method: 'POST', headers: teacherHeaders({ 'content-type': 'application/json' }), body: JSON.stringify({ ids, variant }) }));
+    if (mathPreview?.request !== request) return;
+    mathPreview.items = result.items || [];
   } catch (error) {
-    if (mathPreview) mathPreview.error = `Preview unavailable: ${error.message}`;
+    if (mathPreview?.request !== request) return;
+    mathPreview.error = `Preview unavailable: ${error.message}`;
   }
   renderLanding();
 }
