@@ -3,7 +3,7 @@ from pathlib import Path
 from PIL import Image
 import numpy as np
 import json
-im=Image.open(Path('public/assets/journey/bajie-repair-stage3.png'))
+im=Image.open(Path('art-source/journey/bajie-repair-stage3.png'))
 assert im.mode=='RGBA' and im.size==(1536,1024)
 a=np.array(im)[:,:,3]
 rows=[0,341,683,1024]

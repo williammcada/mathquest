@@ -2,7 +2,7 @@ from pathlib import Path
 from PIL import Image
 import numpy as np
 import json
-root=Path('public/assets/journey')
+root=Path('art-source/journey')
 manifest=json.loads((root/'stage4-repair-manifest.json').read_text())
 audit=json.loads((root/'frame-bounds-audit.json').read_text())
 results=[]

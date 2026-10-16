@@ -6,7 +6,7 @@ from PIL import Image
 import numpy as np
 from scipy.ndimage import label,find_objects
 import json
-root=Path('public/assets/journey');frames={};summary={}
+root=Path('art-source/journey');frames={};summary={}
 for hero,file in [('wukong','wukong-stage1.png'),('bajie','bajie-stage2.png'),('wujing','wujing-stage2.png'),('tang','tang-stage2.png'),('prince','prince-stage2.png')]:
  a=np.array(Image.open(root/file))[:,:,3];labels,n=label(a>100);parts=[]
  for ident,sl in enumerate(find_objects(labels),1):
