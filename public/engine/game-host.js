@@ -1,6 +1,6 @@
-import {bindGameInput,controlMarkup,crispCanvas} from './controls.js?v=0.14.0';
-import {registerRecord} from '../privacy.js?v=0.14.0';
-import {GameAudio} from './game-audio.js?v=0.14.0';
+import {bindGameInput,controlMarkup,crispCanvas} from './controls.js?v=0.14.1';
+import {registerRecord} from '../privacy.js?v=0.14.1';
+import {GameAudio} from './game-audio.js?v=0.14.1';
 
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export class GameHost {

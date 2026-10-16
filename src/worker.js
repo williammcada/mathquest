@@ -24,7 +24,7 @@ import {configureSupply,awardSupply} from './engine/supply.js';
 
 const ACTIVE_MS = 20_000;
 export const RETENTION_MS=48*60*60*1000;
-const VERSION = "0.14.0";
+const VERSION = "0.14.1";
 // Constant-time check of the teacher passcode against the TEACHER_PASSCODE secret (never stored in the repo).
 async function teacherGate(request, env) {
   const secret = typeof env.TEACHER_PASSCODE === "string" ? env.TEACHER_PASSCODE : "";
@@ -187,7 +187,8 @@ async function routeRequest(request, env) {
       let input = {};
       try { input = await request.json(); } catch { /* empty */ }
       const ids = Array.isArray(input.ids) ? input.ids.map(String).slice(0, 20) : [];
-      return json({ engine: ENGINE, items: enginePreview(ids) });
+      const variant = Number.isSafeInteger(input.variant) && input.variant >= 0 ? input.variant : 0;
+      return json({ engine: ENGINE, items: enginePreview(ids, variant) });
     }
     if (url.pathname === "/api/sessions" && request.method === "POST") {
       const gate = await teacherGate(request, env);
