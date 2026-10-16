@@ -32,3 +32,7 @@ from the prompts in [the sprite brief](art/NIGHTFALL-SPRITE-BRIEF-v1.md):
 - Roof cells 0–3 were made opaque and edge-blended so they tile seamlessly; cell 3 tiles left–right only.
 
 **Accepted:** all 80 cells present in brief order, with no readable text, logos or gore.
+
+## WebP delivery — 16 October 2026
+
+Format conversion only, approved by the owner (game-loading change specification). The city atlases (`actors`, `tiles`, `props`) are served as lossless WebP with identical pixels; the five shared NF-ART-01 sheets (`interactables`, `furniture`, `decals`, `roofs`, `machinery`) are served as 512 px WebP at quality 90, the size the renderer already decoded them to. The 1024 px PNG originals are in `art-source/`. Maker and provenance are unchanged. Rebuild with `python3 scripts/art/convert-webp.py`.

@@ -1,7 +1,7 @@
-import {GameHost} from '../../engine/game-host.js?v=0.14.1';
-import {rescueAdapter} from './rescue-adapter.js?v=0.14.1';
-import {createRescue,checkpointFor} from './rescue.js?v=0.14.1';
-import {RESCUE_WINDOW_MS} from './rescue-world.js?v=0.14.1';
+import {GameHost} from '../../engine/game-host.js?v=0.14.2';
+import {rescueAdapter} from './rescue-adapter.js?v=0.14.2';
+import {createRescue,checkpointFor} from './rescue.js?v=0.14.2';
+import {RESCUE_WINDOW_MS} from './rescue-world.js?v=0.14.2';
 
 export class RescueHost extends GameHost{
  constructor(root,options){

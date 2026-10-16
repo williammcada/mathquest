@@ -10,7 +10,7 @@ export class JourneyRenderer {
   constructor(canvas){this.canvas=canvas;this.ctx=canvas.getContext('2d');this.images={};this.frames=new Map();this.snapshot=null;this.started=performance.now();
     // Scenery starts first so sprite-atlas downloads cannot starve the backdrop.
     for(const env of ENVIRONMENTS)this.loadImage('environment-'+env.id,env.file,true);
-    for(const [key,file] of [...Object.entries(HERO_ART).map(([key,art])=>[key,art.file]),...Object.entries(ENEMY_ART).map(([key,art])=>[key,art.file]),['baozi','baozi-stage9.png'],['elixir','elixir-stage9.png'],['crate','crate-stage9.png'],['enemy-repairs',ENEMY_REPAIR_FILE],['enemy','raider-stage1.png'],['horse','prince-charge-stage3.png'],...Object.entries(REPAIR_ATLASES)]){this.loadImage(key,file);}this.images.hero=this.images.wukong;
+    for(const [key,file] of [...Object.entries(HERO_ART).map(([key,art])=>[key,art.file]),...Object.entries(ENEMY_ART).map(([key,art])=>[key,art.file]),['baozi','baozi-stage9.webp'],['elixir','elixir-stage9.webp'],['crate','crate-stage9.webp'],['enemy-repairs',ENEMY_REPAIR_FILE],['enemy','raider-stage1.webp'],['horse','prince-charge-stage3.webp'],...Object.entries(REPAIR_ATLASES)]){this.loadImage(key,file);}this.images.hero=this.images.wukong;
 
   }
   loadImage(key,file,priority=false){

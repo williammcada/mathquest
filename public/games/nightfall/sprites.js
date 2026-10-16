@@ -1,11 +1,11 @@
 // Nightfall shared sprite sheets (NF-ART-01). Every world object is drawn from a
 // predesigned 1024×1024, 4×4 sheet; this module only maps cells to screen boxes.
 export const SHEETS={
- interactables:'./assets/nightfall/shared/interactables-v1.png',
- furniture:'./assets/nightfall/shared/furniture-v1.png',
- decals:'./assets/nightfall/shared/decals-v1.png',
- roofs:'./assets/nightfall/shared/roofs-v1.png',
- machinery:'./assets/false-haven/machinery-v1.png'
+ interactables:'./assets/nightfall/shared/interactables-v1.webp',
+ furniture:'./assets/nightfall/shared/furniture-v1.webp',
+ decals:'./assets/nightfall/shared/decals-v1.webp',
+ roofs:'./assets/nightfall/shared/roofs-v1.webp',
+ machinery:'./assets/false-haven/machinery-v1.webp'
 };
 // Opaque bounds of each cell in sheet pixels [x,y,w,h], measured from the committed
 // sheets so sprites fill their collision boxes instead of their padded cells.

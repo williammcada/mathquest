@@ -1,11 +1,11 @@
-import {havenGroundTile,drawHavenTask,drawHavenWall,drawHavenUnder,drawHavenOver,signBoard} from './false-haven-renderer.js?v=0.14.1';
-import {WORLD,BUILDINGS,TASKS,PICKUPS,PROPS,DISTRACTIONS,doorRects,propBounds,walls,nextObjective,worldFor} from './world.js?v=0.14.1';
-import {drawCar,drawFixtures} from './hardware.js?v=0.14.1';
-import {SHEETS,sprite,strip,tiled,CELL} from './sprites.js?v=0.14.1';
-import {interiorItems,roofFor,SIGN_SIDE} from './interiors.js?v=0.14.1';
+import {havenGroundTile,drawHavenTask,drawHavenWall,drawHavenUnder,drawHavenOver,signBoard} from './false-haven-renderer.js?v=0.14.2';
+import {WORLD,BUILDINGS,TASKS,PICKUPS,PROPS,DISTRACTIONS,doorRects,propBounds,walls,nextObjective,worldFor} from './world.js?v=0.14.2';
+import {drawCar,drawFixtures} from './hardware.js?v=0.14.2';
+import {SHEETS,sprite,strip,tiled,CELL} from './sprites.js?v=0.14.2';
+import {interiorItems,roofFor,SIGN_SIDE} from './interiors.js?v=0.14.2';
 const motionPreference=globalThis.matchMedia?.('(prefers-reduced-motion: reduce)');
-export const MEDIA={actors:'./assets/nightfall/city/actors.png',tiles:'./assets/nightfall/city/tiles.png',props:'./assets/nightfall/city/props.png',...SHEETS,ambient:'./assets/nightfall/city/ambient.mp3',danger:'./assets/nightfall/city/danger.mp3',ending:'./assets/nightfall/city/ending.mp3',effects:'./assets/nightfall/city/effects.wav',sfx:Object.fromEntries(['step','shot','shotgun','glass','alarm','moan','enemy-death','breach'].map(k=>[k,'./assets/nightfall/city/v092/'+k+'.wav']))};
-// Decoded sizes: shared 1024 px sheets decode at 512 px, ample for on-screen sizes.
+export const MEDIA={actors:'./assets/nightfall/city/actors.webp',tiles:'./assets/nightfall/city/tiles.webp',props:'./assets/nightfall/city/props.webp',...SHEETS,ambient:'./assets/nightfall/city/ambient.mp3',danger:'./assets/nightfall/city/danger.mp3',ending:'./assets/nightfall/city/ending.mp3',effects:'./assets/nightfall/city/effects.wav',sfx:Object.fromEntries(['step','shot','shotgun','glass','alarm','moan','enemy-death','breach'].map(k=>[k,'./assets/nightfall/city/v092/'+k+'.wav']))};
+// Decoded sizes: shared sheets ship at 512 px WebP (1024 px PNG originals in art-source/), ample for on-screen sizes.
 const SIZES={tiles:[256,256],props:[512,512],actors:[736,580],interactables:[512,512],furniture:[512,512],decals:[512,512],roofs:[512,512],machinery:[512,512]};
 export async function loadArt(media=MEDIA){const art={};await Promise.all(Object.keys(SIZES).map(key=>new Promise((resolve,reject)=>{const im=new Image();im.onload=async()=>{try{const [width,height]=SIZES[key];art[key]=globalThis.createImageBitmap?await createImageBitmap(im,{resizeWidth:width,resizeHeight:height,resizeQuality:key==='tiles'||key==='actors'?'pixelated':'high'}):im;resolve();}catch(error){reject(error);}};im.onerror=()=>reject(new Error(`Missing or invalid image: ${media[key]}`));im.src=media[key];})));return art;}
 function cell(c,im,n,cols,rows,x,y,w,h){if(!im)return;const sw=im.width/cols,sh=im.height/rows;c.drawImage(im,(n%cols)*sw,Math.floor(n/cols)*sh,sw,sh,x,y,w,h);}

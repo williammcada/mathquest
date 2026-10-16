@@ -17,7 +17,7 @@ for name,file,cols,rows in [('actors','exec-58cbf09a-30d4-4a57-afbb-3d16aaacccd7
     if box:cell=cell.crop(box)
     cell.thumbnail((116,116),Image.Resampling.LANCZOS);out.alpha_composite(cell,(x*128+(128-cell.width)//2,y*128+(128-cell.height)//2))
    else:out.alpha_composite(cell.resize((128,128)),(x*128,y*128))
- out.save(root/(name+'.png'),optimize=True)
+ out.save(root.parents[3]/'art-source/nightfall/city'/(name+'.png'),optimize=True)  # PNG original; run scripts/art/convert-webp.py to publish WebP
 sr=22050;rng=np.random.default_rng(708)
 def save(name,data,mp3=True):
  data=np.tanh(data)*.85

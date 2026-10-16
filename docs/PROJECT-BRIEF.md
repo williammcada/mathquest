@@ -348,3 +348,7 @@ Approved [change specification](change-specs/v0.13.0-controls-sound.md). MathQue
 
 Owner-approved after the v0.13.0 audit: room creation, answer previews, the setup page's Developer tools and every practice/DEV/review page are now behind one teacher passcode held only as the Worker secret `TEACHER_PASSCODE`. Worker and frontend 0.14.0 deploy together. Implementation checkpoint — [record and go-live steps](releases/v0.14.0-teacher-passcode.md).
 
+
+## WebP game art — 16 October 2026
+
+Owner approved the cross-project game-loading plan (Math-Arcade `docs/change-specs/game-loading-2026-10-16.md`): WebP quality 90 at the same size, approval by side-by-side screenshots, PNG originals kept in `art-source/` outside the published `public/`. MathQuest notes: [webp-art-2026-10-16](change-specs/webp-art-2026-10-16.md). Branch `implement/webp-art`, implementation checkpoint `d5c8fe4`: Journey art per launch 44.8 MB → 9.7 MB; Nightfall/False Haven sheets 8.8 MB → 1.6 MB. Owner approved the visual comparison 16 October 2026. Released as frontend **0.14.2** (Worker unchanged at 0.14.1). Hosted and iPad checks pending. See [verification record](releases/webp-art-2026-10-16.md).
