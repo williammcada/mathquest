@@ -42,12 +42,13 @@ test("engine questions carry display markup, answer input and provenance", () =>
   assert.equal(checkAnswerFor(choice, choice.answer.toUpperCase()).correct, true);
   assert.equal(checkAnswerFor(choice, "Not a choice").valid, false);
   const keys = engineQuestion("g4-divide", 5) || engineQuestion("bank:course-87-en:item:SN870001", 5);
-  assert.ok(["engine-keys", "number"].includes(keys.answerType));
+  assert.equal(keys.answerType, "engine-pad"); // U-18 universal pad (0.15.0)
   const text = engineQuestion("bank:course-87-en:authored:MCADA-18.1", 2);
   assert.equal(text.answerType, "engine-text");
   assert.equal(checkAnswerFor(text, text.answer).correct, true);
   const fraction = engineQuestion("g4-equivalent", 4);
-  assert.equal(fraction.answerType, "fraction");
+  assert.equal(fraction.answerType, "engine-pad"); // fractions are typed with a slash on the U-18 pad
+  assert.equal(checkAnswerFor(fraction, fraction.answer).correct, true);
   assert.match(fraction.promptMarkup, /engine|<span|Reduce/);
 });
 
