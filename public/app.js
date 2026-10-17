@@ -1,26 +1,27 @@
 import {splitScene,instructionPanel} from './review-presentation.js?v=u11';
-import {JourneyHost} from './games/journey/host.js?v=0.14.2';
+import {JourneyHost} from './games/journey/host.js?v=0.15.0';
 let journeyHost=null;
-import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.14.2';
+import {CoastalHost} from './games/aerial-shooter/classroom-host.js?v=0.15.0';
 import {IronbreakHost} from './games/shooter/host.js?v=ironbreak-0.2.0';
-import {RescueHost} from './games/nightfall/rescue-host.js?v=0.14.2';
-import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.14.2';
-import { hostingFor, fetchApi } from './hosting.js?v=0.14.2';
-import { CATALOG } from './catalog.js?v=0.14.2'; // retired MathQuest module titles only
-import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.14.2';
-import { StealthRuntime } from './stealth.js?v=0.14.2';
-import { SceneAssets } from './vault7-assets.js?v=0.14.2';
-import { TeacherAudio } from './teacher-audio.js?v=0.14.2';
-import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.14.2';
-import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.14.2';
-import { FinaleHost } from './finale-host.js?v=0.14.2';
-import { CartridgeAudio } from './cartridge-audio.js?v=0.14.2';
-import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.14.2';
-import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.14.2';
-import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.14.2';
-import {storedPasscode,forgetPasscode,teacherHeaders,checkPasscode,gateHtml,bindGate,ensureGateStyle} from './engine/teacher-gate.js?v=0.14.2';
+import {RescueHost} from './games/nightfall/rescue-host.js?v=0.15.0';
+import {equipmentMarkup,bindEquipment} from './equipment-ui.js?v=0.15.0';
+import { hostingFor, fetchApi } from './hosting.js?v=0.15.0';
+import { CATALOG } from './catalog.js?v=0.15.0'; // retired MathQuest module titles only
+import { ENGINE_VERSION, ENGINE_ROWS, ENGINE_COURSES, LEGACY_MODULE_MAP } from './engine-catalog.js?v=0.15.0';
+import AnswerPad from './engine/answer-pad.js?v=0.15.0'; // U-18 universal answer pad, built in the Math Engine
+import { StealthRuntime } from './stealth.js?v=0.15.0';
+import { SceneAssets } from './vault7-assets.js?v=0.15.0';
+import { TeacherAudio } from './teacher-audio.js?v=0.15.0';
+import { CARTRIDGES, cartridgeFor } from './cartridges.js?v=0.15.0';
+import { expansionBody, bindExpansion } from './expansion-ui.js?v=0.15.0';
+import { FinaleHost } from './finale-host.js?v=0.15.0';
+import { CartridgeAudio } from './cartridge-audio.js?v=0.15.0';
+import {bindTeamTools,teamToolsMarkup,teamProgressMarkup} from './engine/team-tools.js?v=0.15.0';
+import {developerTools,extensionDialog} from './engine/teacher-tools.js?v=0.15.0';
+import {forgetRoom,forgetExpiredRooms} from './privacy.js?v=0.15.0';
+import {storedPasscode,forgetPasscode,teacherHeaders,checkPasscode,gateHtml,bindGate,ensureGateStyle} from './engine/teacher-gate.js?v=0.15.0';
 forgetExpiredRooms();
-import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.14.2';
+import {BRAND,presentationFor,setBrandContext,markMarkup,cartridgeCard} from './brand.js?v=0.15.0';
 let setupCartridge='';
 let finaleHost=null;
 const app = document.querySelector("#app");
@@ -38,6 +39,8 @@ let state = null;
 let notice = null;
 let busy = false;
 let draft = { main: "", whole: "", numerator: "", denominator: "", left: "", right: "", coefficient: "", exponent: "", choice: "" };
+// U-18 pad on the gate screen: one at a time; its open tab survives the poll re-render, a new question opens on 123.
+let answerPad = null, padTab = "123", padItemId = null;
 let activeField = "main";
 let customModules = [];
 let setupTeams = "Cipher, Vector";
@@ -127,6 +130,7 @@ async function command(type, extra = {}, options = {}) {
 function resetDraft() {
   draft = { main: "", whole: "", numerator: "", denominator: "", left: "", right: "", coefficient: "", exponent: "", choice: "" };
   activeField = "main";
+  padTab = "123";
 }
 
 function shell(content, compact = false) {
@@ -685,7 +689,10 @@ function answerMarkup(item) {
   if(item.answerType==='ratio') return `${slot('left','First value')} : ${slot('right','Second value')}`;
   return `${item.answerType==='money'?escapeHtml(item.currency||'$'):''}${slot('main','Answer')}${item.answerType==='percent'?'%':item.answerType==='unit'?`<span class="answer-unit">${escapeHtml(item.unit||'')}</span>`:''}`;
 }
+// Engine keypad questions use the universal pad (0.15.0). 'engine-keys' is the pre-0.15.0 name, kept for rooms already running.
+const usesAnswerPad = item => item.answerType === 'engine-pad' || item.answerType === 'engine-keys';
 function engineInput(item) {
+  if(usesAnswerPad(item)) return `<div class="answer-display math-answer" aria-live="polite"><span class="answer-slot active" data-pad-answer aria-label="Answer">${escapeHtml(draft.main||'□')}</span></div><p class="fine">Use the keypad or your keyboard. Fractions use /, for example 3/4.</p><div class="mq-answer-pad" data-answer-pad-host></div>`;
   if(item.answerType==='engine-text') return `<label class="engine-text-answer">Answer<input id="engine-text-answer" type="text" value="${escapeHtml(draft.main)}" autocomplete="off" autocapitalize="off" spellcheck="false" maxlength="200" enterkeyhint="done"></label><p class="fine">Type your answer, then submit.</p>`;
   const extras=(item.keys||[]).filter(k=>!/^[0-9]$/.test(k)&&!['-','.','/'].includes(k));
   const base=['7','8','9','4','5','6','1','2','3'];
@@ -693,7 +700,7 @@ function engineInput(item) {
     <div class="keypad math-native engine-keys" aria-label="Math answer keypad">${base.map(k=>`<button data-answer-key="${k}">${k}</button>`).join('')}<button data-answer-text="-" aria-label="Minus">−</button><button data-answer-key="0">0</button><button data-answer-key="backspace" aria-label="Delete">⌫</button><button data-answer-text=".">.</button><button data-answer-text="/">/</button><button data-answer-text=" " aria-label="Space">space</button>${extras.map(k=>`<button data-answer-text="${escapeHtml(k)}">${escapeHtml(k)}</button>`).join('')}</div>`;
 }
 function mathInput(item) {
-  if(item.answerType==='engine-keys'||item.answerType==='engine-text'){activeField='main';return engineInput(item);}
+  if(usesAnswerPad(item)||item.answerType==='engine-text'){activeField='main';return engineInput(item);}
   if(item.answerType==='choice') return `<div class="answer-options">${item.options.map(option=>`<button class="answer-option ${draft.choice===option?'selected':''}" aria-pressed="${draft.choice===option}" data-answer-choice="${escapeHtml(option)}"><span class="selection-check">✓</span>${escapeHtml(option)}</button>`).join('')}</div>`;
   const fields=item.answerType==='fraction'&&draft.integerMode? [['numerator','Integer answer']]:inputParts(item.answerType);
   if(!fields.some(([key])=>key===activeField))activeField=fields[0][0];
@@ -802,7 +809,24 @@ function statusBar(item, student) {
   return `<div class="statusbar"><span><i></i> HTTPS polling</span><span>${escapeHtml(item.name)}${student.isLead ? " · Event Lead" : ""}</span></div>`;
 }
 
+function mountGatePad(student) {
+  answerPad?.destroy(); answerPad = null;
+  const host = document.querySelector("[data-answer-pad-host]");
+  if (!host) return;
+  const itemId = student.currentItem?.id ?? null;
+  if (itemId !== padItemId) { padItemId = itemId; padTab = "123"; }
+  const shown = document.querySelector("[data-pad-answer]");
+  answerPad = AnswerPad.mountAnswerPad(host, {
+    value: draft.main,
+    onChange: value => { draft.main = value; if (shown) shown.textContent = value || "□"; },
+    onSubmit: () => document.querySelector('[data-action="math.submit"]')?.click()
+  });
+  answerPad.showTab(padTab);
+  host.addEventListener("click", event => { const tab = event.target.closest("[data-pad-tab]"); if (tab) padTab = tab.dataset.padTab; });
+}
+
 function bindStudentActions(item, student) {
+  mountGatePad(student);
   document.querySelectorAll("[data-action]").forEach(button => button.onclick = () => {
     const action = button.dataset.action;
     if (action === "math.submit") command(action, { answer: serializeAnswer(student.currentItem.answerType) });
@@ -915,6 +939,7 @@ async function poll() {
 window.addEventListener('mq-session-gone',event=>{if(event.detail.code!==session)return;sessionGone=true;extractionRuntime?.destroy();extractionRuntime=null;finaleHost?.destroy();finaleHost=null;forgetRoom(session);render();});
 app.addEventListener('error', event => { if(event.target.matches?.('.scene-image img')) { event.target.hidden=true; event.target.nextElementSibling.hidden=false; } },true);
 document.addEventListener('keydown',event=>{
+  if(document.querySelector('[data-answer-pad-host] .answer-pad'))return; // the U-18 pad handles its own keys and Enter
   if(teacherKey||extractionRuntime||state?.student?.gateComplete||currentTeam()?.stage!=='gate'||document.activeElement?.matches('input,select,textarea')||event.ctrlKey||event.metaKey||event.altKey)return;
   const key=/^\d$/.test(event.key)?event.key:event.key==='Backspace'?'backspace':event.key==='-'?'minus':event.key==='.'?'.':null;
   if(key){const button=document.querySelector(`[data-answer-key="${key}"]`);if(button){event.preventDefault();button.click();return;}}

@@ -1,6 +1,6 @@
 // MathQuest v0.14.0 — teacher passcode (spec change-specs/v0.14.0-teacher-passcode.md).
 // The passcode lives only in the Worker secret TEACHER_PASSCODE; this device remembers it after the server accepts it.
-import {hostingFor,fetchApi} from '../hosting.js?v=0.14.2';
+import {hostingFor,fetchApi} from '../hosting.js?v=0.15.0';
 const KEY='mq-teacher-passcode';
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 export const storedPasscode=()=>{try{return localStorage.getItem(KEY)||'';}catch{return '';}};

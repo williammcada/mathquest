@@ -12,13 +12,13 @@ async function call(room, path, method = "GET", body) {
 }
 const command = (room, body) => call(room, "/command", "POST", { commandId: crypto.randomUUID(), ...body });
 
-// Kindergarten through Algebra 2, plus a choice item, a keyboard item and a keypad-extras item.
+// Kindergarten through Algebra 2, plus a choice item and a keyboard item. Every keypad item uses the U-18 pad (0.15.0).
 const SPAN = [
   "k-next", "g3-reduce", "g7-intdiv",
   "bank:intermediate-4-en:authored:M2-4078157a9e82-2",
   "bank:course-87-en:item:SN870001",
   "bank:algebra-1-en:node:570",
-  "bank:algebra-2-en:node:142",
+  "bank:algebra-2-en:node:209",
   "bank:course-87-en:authored:MCADA-18.1",
   "mq-properties"
 ];
@@ -72,7 +72,7 @@ test("every answer input type round-trips through the session", async () => {
     const result = await command(room, { type: "math.submit", deviceId: "s0", answer: student.currentItem.answer });
     assert.equal(result.body.feedback?.correct, true, `${id}: ${JSON.stringify(result.body.error || '')}`);
   }
-  for (const t of ["choice", "engine-text", "fraction", "number"]) assert.ok(types.has(t), `covers ${t}: ${[...types]}`);
+  for (const t of ["choice", "engine-text", "engine-pad"]) assert.ok(types.has(t), `covers ${t}: ${[...types]}`);
 });
 
 test("unsimplified engine fractions get the simplest-form message and are not counted as correct", async () => {
@@ -118,8 +118,45 @@ test("catalog and preview endpoints expose the engine without answers leaking in
   const env = { TEACHER_PASSCODE: 'test-teacher-passcode', SESSIONS: { idFromName: () => ({}), get: () => ({}) } };
   const catalog = await (await worker.fetch(new Request("https://api.example/api/catalog"), env)).json();
   assert.equal(catalog.engine.version, ENGINE.version);
-  assert.equal(catalog.modules.length, 1763);
-  const preview = await (await worker.fetch(new Request("https://api.example/api/engine-preview", { method: "POST", headers: { "x-mathquest-teacher": "test-teacher-passcode" }, body: JSON.stringify({ ids: ["k-next", "bank:algebra-2-en:node:142", "nope"] }) }), env)).json();
+  assert.equal(catalog.modules.length, 4147); // Math Engine 0.65.0 (1,763 in 0.34.0-rc.3)
+  const preview = await (await worker.fetch(new Request("https://api.example/api/engine-preview", { method: "POST", headers: { "x-mathquest-teacher": "test-teacher-passcode" }, body: JSON.stringify({ ids: ["k-next", "bank:algebra-2-en:node:209", "nope"] }) }), env)).json();
   assert.equal(preview.items.length, 2);
   assert.ok(preview.items.every(i => i.prompt && i.answer));
+});
+
+test("0.15.0: questions the Engine keeps out of games are skipped; a retired module with none left uses its lessons' single-answer siblings", async () => {
+  const { engineIdsFor, engineQuestion } = await import("../src/engine-questions.js");
+  assert.deepEqual(engineIdsFor({ id: "number.scientific-notation" }), ["bank:course-87-en:authored:MCADA-51.2", "bank:course-87-en:authored:MCADA-57.3"]);
+  assert.deepEqual(engineIdsFor({ id: "x", engineIds: ["bank:algebra-2-en:node:142", "bank:algebra-2-en:node:209"] }), ["bank:algebra-2-en:node:209"]);
+  for (const id of engineIdsFor({ id: "number.scientific-notation" })) { const q = engineQuestion(id, 3); assert.equal(q.answerType, "engine-pad"); }
+  const room = await launch([{ id: "number.scientific-notation", itemCount: 3 }], 1);
+  await call(room, "/state?deviceId=s0");
+  assert.match(room.state.students.s0.currentItem.engineId, /MCADA-5(1\.2|7\.3)$/);
+});
+
+test("0.15.0: answers typed on the U-18 pad (− ÷ √ ×, AM/PM) are read by the Engine", async () => {
+  const { engineQuestion, checkEngineAnswer } = await import("../src/engine-questions.js");
+  const { default: E } = await import("../src/vendor/math-engine-practice.js");
+  let checked = 0;
+  for (const e of E.catalog) {
+    const q = engineQuestion(e.id, 11);
+    if (q.answerType !== "engine-pad") continue;
+    const typed = E.answerPad.padForm(q.answer).replace(/-/g, "−");
+    assert.ok(E.answerPad.onlyPadCharacters(typed), `${e.id}: ${typed}`);
+    assert.equal(checkEngineAnswer(q, typed).correct, true, `${e.id}: typed ${typed} for ${q.answer}`);
+    checked++;
+  }
+  assert.ok(checked > 3000, String(checked));
+});
+
+test("0.15.0: rooms created by 0.13.0, 0.14.0 and 0.14.1 keep running after the upgrade (U-06)", async () => {
+  for (const version of ["0.13.0", "0.14.0", "0.14.1"]) {
+    const room = await launch([{ id: "g6-write", source: "engine", itemCount: 3 }], 1);
+    room.state.config.engineVersion = version;
+    const view = await call(room, "/state?deviceId=s0");
+    const item = room.state.students.s0.currentItem;
+    assert.ok(view.body.student.currentItem, version);
+    const result = await command(room, { type: "math.submit", deviceId: "s0", answer: item.answer });
+    assert.equal(result.body.feedback?.correct, true, `${version}: ${JSON.stringify(result.body)}`);
+  }
 });

@@ -10,14 +10,20 @@ export { LEGACY_MODULE_MAP };
 // Titles of the retired MathQuest modules, for rooms and saved setups created before 0.10.0.
 export const LEGACY_MODULE_TITLES = Object.freeze({"number.integer-operations": "Integer Operations", "number.gcf": "Greatest Common Factor", "number.lcm": "Least Common Multiple", "number.absolute-value": "Absolute Value", "number.order-of-operations": "Integer Order of Operations", "number.part-of-whole": "Fraction or Percent of a Whole", "data.mean-missing": "Mean and Missing Average", "algebra.one-step": "One-Step Equations", "algebra.two-step": "Equations with Rational Numbers", "fraction.simplify": "Simplifying Fractions", "number.fdp-conversion": "Fraction Decimal Percent Conversion", "probability.simple": "Simple Probability", "ratio.unit-rate": "Unit Rate", "ratio.proportion": "Ratio and Proportion", "percent.change": "Percent Change", "exponent.negative": "Negative Exponents", "number.scientific-notation": "Scientific Notation", "word.multistep": "Mixed Multi-Step Word Problems", "algebra.word-problems": "Algebraic Word Problems", "exponent.scientific-operations": "Scientific Notation Operations", "measurement.conversions": "Unit Multiplier Conversions", "number.properties": "Properties of Operations", "geometry.polygons": "Quadrilaterals and Polygons", "percent.tax-tip": "Sales Tax and Tip", "number.real-family": "Real Number Classification"});
 
-const BASIC_KEYS = new Set(['7', '8', '9', 'back', '4', '5', '6', 'clear', '1', '2', '3', '-', '0', '.', '/', ' ']);
-
 export function engineEntry(id) { return Engine.find(id); }
 
-/** Engine ids behind a configured module: an engine id, or a retired MathQuest module id. */
+// 0.15.0: Engine 0.37.0+ keeps questions that need more than one answer out of games
+// (Engine.find returns null; Engine.gameExclusion names the reason). A retired module whose
+// mapped items are all excluded runs on the same lessons' single-answer siblings instead.
+export const LEGACY_REPLACEMENTS = Object.freeze({
+  'number.scientific-notation': ['bank:course-87-en:authored:MCADA-51.2', 'bank:course-87-en:authored:MCADA-57.3']
+});
+const playable = ids => ids.filter(id => Engine.find(id));
+
+/** Engine ids behind a configured module: an engine id, or a retired MathQuest module id. Only ids games may use. */
 export function engineIdsFor(module) {
-  if (Array.isArray(module?.engineIds) && module.engineIds.length) return module.engineIds;
-  if (LEGACY_MODULE_MAP[module?.id]) return LEGACY_MODULE_MAP[module.id];
+  if (Array.isArray(module?.engineIds) && module.engineIds.length) { const ids = playable(module.engineIds); if (ids.length) return ids; }
+  if (LEGACY_MODULE_MAP[module?.id]) { const ids = playable(LEGACY_MODULE_MAP[module.id]); return ids.length ? ids : playable(LEGACY_REPLACEMENTS[module.id] || []); }
   return Engine.find(module?.id) ? [module.id] : [];
 }
 
@@ -36,11 +42,12 @@ export function adjustForPolicy(id, policy) {
   return { id, linked: true };
 }
 
+// U-18 (0.15.0): every Engine keypad question uses the Engine's universal answer pad ('engine-pad').
+// Choice items keep answer buttons; words, letters and other typed forms keep a text box.
 function answerTypeFor(item) {
   if (item.inputMode === 'choice') return 'choice';
   if (item.inputMode === 'keyboard') return 'engine-text';
-  if (item.type === 'fraction' && (item.layer === 'skill' || item.layer === 'continuity')) return 'fraction';
-  return item.keys.every(k => BASIC_KEYS.has(k)) ? 'number' : 'engine-keys';
+  return 'engine-pad';
 }
 
 /** Build a MathQuest item record from an engine item. */
@@ -58,7 +65,6 @@ export function engineQuestion(engineId, seed, { moduleId, moduleTitle, policy =
     answerType,
     answer: item.answerText,
     options: item.choices || undefined,
-    keys: answerType === 'engine-keys' ? item.keys.filter(k => k !== 'back' && k !== 'clear' && k !== ' ') : undefined,
     solution: item.solution || '',
     source: 'math-engine',
     engineId,
@@ -81,6 +87,7 @@ export function engineQuestion(engineId, seed, { moduleId, moduleTitle, policy =
  * Returns the checkItem shape: { valid, correct, error, normalized, reason }.
  */
 export function checkEngineAnswer(record, input) {
+  // Engine.evaluate reads pad text (− ÷ √ ×) itself (U-18).
   let text = String(input ?? '').trim().replace(/−/g, '-');
   // MathQuest's fraction widget sends "n/1" in Integer mode.
   const whole = text.match(/^(-?\d+)\s*\/\s*1$/);

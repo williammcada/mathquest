@@ -1,12 +1,12 @@
 {
   "repository": "williammcada/MATH-ENGINE",
-  "commit": "10127fc92ca3787df392046e7bbe13a7b3fb5cf7",
+  "commit": "17c4e3a460cfc89f4b7db42b8bb59251e6a9f6b0",
   "module": "dist/math-engine-practice.js",
-  "engineVersion": "0.34.0-rc.3",
+  "engineVersion": "0.65.0",
   "bankVersion": "0.33.0-rc.1",
   "k7Version": "megaman-v0.7",
-  "bundleSha256": "8784557667e08ce08fd23c77b232dbbdbe307f67c744c4598a2e465e9990cd11",
-  "contentHash": "5cdb34cc0facb7ac3c2b6658f1c2f72b",
+  "bundleSha256": "87901436ff078e46247af49eef02bbc86e1d0f2eb918d667676ee1b31e13fbca",
+  "contentHash": "2b2bd8f4599cf19ed292f12a70e6a0ce",
   "baseline": "baselines/megaman-v0.7/shared-math.js",
   "baselineSha256": "78841274e50b07c6640913bb84fdd821247ed47030b575feb27760d35fcff1a0",
   "sources": [
@@ -72,6 +72,18 @@
     "src/algebra-one-map.js",
     "src/algebra-half.js",
     "src/algebra-half-map.js",
+    "src/port87.js",
+    "src/port-shared.js",
+    "src/port87-map.js",
+    "src/port-courses.js",
+    "src/port-intermediate-4.js",
+    "src/port-intermediate-4-map.js",
+    "src/port-algebra-half.js",
+    "src/port-algebra-half-map.js",
+    "src/port-algebra-1.js",
+    "src/port-algebra-1-map.js",
+    "src/port-algebra-2.js",
+    "src/port-algebra-2-map.js",
     "src/related-concepts.js",
     "src/related-concepts-map.js",
     "src/cross-course.js",
@@ -80,12 +92,18 @@
     "src/curriculum87-assessment-map.js",
     "src/k7-skills.js",
     "src/practice-index.js",
-    "src/continuity-skills.js"
+    "src/continuity-skills.js",
+    "src/answer-pad.js",
+    "src/answer-shape.js"
   ],
+  "gameExcluded": {
+    "teacher-reviewed": 891,
+    "multi-part": 519
+  },
   "catalog": {
-    "total": 1763,
+    "total": 4147,
     "k7": 312,
-    "bank": 1441,
+    "bank": 3825,
     "continuity": 10
   }
 }

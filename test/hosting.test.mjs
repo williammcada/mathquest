@@ -42,7 +42,7 @@ function cors(response) {
   assert.equal(response.headers.get('access-control-allow-origin'), origin);
   assert.match(response.headers.get('vary'), /Origin/);
   assert.equal(response.headers.get('cache-control'), 'no-store');
-  assert.equal(response.headers.get('x-mathquest-version'), '0.14.1');
+  assert.equal(response.headers.get('x-mathquest-version'), '0.15.0');
   assert.equal(response.headers.get('access-control-allow-credentials'), null);
 }
 
@@ -99,7 +99,7 @@ test('cross-origin create, two-player join, launch, answers, polling, and teache
   async function call(path, method = 'GET', body) {
     const response = await worker.fetch(request(path, method, body), env); cors(response); return response;
   }
-  const catalog = await (await call('catalog')).json(); assert.equal(catalog.modules.length, 1763); assert.equal(Object.keys(catalog.legacyModules).length, 25); assert.match(catalog.engine.version, /^0\.34\.0/);
+  const catalog = await (await call('catalog')).json(); assert.equal(catalog.modules.length, 4147); assert.equal(Object.keys(catalog.legacyModules).length, 25); assert.match(catalog.engine.version, /^0\.65\.0/);
   const created = await call('sessions', 'POST', { teamNames: ['Cipher', 'Empty'], gateCount: 3,
     modules: [{ id: 'number.gcf', source: 'preset', band: 'beginner', itemCount: 3 }] });
   assert.equal(created.status, 200);
